@@ -1,111 +1,330 @@
 const { User, Department, Doctor } = require("../models/admin");
 
 
+// GET ALL USERS
+const getUsers = async (req, res, next) => {
+    try {
+        const users = await User.find();
 
-// Create User
-exports.createUser = async (req, res) => {
-  try {
-    const user = await User.create(req.body);
-
-    res.status(201).json({
-      success: true,
-      data: user,
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.message,
-    });
-  }
+        res.status(200).json({
+            success: true,
+            count: users.length,
+            data: users
+        });
+    } catch (err) {
+        next({ code: 500, message: "Unable to fetch users" });
+    }
 };
 
-// Get All Users
-exports.getUsers = async (req, res) => {
-  try {
-    const users = await User.find();
+// GET USER BY ID
+const getUserById = async (req, res, next) => {
+    try {
+        const user = await User.findById(req.params.id);
 
-    res.status(200).json({
-      success: true,
-      data: users,
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.message,
-    });
-  }
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found"
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            data: user
+        });
+    } catch (err) {
+        next({ code: 500, message: "Unable to fetch user" });
+    }
+};
+
+// CREATE USER
+const createUser = async (req, res, next) => {
+    try {
+        const user = await User.create(req.body);
+
+        res.status(201).json({
+            success: true,
+            data: user
+        });
+    } catch (err) {
+        next({ code: 500, message: err.message });
+    }
+};
+
+// UPDATE USER
+const updateUser = async (req, res, next) => {
+    try {
+        const user = await User.findByIdAndUpdate(
+            req.params.id,
+            req.body,
+            { new: true, runValidators: true }
+        );
+
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found"
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            data: user
+        });
+    } catch (err) {
+        next({ code: 500, message: "Unable to update user" });
+    }
+};
+
+// DELETE USER
+const deleteUser = async (req, res, next) => {
+    try {
+        const user = await User.findByIdAndDelete(req.params.id);
+
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found"
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            message: "User deleted successfully"
+        });
+    } catch (err) {
+        next({ code: 500, message: "Unable to delete user" });
+    }
 };
 
 
+// =======================
+// DEPARTMENTS
+// =======================
 
-// Create Department
-exports.createDepartment = async (req, res) => {
-  try {
-    const department = await Department.create(req.body);
+// GET ALL DEPARTMENTS
+const getDepartments = async (req, res, next) => {
+    try {
+        const departments = await Department.find();
 
-    res.status(201).json({
-      success: true,
-      data: department,
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.message,
-    });
-  }
+        res.status(200).json({
+            success: true,
+            count: departments.length,
+            data: departments
+        });
+    } catch (err) {
+        next({ code: 500, message: "Unable to fetch departments" });
+    }
 };
 
-// Get All Departments
-exports.getDepartments = async (req, res) => {
-  try {
-    const departments = await Department.find();
+// GET DEPARTMENT BY ID
+const getDepartmentById = async (req, res, next) => {
+    try {
+        const department = await Department.findById(req.params.id);
 
-    res.status(200).json({
-      success: true,
-      data: departments,
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.message,
-    });
-  }
+        if (!department) {
+            return res.status(404).json({
+                success: false,
+                message: "Department not found"
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            data: department
+        });
+    } catch (err) {
+        next({ code: 500, message: "Unable to fetch department" });
+    }
+};
+
+// CREATE DEPARTMENT
+const createDepartment = async (req, res, next) => {
+    try {
+        const department = await Department.create(req.body);
+
+        res.status(201).json({
+            success: true,
+            data: department
+        });
+    } catch (err) {
+        next({ code: 500, message: err.message });
+    }
+};
+
+// UPDATE DEPARTMENT
+const updateDepartment = async (req, res, next) => {
+    try {
+        const department = await Department.findByIdAndUpdate(
+            req.params.id,
+            req.body,
+            { new: true, runValidators: true }
+        );
+
+        if (!department) {
+            return res.status(404).json({
+                success: false,
+                message: "Department not found"
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            data: department
+        });
+    } catch (err) {
+        next({ code: 500, message: "Unable to update department" });
+    }
+};
+
+// DELETE DEPARTMENT
+const deleteDepartment = async (req, res, next) => {
+    try {
+        const department = await Department.findByIdAndDelete(req.params.id);
+
+        if (!department) {
+            return res.status(404).json({
+                success: false,
+                message: "Department not found"
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            message: "Department deleted successfully"
+        });
+    } catch (err) {
+        next({ code: 500, message: "Unable to delete department" });
+    }
 };
 
 
+// DOCTORS
 
-// Create Doctor
-exports.createDoctor = async (req, res) => {
-  try {
-    const doctor = await Doctor.create(req.body);
 
-    res.status(201).json({
-      success: true,
-      data: doctor,
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.message,
-    });
-  }
+// GET ALL DOCTORS
+const getDoctors = async (req, res, next) => {
+    try {
+        const doctors = await Doctor.find()
+            .populate("userId")
+            .populate("department");
+
+        res.status(200).json({
+            success: true,
+            count: doctors.length,
+            data: doctors
+        });
+    } catch (err) {
+        next({ code: 500, message: "Unable to fetch doctors" });
+    }
 };
 
-// Get All Doctors
-exports.getDoctors = async (req, res) => {
-  try {
-    const doctors = await Doctor.find()
-      .populate("userId")
-      .populate("department");
+// GET DOCTOR BY ID
+const getDoctorById = async (req, res, next) => {
+    try {
+        const doctor = await Doctor.findById(req.params.id)
+            .populate("userId")
+            .populate("department");
 
-    res.status(200).json({
-      success: true,
-      data: doctors,
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.message,
-    });
-  }
+        if (!doctor) {
+            return res.status(404).json({
+                success: false,
+                message: "Doctor not found"
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            data: doctor
+        });
+    } catch (err) {
+        next({ code: 500, message: "Unable to fetch doctor" });
+    }
+};
+
+// CREATE DOCTOR
+const createDoctor = async (req, res, next) => {
+    try {
+        const doctor = await Doctor.create(req.body);
+
+        res.status(201).json({
+            success: true,
+            data: doctor
+        });
+    } catch (err) {
+        next({ code: 500, message: err.message });
+    }
+};
+
+// UPDATE DOCTOR
+const updateDoctor = async (req, res, next) => {
+    try {
+        const doctor = await Doctor.findByIdAndUpdate(
+            req.params.id,
+            req.body,
+            { new: true, runValidators: true }
+        );
+
+        if (!doctor) {
+            return res.status(404).json({
+                success: false,
+                message: "Doctor not found"
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            data: doctor
+        });
+    } catch (err) {
+        next({ code: 500, message: "Unable to update doctor" });
+    }
+};
+
+// DELETE DOCTOR
+const deleteDoctor = async (req, res, next) => {
+    try {
+        const doctor = await Doctor.findByIdAndDelete(req.params.id);
+
+        if (!doctor) {
+            return res.status(404).json({
+                success: false,
+                message: "Doctor not found"
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            message: "Doctor deleted successfully"
+        });
+    } catch (err) {
+        next({ code: 500, message: "Unable to delete doctor" });
+    }
+};
+
+
+// EXPORTS
+
+
+module.exports = {
+    // Users
+    getUsers,
+    getUserById,
+    createUser,
+    updateUser,
+    deleteUser,
+
+    // Departments
+    getDepartments,
+    getDepartmentById,
+    createDepartment,
+    updateDepartment,
+    deleteDepartment,
+
+    // Doctors
+    getDoctors,
+    getDoctorById,
+    createDoctor,
+    updateDoctor,
+    deleteDoctor
 };
