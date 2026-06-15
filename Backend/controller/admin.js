@@ -4,10 +4,32 @@ const { User, Department, Doctor } = require("../models/admin");
 // GET ALL USERS
 const getUsers = async (req, res, next) => {
     try {
-        const users = await User.find();
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+        const skip = (page - 1) * limit;
+
+        let filter = {};
+
+        if (req.query.role) {
+            filter.role = req.query.role;
+        }
+
+        if (req.query.isActive !== undefined) {
+            filter.isActive = req.query.isActive === "true";
+        }
+
+        const users = await User.find(filter)
+            .skip(skip)
+            .limit(limit);
+
+        const totalRecords = await User.countDocuments(filter);
 
         res.status(200).json({
             success: true,
+            page,
+            limit,
+            totalRecords,
+            totalPages: Math.ceil(totalRecords / limit),
             count: users.length,
             data: users
         });
@@ -15,7 +37,6 @@ const getUsers = async (req, res, next) => {
         next({ code: 500, message: "Unable to fetch users" });
     }
 };
-
 // GET USER BY ID
 const getUserById = async (req, res, next) => {
     try {
