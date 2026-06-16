@@ -2,30 +2,36 @@ const express = require("express");
 
 const router = express.Router();
 const admin = require("../controller/admin");
+const checkAuth = require("../middleware/check-auth");
+const checkRole = require("../middleware/check-role");
 
-// USERS
+router.use(checkAuth);
 
-router.post("/users", admin.createUser);
-router.get("/users", admin.getUsers);
-router.get("/users/:id", admin.getUserById);
-router.put("/users/:id", admin.updateUser);
-router.delete("/users/:id", admin.deleteUser);
+// USERS - Admin Only
 
-// DEPARTMENTS
+router.post("/users", checkRole(["Admin"]), admin.createUser);
+router.get("/users", checkRole(["Admin"]), admin.getUsers);
+router.get("/users/:id", checkRole(["Admin"]), admin.getUserById);
+router.put("/users/:id", checkRole(["Admin"]), admin.updateUser);
+router.delete("/users/:id", checkRole(["Admin"]), admin.deleteUser);
 
-router.post("/departments", admin.createDepartment);
-router.get("/departments", admin.getDepartments);
-router.get("/departments/:id", admin.getDepartmentById);
-router.put("/departments/:id", admin.updateDepartment);
-router.delete("/departments/:id", admin.deleteDepartment);
+// DEPARTMENTS - Admin Only
 
-// DOCTORS
+router.post("/departments", checkAuth, checkRole(["Admin"]), admin.createDepartment);
+router.get("/departments", checkAuth, checkRole(["Admin"]), admin.getDepartments);
+router.get("/departments/:id", checkAuth, checkRole(["Admin"]), admin.getDepartmentById);
+router.put("/departments/:id", checkAuth, checkRole(["Admin"]), admin.updateDepartment);
+router.delete("/departments/:id", checkAuth, checkRole(["Admin"]), admin.deleteDepartment);
 
-router.post("/doctors", admin.createDoctor);
-router.get("/doctors", admin.getDoctors);
-router.get("/doctors/:id", admin.getDoctorById);
-router.put("/doctors/:id", admin.updateDoctor);
-router.delete("/doctors/:id", admin.deleteDoctor);
+// DOCTORS - Admin Only (Create/Update/Delete)
 
+router.post("/doctors",checkRole(["Admin"]), admin.createDoctor);
+router.put("/doctors/:id",  checkRole(["Admin"]), admin.updateDoctor);
+router.delete("/doctors/:id", checkRole(["Admin"]), admin.deleteDoctor);
+
+// DOCTORS - View (Admin, Receptionist, Doctor)
+
+router.get("/doctors",checkRole(["Admin", "Receptionist", "Doctor"]), admin.getDoctors);
+router.get("/doctors/:id", checkRole(["Admin", "Receptionist", "Doctor"]), admin.getDoctorById);
 
 module.exports = router;
