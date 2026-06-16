@@ -5,7 +5,7 @@ const dns = require('dns')
 
 const app = express();
 
-
+const authRoutes = require("./routes/auth");
 const adminRoutes = require("./routes/admin");
 const doctorRoutes = require("./routes/doctor");
 const receptionistRoutes = require("./routes/receptionist");
@@ -19,6 +19,8 @@ app.use("/api/admin", adminRoutes);
 app.use("/api/doctor", doctorRoutes);
 app.use("/api/receptionist", receptionistRoutes);
 app.use("/api/labtech", labtechRoutes);
+
+app.use("/api/auth", authRoutes);
 
 app.use((error, req, res, next) => {
     if (res.headersSent) {
