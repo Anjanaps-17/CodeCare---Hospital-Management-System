@@ -1,4 +1,6 @@
+const bcrypt = require("bcryptjs");
 const { User, Department, Doctor } = require("../models/admin");
+
 
 
 // GET ALL USERS
@@ -61,24 +63,58 @@ const getUserById = async (req, res, next) => {
 // CREATE USER
 const createUser = async (req, res, next) => {
     try {
-        const user = await User.create(req.body);
+        const existingUser = await User.findOne({
+            Username: req.body.Username
+        });
+
+        if (existingUser) {
+            return res.status(409).json({
+                success: false,
+                message: "Username already exists"
+            });
+        }
+
+        const hashedPassword = await bcrypt.hash(
+            req.body.Password,
+            12
+        );
+
+        const user = await User.create({
+            ...req.body,
+            Password: hashedPassword
+        });
 
         res.status(201).json({
             success: true,
             data: user
         });
+
     } catch (err) {
-        next({ code: 500, message: err.message });
+        next({
+            code: 500,
+            message: err.message
+        });
     }
 };
 
 // UPDATE USER
 const updateUser = async (req, res, next) => {
     try {
+
+        if (req.body.Password) {
+            req.body.Password = await bcrypt.hash(
+                req.body.Password,
+                12
+            );
+        }
+
         const user = await User.findByIdAndUpdate(
             req.params.id,
             req.body,
-            { new: true, runValidators: true }
+            {
+                new: true,
+                runValidators: true
+            }
         );
 
         if (!user) {
@@ -92,8 +128,12 @@ const updateUser = async (req, res, next) => {
             success: true,
             data: user
         });
+
     } catch (err) {
-        next({ code: 500, message: "Unable to update user" });
+        next({
+            code: 500,
+            message: "Unable to update user"
+        });
     }
 };
 
