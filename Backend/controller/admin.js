@@ -64,7 +64,7 @@ const getUserById = async (req, res, next) => {
 const createUser = async (req, res, next) => {
     try {
         const existingUser = await User.findOne({
-            Username: req.body.Username
+            username: req.body.username
         });
 
         if (existingUser) {
@@ -74,14 +74,14 @@ const createUser = async (req, res, next) => {
             });
         }
 
-        const hashedPassword = await bcrypt.hash(
-            req.body.Password,
+        const hashedpassword = await bcrypt.hash(
+            req.body.password,
             12
         );
 
         const user = await User.create({
             ...req.body,
-            Password: hashedPassword
+            password: hashedpassword
         });
 
         res.status(201).json({
@@ -101,9 +101,9 @@ const createUser = async (req, res, next) => {
 const updateUser = async (req, res, next) => {
     try {
 
-        if (req.body.Password) {
-            req.body.Password = await bcrypt.hash(
-                req.body.Password,
+        if (req.body.password) {
+            req.body.password = await bcrypt.hash(
+                req.body.password,
                 12
             );
         }

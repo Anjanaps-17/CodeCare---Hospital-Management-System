@@ -2,8 +2,8 @@ const express = require("express");
 
 const router = express.Router();
 const admin = require("../controller/admin");
-const checkAuth = require("../middleware/check-auth");
-const checkRole = require("../middleware/check-role");
+const { checkAuth, checkRole } = require("../middleware/admin-middleware");
+
 
 router.use(checkAuth);
 
@@ -17,11 +17,11 @@ router.delete("/users/:id", checkRole(["Admin"]), admin.deleteUser);
 
 // DEPARTMENTS - Admin Only
 
-router.post("/departments", checkAuth, checkRole(["Admin"]), admin.createDepartment);
-router.get("/departments", checkAuth, checkRole(["Admin"]), admin.getDepartments);
-router.get("/departments/:id", checkAuth, checkRole(["Admin"]), admin.getDepartmentById);
-router.put("/departments/:id", checkAuth, checkRole(["Admin"]), admin.updateDepartment);
-router.delete("/departments/:id", checkAuth, checkRole(["Admin"]), admin.deleteDepartment);
+router.post("/departments",checkRole(["Admin"]), admin.createDepartment);
+router.get("/departments",checkRole(["Admin"]), admin.getDepartments);
+router.get("/departments/:id",checkRole(["Admin"]), admin.getDepartmentById);
+router.put("/departments/:id",checkRole(["Admin"]), admin.updateDepartment);
+router.delete("/departments/:id",checkRole(["Admin"]), admin.deleteDepartment);
 
 // DOCTORS - Admin Only (Create/Update/Delete)
 
