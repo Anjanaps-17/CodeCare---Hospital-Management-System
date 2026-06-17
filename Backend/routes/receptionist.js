@@ -1,22 +1,30 @@
 const express = require("express");
 const router = express.Router();
 
+const { checkAuth, checkRole } = require("../middleware/admin-middleware");
+
 const {
   registerPatient,
   searchPatient,
   getPatientById,
   updatePatient,
   updatePatientStatus,
-  deletePatient,     
+  deletePatient,
   bookAppointment,
   verifyQR,
   getAppointmentById,
   getAppointmentsByDoctor,
-  updateAppointment,
-  cancelAppointment,
-  deleteAppointment,
   getAppointmentsByPatient,
+  updateAppointment,
+  deleteAppointment,
 } = require("../controller/receptionist");
+
+
+router.use(checkAuth);
+router.use(checkRole(["Receptionist"]));
+// ======================
+// Patient Routes
+// ======================
 
 // Register Patient
 router.post("/patients", registerPatient);
@@ -36,7 +44,9 @@ router.patch("/patients/:id/status", updatePatientStatus);
 // Delete Patient
 router.delete("/patients/:id", deletePatient);
 
+// ======================
 // Appointment Routes
+// ======================
 
 // Book Appointment
 router.post("/appointments", bookAppointment);
@@ -44,21 +54,19 @@ router.post("/appointments", bookAppointment);
 // Verify QR Code
 router.get("/appointments/verify-qr", verifyQR);
 
-// Get Appointment by ID
-router.get("/appointments/:id", getAppointmentById);
-
 // Get Appointments by Patient ID
 router.get("/appointments/patient/:patientId", getAppointmentsByPatient);
 
 // Get Appointments by Doctor ID
 router.get("/appointments/doctor/:doctorId", getAppointmentsByDoctor);
 
+// Get Appointment by ID
+router.get("/appointments/:id", getAppointmentById);
+
 // Update Appointment
 router.put("/appointments/:id", updateAppointment);
 
-// Cancel Appointment
-router.patch("/appointments/:id/cancel", cancelAppointment);
-
-// Delete Appointment
+// Delete Appointment (changes status to Cancelled)
 router.delete("/appointments/:id", deleteAppointment);
+
 module.exports = router;
