@@ -1,7 +1,9 @@
 const { Patient, Appointment } = require("../models/receptionist");
 
-// Register Patient
 
+// ======================
+// Register Patient
+// ======================
 const registerPatient = async (req, res) => {
   try {
     const patient = new Patient(req.body);
@@ -17,19 +19,16 @@ const registerPatient = async (req, res) => {
   }
 };
 
-// Search Patient
 
+// ======================
+// Search Patient
+// ======================
 const searchPatient = async (req, res) => {
   try {
     const { patientId, name, phone, qrCode } = req.query;
 
     const patient = await Patient.findOne({
-      $or: [
-        { patientId },
-        { name },
-        { phone },
-        { qrCode },
-      ],
+      $or: [{ patientId }, { name }, { phone }, { qrCode }],
     });
 
     if (!patient) {
@@ -45,8 +44,9 @@ const searchPatient = async (req, res) => {
 };
 
 
+// ======================
 // Get Patient By ID
-
+// ======================
 const getPatientById = async (req, res) => {
   try {
     const patient = await Patient.findById(req.params.id);
@@ -63,8 +63,10 @@ const getPatientById = async (req, res) => {
   }
 };
 
-// Update Patient Details
 
+// ======================
+// Update Patient Details
+// ======================
 const updatePatient = async (req, res) => {
   try {
     const updatedPatient = await Patient.findByIdAndUpdate(
@@ -88,8 +90,10 @@ const updatePatient = async (req, res) => {
   }
 };
 
-// Update Patient Status
 
+// ======================
+// Update Patient Status
+// ======================
 const updatePatientStatus = async (req, res) => {
   try {
     const patient = await Patient.findByIdAndUpdate(
@@ -113,7 +117,10 @@ const updatePatientStatus = async (req, res) => {
   }
 };
 
-// Delete a Patient
+
+// ======================
+// Delete Patient
+// ======================
 const deletePatient = async (req, res) => {
   try {
     const patient = await Patient.findByIdAndDelete(req.params.id);
@@ -125,17 +132,17 @@ const deletePatient = async (req, res) => {
     }
 
     res.status(200).json({
-      message: "Patient deleted successfully",});
-
-  } catch (error) {
-    res.status(500).json({
-      error: error.message,
+      message: "Patient deleted successfully",
     });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 };
 
-// Book Appointment
 
+// ======================
+// Book Appointment
+// ======================
 const bookAppointment = async (req, res) => {
   try {
     const appointment = new Appointment(req.body);
@@ -151,8 +158,10 @@ const bookAppointment = async (req, res) => {
   }
 };
 
-// Verify QR
 
+// ======================
+// Verify QR
+// ======================
 const verifyQR = async (req, res) => {
   try {
     const patient = await Patient.findOne({
@@ -171,6 +180,135 @@ const verifyQR = async (req, res) => {
   }
 };
 
+
+// ======================
+// Get Appointment By ID
+// ======================
+const getAppointmentById = async (req, res) => {
+  try {
+    const appointment = await Appointment.findById(req.params.id);
+
+    if (!appointment) {
+      return res.status(404).json({
+        message: "Appointment not found",
+      });
+    }
+
+    res.status(200).json(appointment);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+
+// ======================
+// Get Appointments By Patient
+// ======================
+const getAppointmentsByPatient = async (req, res) => {
+  try {
+    const appointments = await Appointment.find({
+      patientId: req.params.patientId,
+    });
+
+    res.status(200).json(appointments);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+
+// ======================
+// Get Appointments By Doctor
+// ======================
+const getAppointmentsByDoctor = async (req, res) => {
+  try {
+    const appointments = await Appointment.find({
+      doctorId: req.params.doctorId,
+    });
+
+    res.status(200).json(appointments);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+
+// ======================
+// Update Appointment
+// ======================
+const updateAppointment = async (req, res) => {
+  try {
+    const appointment = await Appointment.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true }
+    );
+
+    if (!appointment) {
+      return res.status(404).json({
+        message: "Appointment not found",
+      });
+    }
+
+    res.status(200).json({
+      message: "Appointment updated successfully",
+      appointment,
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+
+// ======================
+// Cancel Appointment
+// ======================
+const cancelAppointment = async (req, res) => {
+  try {
+    const appointment = await Appointment.findByIdAndUpdate(
+      req.params.id,
+      { status: "Cancelled" },
+      { new: true }
+    );
+
+    if (!appointment) {
+      return res.status(404).json({
+        message: "Appointment not found",
+      });
+    }
+
+    res.status(200).json({
+      message: "Appointment cancelled successfully",
+      appointment,
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+
+// ======================
+// Delete Appointment
+// ======================
+const deleteAppointment = async (req, res) => {
+  try {
+    const appointment = await Appointment.findByIdAndDelete(req.params.id);
+
+    if (!appointment) {
+      return res.status(404).json({
+        message: "Appointment not found",
+      });
+    }
+
+    res.status(200).json({
+      message: "Appointment deleted successfully",
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+
 module.exports = {
   registerPatient,
   searchPatient,
@@ -180,4 +318,10 @@ module.exports = {
   deletePatient,
   bookAppointment,
   verifyQR,
+  getAppointmentById,
+  getAppointmentsByPatient,
+  getAppointmentsByDoctor,
+  updateAppointment,
+  cancelAppointment,
+  deleteAppointment,
 };
