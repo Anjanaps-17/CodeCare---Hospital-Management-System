@@ -1,11 +1,18 @@
 const { Patient, Appointment } = require("../models/receptionist");
+const { Doctor } = require("../models/admin");
 
 // ======================
 // Register Patient
 // ======================
 const registerPatient = async (req, res) => {
   try {
-    const patient = new Patient(req.body);
+    const uniqueId = Date.now();
+
+    const patient = new Patient({
+      ...req.body,
+      patientId: `PAT-${uniqueId}`,
+      qrCode: `QR-${uniqueId}`
+    });
 
     await patient.save();
 
@@ -38,17 +45,17 @@ if (conditions.length === 0) {
   });
 }
 
-const patient = await Patient.findOne({
+const patients = await Patient.find({
   $or: conditions,
 });
 
-    if (!patient) {
-      return res.status(404).json({
-        message: "Patient not found",
-      });
-    }
+if (patients.length === 0) {
+  return res.status(404).json({
+    message: "Patient not found",
+  });
+}
 
-    res.status(200).json(patient);
+res.status(200).json(patients);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -132,7 +139,6 @@ const updatePatientStatus = async (req, res) => {
 };
 
 // ======================
-// ======================
 // Delete Patient
 // ======================
 const deletePatient = async (req, res) => {
@@ -168,7 +174,28 @@ const deletePatient = async (req, res) => {
 // ======================
 const bookAppointment = async (req, res) => {
   try {
-    const appointment = new Appointment(req.body);
+    const patient = await Patient.findById(req.body.patientId);
+
+    if (!patient) {
+      return res.status(404).json({
+        message: "Patient not found",
+      });
+    }
+
+    const doctor = await Doctor.findById(req.body.doctorId);
+
+    if (!doctor) {
+      return res.status(404).json({
+        message: "Doctor not found",
+      });
+    }
+
+    const uniqueId = Date.now();
+
+    const appointment = new Appointment({
+      ...req.body,
+      token: `APT-${uniqueId}`,
+    });
 
     await appointment.save();
 
@@ -187,7 +214,7 @@ const bookAppointment = async (req, res) => {
 const verifyQR = async (req, res) => {
   try {
     const patient = await Patient.findOne({
-      qrCode: req.query.qrCode,
+      qrCode: req.query.qr,
     });
 
     if (!patient) {
@@ -198,7 +225,7 @@ const verifyQR = async (req, res) => {
 
     const appointment = await Appointment.findOne({
       patientId: patient._id,
-    });
+    }).sort({ createdAt: -1 });
 
     res.status(200).json({
       patient,
@@ -208,7 +235,6 @@ const verifyQR = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
-
 // ======================
 // Get Appointment By ID
 // ======================
@@ -294,10 +320,9 @@ const updateAppointment = async (req, res) => {
 };
 
 // ======================
-
-// Delete Appointment
+// Cancel Appointment
 // ======================
-const deleteAppointment = async (req, res) => {
+const cancelAppointment = async (req, res) => {
   try {
     const appointment = await Appointment.findByIdAndUpdate(
       req.params.id,
@@ -336,5 +361,5 @@ module.exports = {
   getAppointmentsByPatient,
   getAppointmentsByDoctor,
   updateAppointment,
-  deleteAppointment,
+  cancelAppointment,
 };

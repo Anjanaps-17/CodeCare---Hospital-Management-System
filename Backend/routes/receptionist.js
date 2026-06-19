@@ -16,7 +16,7 @@ const {
   getAppointmentsByDoctor,
   getAppointmentsByPatient,
   updateAppointment,
-  deleteAppointment,
+  cancelAppointment,
 } = require("../controller/receptionist");
 
 
@@ -66,7 +66,7 @@ router.get("/appointments/:id", getAppointmentById);
 // Update Appointment
 router.put("/appointments/:id", updateAppointment);
 
-// Delete Appointment (changes status to Cancelled)
-router.delete("/appointments/:id", deleteAppointment);
+// Cancel Appointment
+router.patch("/appointments/:id/cancel", cancelAppointment);
 
 module.exports = router;
