@@ -93,4 +93,4 @@ const labTechnicianSchema = new Schema(
 }
 );
 
-module.exports = mongoose.model("LabTechnician", labTechnicianSchema);
+module.exports = mongoose.model("LabTechnician", labTechnicianSchema); 
