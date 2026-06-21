@@ -1,11 +1,23 @@
 const { Patient, Appointment } = require("../models/receptionist");
 const { Doctor } = require("../models/admin");
+const mongoose = require("mongoose");
 
 // ======================
 // Register Patient
 // ======================
 const registerPatient = async (req, res) => {
   try {
+    const existingPatient = await Patient.findOne({
+      phone: req.body.phone,
+      dob: req.body.dob
+    });
+
+    if (existingPatient) {
+      return res.status(400).json({
+        message: "Patient already registered",
+        patient: existingPatient
+      });
+    }
     const uniqueId = Date.now();
 
     const patient = new Patient({
@@ -66,7 +78,20 @@ res.status(200).json(patients);
 // ======================
 const getPatientById = async (req, res) => {
   try {
-    const patient = await Patient.findById(req.params.id);
+    let patient;
+
+    if (mongoose.Types.ObjectId.isValid(req.params.id)) {
+      patient = await Patient.findOne({
+        $or: [
+          { _id: req.params.id },
+          { patientId: req.params.id }
+        ]
+      });
+    } else {
+      patient = await Patient.findOne({
+        patientId: req.params.id
+      });
+    }
 
     if (!patient) {
       return res.status(404).json({
@@ -85,14 +110,32 @@ const getPatientById = async (req, res) => {
 // ======================
 const updatePatient = async (req, res) => {
   try {
-    const updatedPatient = await Patient.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      {
-        new: true,
-        runValidators: true,
-      }
-    );
+    let updatedPatient;
+
+    if (mongoose.Types.ObjectId.isValid(req.params.id)) {
+      updatedPatient = await Patient.findOneAndUpdate(
+        {
+          $or: [
+            { _id: req.params.id },
+            { patientId: req.params.id }
+          ]
+        },
+        req.body,
+        {
+          new: true,
+          runValidators: true,
+        }
+      );
+    } else {
+      updatedPatient = await Patient.findOneAndUpdate(
+        { patientId: req.params.id },
+        req.body,
+        {
+          new: true,
+          runValidators: true,
+        }
+      );
+    }
 
     if (!updatedPatient) {
       return res.status(404).json({
@@ -114,14 +157,32 @@ const updatePatient = async (req, res) => {
 // ======================
 const updatePatientStatus = async (req, res) => {
   try {
-    const patient = await Patient.findByIdAndUpdate(
-      req.params.id,
-      { status: req.body.status },
-      {
-        new: true,
-        runValidators: true,
-      }
-    );
+    let patient;
+
+    if (mongoose.Types.ObjectId.isValid(req.params.id)) {
+      patient = await Patient.findOneAndUpdate(
+        {
+          $or: [
+            { _id: req.params.id },
+            { patientId: req.params.id }
+          ]
+        },
+        { status: req.body.status },
+        {
+          new: true,
+          runValidators: true,
+        }
+      );
+    } else {
+      patient = await Patient.findOneAndUpdate(
+        { patientId: req.params.id },
+        { status: req.body.status },
+        {
+          new: true,
+          runValidators: true,
+        }
+      );
+    }
 
     if (!patient) {
       return res.status(404).json({
@@ -137,7 +198,6 @@ const updatePatientStatus = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
-
 // ======================
 // Delete Patient
 // ======================
@@ -153,7 +213,20 @@ const deletePatient = async (req, res) => {
       });
     }
 
-    const patient = await Patient.findByIdAndDelete(req.params.id);
+    let patient;
+
+if (mongoose.Types.ObjectId.isValid(req.params.id)) {
+  patient = await Patient.findOneAndDelete({
+    $or: [
+      { _id: req.params.id },
+      { patientId: req.params.id }
+    ]
+  });
+} else {
+  patient = await Patient.findOneAndDelete({
+    patientId: req.params.id
+  });
+}
 
     if (!patient) {
       return res.status(404).json({
@@ -174,7 +247,20 @@ const deletePatient = async (req, res) => {
 // ======================
 const bookAppointment = async (req, res) => {
   try {
-    const patient = await Patient.findById(req.body.patientId);
+   let patient;
+
+if (mongoose.Types.ObjectId.isValid(req.body.patientId)) {
+  patient = await Patient.findOne({
+    $or: [
+      { _id: req.body.patientId },
+      { patientId: req.body.patientId }
+    ]
+  });
+} else {
+  patient = await Patient.findOne({
+    patientId: req.body.patientId
+  });
+}
 
     if (!patient) {
       return res.status(404).json({
