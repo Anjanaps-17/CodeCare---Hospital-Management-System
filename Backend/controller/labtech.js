@@ -1,262 +1,200 @@
 
-const { validationResult } = require("express-validator");
-const LabTechnician = require("../models/LabTechnician");
-const HttpError = require("../models/http-error");
-const { v4: uuidv4 } = require("uuid");
+const LabTest = require('../models/labtech');
 
-// ======================================
-// GET ALL LAB TECHNICIANS
-// GET /api/labtechnicians
-// ======================================
-const getLabTechnicians = async (req, res, next) => {
-    try {
-        const technicians = await LabTechnician.find()
-            .populate("UserId")
-            .populate("DepartmentId")
-            .populate("AssignedTests");
+// UC-LAB-01 View Pending Tests
+const getPendingTests = async (req, res, next) => {
+let pendingTests;
 
-        res.status(200).json({
-            success: true,
-            count: technicians.length,
-            data: technicians
-        });
-    } catch (err) {
-        return next(
-            new HttpError(
-                "Fetching lab technicians failed, please try again.",
-                500
-            )
-        );
-    }
+
+try {
+    pendingTests = await LabTest.find({ status: 'Pending' })
+        .populate('patientId', 'name')
+        .populate('orderedBy', 'name');
+} catch (err) {
+    return next(
+        new HttpError(
+            'Fetching pending tests failed, please try again.',
+            500
+        )
+    );
+}
+
+res.status(200).json({
+    pendingTests: pendingTests.map(test =>
+        test.toObject({ getters: true })
+    )
+});
+
+
 };
 
-// ======================================
-// GET LAB TECHNICIAN BY ID
-// GET /api/labtechnicians/:id
-// ======================================
-const getLabTechnicianById = async (req, res, next) => {
-    const technicianId = req.params.id;
+// UC-LAB-02 Start Test
+const startTest = async (req, res, next) => {
+const testId = req.params.id;
 
-    let technician;
 
-    try {
-        technician = await LabTechnician.findById(technicianId)
-            .populate("UserId")
-            .populate("DepartmentId")
-            .populate("AssignedTests");
-    } catch (err) {
-        return next(
-            new HttpError(
-                "Something went wrong, could not find technician.",
-                500
-            )
-        );
-    }
+let labTest;
 
-    if (!technician) {
-        return next(
-            new HttpError("Lab Technician not found.", 404)
-        );
-    }
+try {
+    labTest = await LabTest.findById(testId);
+} catch (err) {
+    return next(
+        new HttpError(
+            'Fetching test failed, please try again.',
+            500
+        )
+    );
+}
 
-    res.status(200).json({
-        success: true,
-        data: technician
-    });
+if (!labTest) {
+    return next(new HttpError('Test not found.', 404));
+}
+
+if (labTest.status !== 'Pending') {
+    return next(
+        new HttpError(
+            'Only pending tests can be started.',
+            400
+        )
+    );
+}
+
+labTest.status = 'In Progress';
+labTest.updatedAt = new Date();
+
+try {
+    await labTest.save();
+} catch (err) {
+    return next(
+        new HttpError(
+            'Starting test failed, please try again.',
+            500
+        )
+    );
+}
+
+res.status(200).json({
+    message: 'Test marked In Progress',
+    labTest: labTest.toObject({ getters: true })
+});
+
+
 };
 
-// ======================================
-// CREATE LAB TECHNICIAN
-// POST /api/labtechnicians
-// ======================================
-const createLabTechnician = async (req, res, next) => {
+// UC-LAB-03 Upload Result
+const uploadResult = async (req, res, next) => {
+const errors = validationResult(req);
 
-    const errors = validationResult(req);
+if (!errors.isEmpty()) {
+    return next(
+        new HttpError(errors.array()[0].msg, 422)
+    );
+}
 
-    if (!errors.isEmpty()) {
-        return next(
-            new HttpError("Invalid inputs passed.", 422)
-        );
-    }
+const testId = req.params.id;
+const { resultFile } = req.body;
 
-    const {
-        UserId,
-        TechnicianName,
-        Qualification,
-        DepartmentId,
-        ContactNumber,
-        Email,
-        DateOfJoining,
-        ShiftTiming,
-        AvailableDays
-    } = req.body;
+let labTest;
 
-    const createdTechnician = new LabTechnician({
-        TechnicianID: `TECH-${uuidv4().substring(0, 8)}`,
-        UserId,
-        TechnicianName,
-        Qualification,
-        DepartmentId,
-        ContactNumber,
-        Email,
-        DateOfJoining,
-        ShiftTiming,
-        AvailableDays,
-        AssignedTests: []
-    });
+try {
+    labTest = await LabTest.findById(testId);
+} catch (err) {
+    return next(
+        new HttpError(
+            'Fetching test failed, please try again.',
+            500
+        )
+    );
+}
 
-    try {
-        await createdTechnician.save();
-    } catch (err) {
-        return next(
-            new HttpError(
-                "Creating lab technician failed, please try again.",
-                500
-            )
-        );
-    }
+if (!labTest) {
+    return next(new HttpError('Test not found.', 404));
+}
 
-    res.status(201).json({
-        success: true,
-        data: createdTechnician
-    });
+if (labTest.status !== 'In Progress') {
+    return next(
+        new HttpError(
+            'Test must be In Progress before uploading results.',
+            400
+        )
+    );
+}
+
+labTest.resultFile = resultFile;
+labTest.updatedAt = new Date();
+
+try {
+    await labTest.save();
+} catch (err) {
+    return next(
+        new HttpError(
+            'Uploading result failed, please try again.',
+            500
+        )
+    );
+}
+
+res.status(200).json({
+    message: 'Result uploaded successfully',
+    resultFile: labTest.resultFile
+});
+
+
 };
 
-// ======================================
-// UPDATE LAB TECHNICIAN
-// PATCH /api/labtechnicians/:id
-// ======================================
-const updateLabTechnician = async (req, res, next) => {
+// UC-LAB-04 Complete Test
+const completeTest = async (req, res, next) => {
+const testId = req.params.id;
 
-    const errors = validationResult(req);
+let labTest;
 
-    if (!errors.isEmpty()) {
-        return next(
-            new HttpError("Invalid inputs passed.", 422)
-        );
-    }
+try {
+    labTest = await LabTest.findById(testId);
+} catch (err) {
+    return next(
+        new HttpError(
+            'Fetching test failed, please try again.',
+            500
+        )
+    );
+}
 
-    const technicianId = req.params.id;
+if (!labTest) {
+    return next(new HttpError('Test not found.', 404));
+}
 
-    const {
-        TechnicianName,
-        Qualification,
-        DepartmentId,
-        ContactNumber,
-        Email,
-        ShiftTiming,
-        AvailableDays,
-        IsActive
-    } = req.body;
+if (!labTest.resultFile) {
+    return next(
+        new HttpError(
+            'Upload result before completing the test.',
+            400
+        )
+    );
+}
 
-    let technician;
+labTest.status = 'Completed';
+labTest.updatedAt = new Date();
 
-    try {
-        technician = await LabTechnician.findById(technicianId);
-    } catch (err) {
-        return next(
-            new HttpError(
-                "Could not update lab technician.",
-                500
-            )
-        );
-    }
+try {
+    await labTest.save();
+} catch (err) {
+    return next(
+        new HttpError(
+            'Completing test failed, please try again.',
+            500
+        )
+    );
+}
 
-    if (!technician) {
-        return next(
-            new HttpError("Lab Technician not found.", 404)
-        );
-    }
+res.status(200).json({
+    message: 'Test completed successfully',
+    labTest: labTest.toObject({ getters: true })
+});
 
-    technician.TechnicianName =
-        TechnicianName || technician.TechnicianName;
 
-    technician.Qualification =
-        Qualification || technician.Qualification;
-
-    technician.DepartmentId =
-        DepartmentId || technician.DepartmentId;
-
-    technician.ContactNumber =
-        ContactNumber || technician.ContactNumber;
-
-    technician.Email =
-        Email || technician.Email;
-
-    technician.ShiftTiming =
-        ShiftTiming || technician.ShiftTiming;
-
-    technician.AvailableDays =
-        AvailableDays || technician.AvailableDays;
-
-    if (typeof IsActive === "boolean") {
-        technician.IsActive = IsActive;
-    }
-
-    try {
-        await technician.save();
-    } catch (err) {
-        return next(
-            new HttpError(
-                "Updating lab technician failed.",
-                500
-            )
-        );
-    }
-
-    res.status(200).json({
-        success: true,
-        data: technician
-    });
 };
 
-// ======================================
-// DELETE LAB TECHNICIAN
-// DELETE /api/labtechnicians/:id
-// ======================================
-const deleteLabTechnician = async (req, res, next) => {
-
-    const technicianId = req.params.id;
-
-    let technician;
-
-    try {
-        technician = await LabTechnician.findById(technicianId);
-    } catch (err) {
-        return next(
-            new HttpError(
-                "Could not delete lab technician.",
-                500
-            )
-        );
-    }
-
-    if (!technician) {
-        return next(
-            new HttpError("Lab Technician not found.", 404)
-        );
-    }
-
-    try {
-        await technician.deleteOne();
-    } catch (err) {
-        return next(
-            new HttpError(
-                "Deleting lab technician failed.",
-                500
-            )
-        );
-    }
-
-    res.status(200).json({
-        success: true,
-        message: "Lab Technician deleted successfully."
-    });
-};
-
-exports.getLabTechnicians = getLabTechnicians;
-exports.getLabTechnicianById = getLabTechnicianById;
-exports.createLabTechnician = createLabTechnician;
-exports.updateLabTechnician = updateLabTechnician;
-exports.deleteLabTechnician = deleteLabTechnician;
-
+exports.getPendingTests = getPendingTests;
+exports.startTest = startTest;
+exports.uploadResult = uploadResult;
+exports.completeTest = completeTest;

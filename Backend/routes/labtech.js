@@ -1,105 +1,38 @@
-
-const express = require("express");
-const { check } = require("express-validator");
-
-const labTechnicianControllers = require("../controllers/labtechnician-controller");
+const express = require('express');
+const { check } = require('express-validator');
 
 const router = express.Router();
 
-// ======================================
-// GET ALL LAB TECHNICIANS
-// GET /api/labtechnicians
-// ======================================
+const labTechnicianController = require('../controller/labtech');
+
+// UC-LAB-01 View Pending Tests
 router.get(
-    "/",
-    labTechnicianControllers.getLabTechnicians
+'/pending',
+labTechnicianController.getPendingTests
 );
 
-// ======================================
-// GET LAB TECHNICIAN BY ID
-// GET /api/labtechnicians/:id
-// ======================================
-router.get(
-    "/:id",
-    labTechnicianControllers.getLabTechnicianById
-);
-
-// ======================================
-// CREATE LAB TECHNICIAN
-// POST /api/labtechnicians
-// ======================================
-router.post(
-    "/",
-    [
-        check("UserId")
-            .not()
-            .isEmpty(),
-
-        check("TechnicianName")
-            .not()
-            .isEmpty(),
-
-        check("Qualification")
-            .not()
-            .isEmpty(),
-
-        check("DepartmentId")
-            .not()
-            .isEmpty(),
-
-        check("ContactNumber")
-            .not()
-            .isEmpty(),
-
-        check("Email")
-            .normalizeEmail()
-            .isEmail(),
-
-        check("DateOfJoining")
-            .not()
-            .isEmpty()
-    ],
-    labTechnicianControllers.createLabTechnician
-);
-
-// ======================================
-// UPDATE LAB TECHNICIAN
-// PATCH /api/labtechnicians/:id
-// ======================================
+// UC-LAB-02 Start Test
 router.patch(
-    "/:id",
-    [
-        check("TechnicianName")
-            .optional()
-            .not()
-            .isEmpty(),
-
-        check("Qualification")
-            .optional()
-            .not()
-            .isEmpty(),
-
-        check("Email")
-            .optional()
-            .normalizeEmail()
-            .isEmail(),
-
-        check("ContactNumber")
-            .optional()
-            .not()
-            .isEmpty()
-    ],
-    labTechnicianControllers.updateLabTechnician
+'/:id/start',
+labTechnicianController.startTest
 );
 
-// ======================================
-// DELETE LAB TECHNICIAN
-// DELETE /api/labtechnicians/:id
-// ======================================
-router.delete(
-    "/:id",
-    labTechnicianControllers.deleteLabTechnician
+// UC-LAB-03 Upload Result
+router.patch(
+'/:id/upload-result',
+[
+check('resultFile')
+.not()
+.isEmpty()
+.withMessage('Result file is required')
+],
+labTechnicianController.uploadResult
+);
+
+// UC-LAB-04 Complete Test
+router.patch(
+'/:id/complete',
+labTechnicianController.completeTest
 );
 
 module.exports = router;
-
