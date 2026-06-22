@@ -7,23 +7,29 @@ const { checkAuth, checkRole } = require("../middleware/admin-middleware");
 
 router.use(checkAuth);
 
+
+const {
+  getDashboardData,
+} = require("../controller/admin");
+
+router.get(
+  "/dashboard",
+  getDashboardData
+);
+
 // USERS - Admin Only
 
 router.post(
   "/users",
   checkRole(["Admin"]),
   [
-    check("Username")
+    check("username")
       .notEmpty()
-      .withMessage("Username is required"),
+      .withMessage("username is required"),
 
-    check("Password")
+    check("password")
       .isLength({ min: 5 })
-      .withMessage("Password must be at least 6 characters"),
-
-    check("RoleId")
-      .notEmpty()
-      .withMessage("Role is required")
+      .withMessage("Password must be at least 6 characters")
   ],
   admin.createUser
 );
@@ -40,20 +46,15 @@ router.put(
   "/users/:id",
   checkRole(["Admin"]),
   [
-    check("Username")
+    check("username")
       .optional()
       .notEmpty()
-      .withMessage("Username cannot be empty"),
+      .withMessage("username cannot be empty"),
 
-    check("Password")
+    check("password")
       .optional()
       .isLength({ min: 6 })
-      .withMessage("Password must be at least 6 characters"),
-
-    check("RoleId")
-      .optional()
-      .notEmpty()
-      .withMessage("Role is required")
+      .withMessage("Password must be at least 6 characters")
   ],
   admin.updateUser
 );

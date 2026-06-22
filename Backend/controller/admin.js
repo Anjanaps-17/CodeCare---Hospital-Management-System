@@ -1,7 +1,28 @@
 const bcrypt = require("bcryptjs");
 const { User, Department, Doctor } = require("../models/admin");
 
+// DASHBOARD
+const getDashboardData = async (req, res, next) => {
+    try {
+        const totalUsers = await User.countDocuments();
+        const totalDoctors = await Doctor.countDocuments();
+        const totalDepartments = await Department.countDocuments();
 
+        res.status(200).json({
+            success: true,
+            data: {
+                totalUsers,
+                totalDoctors,
+                totalDepartments
+            }
+        });
+    } catch (err) {
+        next({
+            code: 500,
+            message: "Unable to fetch dashboard data"
+        });
+    }
+};
 
 // GET ALL USERS
 const getUsers = async (req, res, next) => {
@@ -70,7 +91,7 @@ const createUser = async (req, res, next) => {
         if (existingUser) {
             return res.status(409).json({
                 success: false,
-                message: "Username already exists"
+                message: "username already exists"
             });
         }
 
@@ -368,6 +389,9 @@ const deleteDoctor = async (req, res, next) => {
 
 
 module.exports = {
+    //Dashboard
+    getDashboardData,
+
     // Users
     getUsers,
     getUserById,

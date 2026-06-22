@@ -2,7 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 require("dotenv").config();
 const dns = require('dns')
-
+const cors = require('cors');
 const app = express();
 
 const authRoutes = require("./routes/auth");
@@ -14,7 +14,7 @@ const labtechRoutes = require("./routes/labtech");
 
 app.use(express.json());
 
-
+app.use(cors());
 app.use("/api/admin", adminRoutes);
 app.use("/api/doctor", doctorRoutes);
 app.use("/api/receptionist", receptionistRoutes);
