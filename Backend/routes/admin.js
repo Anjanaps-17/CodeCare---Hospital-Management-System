@@ -1,37 +1,164 @@
 const express = require("express");
+const { check } = require("express-validator");
 
 const router = express.Router();
 const admin = require("../controller/admin");
 const { checkAuth, checkRole } = require("../middleware/admin-middleware");
 
-
 router.use(checkAuth);
+
+
+const {
+  getDashboardData,
+} = require("../controller/admin");
+
+router.get(
+  "/dashboard",
+  getDashboardData
+);
 
 // USERS - Admin Only
 
-router.post("/users", checkRole(["Admin"]), admin.createUser);
+router.post(
+  "/users",
+  checkRole(["Admin"]),
+  [
+    check("username")
+      .notEmpty()
+      .withMessage("username is required"),
+
+    check("password")
+      .isLength({ min: 5 })
+      .withMessage("Password must be at least 6 characters")
+  ],
+  admin.createUser
+);
+
 router.get("/users", checkRole(["Admin"]), admin.getUsers);
-router.get("/users/:id", checkRole(["Admin"]), admin.getUserById);
-router.put("/users/:id", checkRole(["Admin"]), admin.updateUser);
-router.delete("/users/:id", checkRole(["Admin"]), admin.deleteUser);
+
+router.get(
+  "/users/:id",
+  checkRole(["Admin"]),
+  admin.getUserById
+);
+
+router.put(
+  "/users/:id",
+  checkRole(["Admin"]),
+  [
+    check("username")
+      .optional()
+      .notEmpty()
+      .withMessage("username cannot be empty"),
+
+    check("password")
+      .optional()
+      .isLength({ min: 6 })
+      .withMessage("Password must be at least 6 characters")
+  ],
+  admin.updateUser
+);
+
+router.delete(
+  "/users/:id",
+  checkRole(["Admin"]),
+  admin.deleteUser
+);
 
 // DEPARTMENTS - Admin Only
 
-router.post("/departments",checkRole(["Admin"]), admin.createDepartment);
-router.get("/departments",checkRole(["Admin"]), admin.getDepartments);
-router.get("/departments/:id",checkRole(["Admin"]), admin.getDepartmentById);
-router.put("/departments/:id",checkRole(["Admin"]), admin.updateDepartment);
-router.delete("/departments/:id",checkRole(["Admin"]), admin.deleteDepartment);
+router.post(
+  "/departments",
+  checkRole(["Admin"]),
+  [
+    check("DepartmentName")
+      .notEmpty()
+      .withMessage("Department name is required")
+  ],
+  admin.createDepartment
+);
 
-// DOCTORS - Admin Only (Create/Update/Delete)
+router.get(
+  "/departments",
+  checkRole(["Admin"]),
+  admin.getDepartments
+);
 
-router.post("/doctors",checkRole(["Admin"]), admin.createDoctor);
-router.put("/doctors/:id",  checkRole(["Admin"]), admin.updateDoctor);
-router.delete("/doctors/:id", checkRole(["Admin"]), admin.deleteDoctor);
+router.get(
+  "/departments/:id",
+  checkRole(["Admin"]),
+  admin.getDepartmentById
+);
 
-// DOCTORS - View (Admin, Receptionist, Doctor)
+router.put(
+  "/departments/:id",
+  checkRole(["Admin"]),
+  [
+    check("DepartmentName")
+      .notEmpty()
+      .withMessage("Department name is required")
+  ],
+  admin.updateDepartment
+);
 
-router.get("/doctors",checkRole(["Admin", "Receptionist", "Doctor"]), admin.getDoctors);
-router.get("/doctors/:id", checkRole(["Admin", "Receptionist", "Doctor"]), admin.getDoctorById);
+router.delete(
+  "/departments/:id",
+  checkRole(["Admin"]),
+  admin.deleteDepartment
+);
+
+// DOCTORS - Admin Only
+
+router.post(
+  "/doctors",
+  checkRole(["Admin"]),
+  [
+    check("DoctorName")
+      .notEmpty()
+      .withMessage("Doctor name is required"),
+
+    check("DepartmentId")
+      .notEmpty()
+      .withMessage("Department is required")
+  ],
+  admin.createDoctor
+);
+
+router.put(
+  "/doctors/:id",
+  checkRole(["Admin"]),
+  [
+    check("DoctorName")
+      .optional()
+      .notEmpty()
+      .withMessage("Doctor name cannot be empty"),
+
+    check("DepartmentId")
+      .optional()
+      .notEmpty()
+      .withMessage("Department is required")
+  ],
+  admin.updateDoctor
+);
+
+router.delete(
+  "/doctors/:id",
+  checkRole(["Admin"]),
+  admin.deleteDoctor
+);
+
+// DOCTORS - View
+
+router.get(
+  "/doctors",
+  checkRole(["Admin", "Receptionist", "Doctor"]),
+  admin.getDoctors
+);
+
+router.get(
+  "/doctors/:id",
+  checkRole(["Admin", "Receptionist", "Doctor"]),
+  admin.getDoctorById
+);
 
 module.exports = router;
