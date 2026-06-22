@@ -16,14 +16,14 @@ const LoginForm = ({
             <div className="card-body">
               <form onSubmit={submitHandler}>
 
-                {/* Username */}
+                {/* username */}
                 <div className="mb-3">
-                  <label className="form-label">Username</label>
+                  <label className="form-label">username</label>
                   <input
                     type="text"
                     className="form-control"
-                    name="Username"
-                    value={formData.Username}
+                    name="username"
+                    value={formData.username}
                     onChange={changeHandler}
                     required
                   />
@@ -35,8 +35,8 @@ const LoginForm = ({
                   <input
                     type="password"
                     className="form-control"
-                    name="Password"
-                    value={formData.Password}
+                    name="password"
+                    value={formData.password}
                     onChange={changeHandler}
                     required
                   />

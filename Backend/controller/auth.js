@@ -12,7 +12,7 @@ const register = async (req, res, next) => {
         if (existingUser) {
             return res.status(400).json({
                 success: false,
-                message: "Username already exists"
+                message: "username already exists"
             });
         }
 
@@ -47,7 +47,7 @@ const login = async (req, res, next) => {
         if (!existingUser) {
             return res.status(401).json({
                 success: false,
-                message: "Invalid Username"
+                message: "Invalid username"
             });
         }
 
