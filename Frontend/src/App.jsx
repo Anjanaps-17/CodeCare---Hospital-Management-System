@@ -4,6 +4,7 @@ import "./App.css";
 import Login from "../src/components/Auth/login";
 import Dashboard from "./pages/Dashboard";
 import Signup from "../src/components/Auth/Signup";
+import AddPatient from "./pages/receptionist/AddPatient";
 
 function App() {
   return (
@@ -12,6 +13,8 @@ function App() {
 
         
         <Route path="/dashboard" element={<Dashboard />} />
+
+        <Route path="/receptionist/add-patient" element={<AddPatient />} />
 
         <Route path="/" element={<Login />} />
         <Route path="/login" element={<Login />} />
