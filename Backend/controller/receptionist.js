@@ -248,6 +248,19 @@ const deletePatient = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+const getPatients = async (req, res) => {
+  try {
+    const patients = await Patient.find()
+      .select("name patientId");
+
+    res.status(200).json(patients);
+
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
 
 // ======================
 // Book Appointment
@@ -536,6 +549,7 @@ module.exports = {
   updatePatient,
   updatePatientStatus,
   deletePatient,
+  getPatients,
   bookAppointment,
   verifyQR,
   getDoctors,
