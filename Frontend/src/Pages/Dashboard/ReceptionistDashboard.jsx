@@ -64,7 +64,7 @@ const ReceptionistDashboard = () => {
             <li
               className="list-group-item"
               style={{ cursor: "pointer" }}
-              onClick={() => navigate("/receptionist/patients/add")}
+              onClick={() => navigate("/receptionist/add-patient")}
             >
               ➕ Add Patient
             </li>
@@ -126,7 +126,7 @@ const ReceptionistDashboard = () => {
               <button
                 className="btn-theme mb-2"
                 style={{ width: "auto", marginRight: "10px" }}
-                onClick={() => navigate("/receptionist/patients/add")}
+                onClick={() => navigate("/receptionist/add-patient")}
               >
                 ➕ Add New Patient
               </button>

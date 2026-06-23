@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, } from "react";
 import { useNavigate } from "react-router-dom";
 import QRCode from "qrcode";
 import jsPDF from "jspdf";
@@ -42,12 +42,43 @@ const AddPatient = () => {
     return url;
   };
 
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    setError("");
-    setPatient(null);
-    setQrDataUrl("");
+setError("");
+
+    // Full Name validation
+if (!/^[A-Za-z\s]+$/.test(formData.name.trim())) {
+  setError("Patient name should contain only alphabets and spaces.");
+  return;
+}
+
+// Emergency Contact Name validation
+if (!/^[A-Za-z\s]+$/.test(formData.emergencyName.trim())) {
+  setError("Emergency contact name should contain only alphabets and spaces.");
+  return;
+}
+
+// Patient phone number validation
+
+if (
+  !/^[6-9]\d{9}$/.test(formData.phone)
+) {
+  setError("Enter a valid patient phone number.");
+  return;
+}
+
+if (
+  !/^[6-9]\d{9}$/.test(formData.emergencyPhone)
+) {
+  setError("Enter a valid emergency contact phone number.");
+  return;
+}
+setLoading(true);
+setPatient(null);
+setQrDataUrl("");
+
 
     try {
       const token = localStorage.getItem("token");
@@ -297,7 +328,7 @@ const AddPatient = () => {
             </div>
 
             <div className="ap-actions">
-              <button type="button" className="ap-btn-ghost" onClick={() => navigate("/receptionist")}>
+              <button type="button" className="ap-btn-ghost" onClick={() => navigate("/receptionist/dashboard")}>
                 <i className="bi bi-arrow-left me-1" /> Back
               </button>
               <button type="submit" className="ap-btn-primary" disabled={loading}>
@@ -371,7 +402,7 @@ const AddPatient = () => {
 
             {/* Action buttons */}
             <div className="ap-result-actions">
-              <button className="ap-btn-ghost" onClick={() => navigate("/receptionist")}>
+              <button className="ap-btn-ghost" onClick={() => navigate("/receptionist/dashboard")}>
                 <i className="bi bi-arrow-left me-1" /> Back to Dashboard
               </button>
               <button className="ap-btn-outline" onClick={resetForm}>

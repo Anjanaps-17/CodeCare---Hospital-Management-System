@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./App.css";
 
 import Login from "../src/components/Auth/login";
-import Dashboard from "./pages/Dashboard";
+
 import Signup from "../src/components/Auth/Signup";
 import AddPatient from "./Pages/Receptionist/AddPatient";
 import AdminDashboard from "./Pages/Dashboard/AdminDashboard";
@@ -14,7 +14,7 @@ function App() {
       <Routes>
 
         
-        <Route path="/dashboard" element={<Dashboard />} />
+      
 
         <Route path="/" element={<Login />} />
         <Route path="/login" element={<Login />} />
