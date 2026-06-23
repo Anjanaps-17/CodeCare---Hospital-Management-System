@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getUsers, deleteUser } from "../../api/AdminService";
+import { toast } from "react-toastify";
 
 const Users = () => {
   const navigate = useNavigate();
-
   const [users, setUsers] = useState([]);
 
   const fetchUsers = async () => {
@@ -21,18 +21,14 @@ const Users = () => {
   }, []);
 
   const handleDelete = async (id) => {
-    const confirmDelete = window.confirm(
-      "Are you sure you want to delete this user?"
-    );
-
-    if (!confirmDelete) return;
+    if (!window.confirm("Delete User?")) return;
 
     try {
       await deleteUser(id);
       fetchUsers();
     } catch (error) {
       console.log(error);
-      alert("Delete failed");
+      toast.success("Delete failed");
     }
   };
 
@@ -44,66 +40,65 @@ const Users = () => {
 
         <button
           className="btn-theme"
-          style={{ width: "200px" }}
           onClick={() => navigate("/admin/users/add")}
         >
           Add User
         </button>
       </div>
 
-      <div className="card shadow">
-        <div className="card-body">
+      <div className="table-responsive">
+        <table className="table table-bordered table-striped shadow">
+          <thead>
+            <tr>
+              <th>Username</th>
+              <th>Email</th>
+              <th>Phone</th>
+              <th>Role</th>
+              <th>Gender</th>
+              <th>Blood Group</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
 
-          <table className="table table-bordered">
-            <thead>
-              <tr>
-                <th>Username</th>
-                <th>Role</th>
-                <th>Status</th>
-                <th width="220">Actions</th>
+          <tbody>
+            {users.map((user) => (
+              <tr key={user._id}>
+                <td>{user.username}</td>
+                <td>{user.email}</td>
+                <td>{user.phoneNumber}</td>
+                <td>{user.role}</td>
+                <td>{user.gender}</td>
+                <td>{user.bloodGroup}</td>
+
+                <td>
+                  {user.isActive ? "Active" : "Inactive"}
+                </td>
+
+                <td>
+                  <button
+                    className="btn btn-warning btn-sm me-2"
+                    onClick={() =>
+                      navigate(`/admin/users/edit/${user._id}`)
+                    }
+                  >
+                    Edit
+                  </button>
+
+                  <button
+                    className="btn btn-danger btn-sm"
+                    onClick={() => handleDelete(user._id)}
+                  >
+                    Delete
+                  </button>
+                </td>
               </tr>
-            </thead>
+            ))}
+          </tbody>
 
-            <tbody>
-              {users.map((user) => (
-                <tr key={user._id}>
-                  <td>{user.username}</td>
-
-                  <td>{user.role}</td>
-
-                  <td>
-                    {user.isActive ? "Active" : "Inactive"}
-                  </td>
-
-                  <td>
-                    <button
-                      className="btn btn-warning btn-sm me-2"
-                      onClick={() =>
-                        navigate(
-                          `/admin/users/edit/${user._id}`
-                        )
-                      }
-                    >
-                      Edit
-                    </button>
-
-                    <button
-                      className="btn btn-danger btn-sm"
-                      onClick={() =>
-                        handleDelete(user._id)
-                      }
-                    >
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-
-          </table>
-
-        </div>
+        </table>
       </div>
+
     </div>
   );
 };

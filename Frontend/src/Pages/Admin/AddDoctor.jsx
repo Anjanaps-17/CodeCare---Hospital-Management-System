@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import {
   getUsers,
   getDepartments,
@@ -52,13 +53,13 @@ const AddDoctor = () => {
     try {
       await createDoctor(formData);
 
-      alert("Doctor added successfully");
+      toast.success("Doctor added successfully");
 
       navigate("/admin/doctors");
     } catch (err) {
       console.log(err);
 
-      alert(
+      toast.error(
         err.response?.data?.message ||
         "Failed to create doctor"
       );

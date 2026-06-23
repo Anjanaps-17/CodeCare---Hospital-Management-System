@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 import {
   getDepartmentById,
   updateDepartment,
@@ -42,12 +43,12 @@ const EditDepartment = () => {
     try {
       await updateDepartment(id, formData);
 
-      alert("Department Updated Successfully");
+      toast.success("Department Updated Successfully");
 
       navigate("/admin/departments");
     } catch (err) {
       console.log(err);
-      alert(
+      toast.error(
         err.response?.data?.message ||
           "Failed to update department"
       );

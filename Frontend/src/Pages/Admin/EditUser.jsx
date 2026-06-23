@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 import {
   getUserById,
   updateUser,
@@ -11,9 +12,20 @@ const EditUser = () => {
 
   const [formData, setFormData] = useState({
     username: "",
+    email: "",
+    phoneNumber: "",
     password: "",
     role: "",
-    isActive: true,
+
+    gender: "",
+    bloodGroup: "",
+    address: "",
+    qualification: "",
+
+    birthDate: "",
+    dateOfJoining: "",
+
+    isActive: true
   });
 
   useEffect(() => {
@@ -27,57 +39,110 @@ const EditUser = () => {
       const user = response.data;
 
       setFormData({
-        username: user.username,
+        username: user.username || "",
+        email: user.email || "",
+        phoneNumber: user.phoneNumber || "",
         password: "",
-        role: user.role,
-        isActive: user.isActive,
+        role: user.role || "",
+
+        gender: user.gender || "",
+        bloodGroup: user.bloodGroup || "",
+        address: user.address || "",
+        qualification: user.qualification || "",
+
+        birthDate: user.birthDate
+          ? user.birthDate.split("T")[0]
+          : "",
+
+        dateOfJoining: user.dateOfJoining
+          ? user.dateOfJoining.split("T")[0]
+          : "",
+
+        isActive: user.isActive
       });
+
     } catch (error) {
       console.log(error);
-      alert("Failed to load user");
+      toast.info("Failed to load user");
     }
   };
 
-  const changeHandler = (event) => {
-    const { name, value } = event.target;
+  const changeHandler = (e) => {
+    const { name, value } = e.target;
 
     setFormData({
       ...formData,
       [name]:
         name === "isActive"
           ? value === "true"
-          : value,
+          : value
     });
   };
 
-  const submitHandler = async (event) => {
-    event.preventDefault();
+  const submitHandler = async (e) => {
+    e.preventDefault();
+
+    const usernameRegex =
+      /^[a-zA-Z0-9_]{3,20}$/;
+
+    const phoneRegex =
+      /^[6-9]\d{9}$/;
+
+    const emailRegex =
+      /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!usernameRegex.test(formData.username)) {
+      return toast.error("Invalid Username");
+    }
+
+    if (!emailRegex.test(formData.email)) {
+      return toast.error("Invalid Email");
+    }
+
+    if (!phoneRegex.test(formData.phoneNumber)) {
+      return toast.error("Invalid Phone Number");
+    }
 
     try {
       const updateData = {
         username: formData.username,
+        email: formData.email,
+        phoneNumber: formData.phoneNumber,
         role: formData.role,
-        isActive: formData.isActive,
+
+        gender: formData.gender,
+        bloodGroup: formData.bloodGroup,
+        address: formData.address,
+        qualification: formData.qualification,
+
+        birthDate: formData.birthDate,
+        dateOfJoining: formData.dateOfJoining,
+
+        isActive: formData.isActive
       };
 
       if (formData.password.trim() !== "") {
-        updateData.password = formData.password;
+        updateData.password =
+          formData.password;
       }
 
       await updateUser(id, updateData);
 
-      alert("User updated successfully");
+      toast.success("User updated successfully");
 
       navigate("/admin/users");
+
     } catch (error) {
       console.log(error);
-      alert("Failed to update user");
+      toast.error(
+        error?.response?.data?.message ||
+        "Failed to update user"
+      );
     }
   };
 
   return (
     <div className="container mt-4">
-
       <div className="card shadow">
         <div className="card-body">
 
@@ -88,9 +153,7 @@ const EditUser = () => {
           <form onSubmit={submitHandler}>
 
             <div className="mb-3">
-              <label className="form-label">
-                Username
-              </label>
+              <label>Username</label>
 
               <input
                 type="text"
@@ -103,9 +166,33 @@ const EditUser = () => {
             </div>
 
             <div className="mb-3">
-              <label className="form-label">
-                New Password (Optional)
-              </label>
+              <label>Email</label>
+
+              <input
+                type="email"
+                name="email"
+                className="form-control"
+                value={formData.email}
+                onChange={changeHandler}
+                required
+              />
+            </div>
+
+            <div className="mb-3">
+              <label>Phone Number</label>
+
+              <input
+                type="text"
+                name="phoneNumber"
+                className="form-control"
+                value={formData.phoneNumber}
+                onChange={changeHandler}
+                required
+              />
+            </div>
+
+            <div className="mb-3">
+              <label>New Password (Optional)</label>
 
               <input
                 type="password"
@@ -113,14 +200,11 @@ const EditUser = () => {
                 className="form-control"
                 value={formData.password}
                 onChange={changeHandler}
-                placeholder="Leave blank to keep current password"
               />
             </div>
 
             <div className="mb-3">
-              <label className="form-label">
-                Role
-              </label>
+              <label>Role</label>
 
               <select
                 name="role"
@@ -128,21 +212,125 @@ const EditUser = () => {
                 value={formData.role}
                 onChange={changeHandler}
               >
-                <option value="Admin">Admin</option>
-                <option value="Doctor">Doctor</option>
+                <option value="Admin">
+                  Admin
+                </option>
+
+                <option value="Doctor">
+                  Doctor
+                </option>
+
                 <option value="Receptionist">
                   Receptionist
                 </option>
+
                 <option value="Lab Technician">
                   Lab Technician
                 </option>
               </select>
             </div>
 
+            <div className="mb-3">
+              <label>Gender</label>
+
+              <select
+                className="form-select"
+                name="gender"
+                value={formData.gender}
+                onChange={changeHandler}
+              >
+                <option value="">
+                  Select Gender
+                </option>
+
+                <option value="Male">
+                  Male
+                </option>
+
+                <option value="Female">
+                  Female
+                </option>
+
+                <option value="Other">
+                  Other
+                </option>
+              </select>
+            </div>
+
+            <div className="mb-3">
+              <label>Blood Group</label>
+
+              <select
+                className="form-select"
+                name="bloodGroup"
+                value={formData.bloodGroup}
+                onChange={changeHandler}
+              >
+                <option value="">
+                  Select Blood Group
+                </option>
+
+                <option>A+</option>
+                <option>A-</option>
+                <option>B+</option>
+                <option>B-</option>
+                <option>AB+</option>
+                <option>AB-</option>
+                <option>O+</option>
+                <option>O-</option>
+              </select>
+            </div>
+
+            <div className="mb-3">
+              <label>Address</label>
+
+              <textarea
+                className="form-control"
+                rows="3"
+                name="address"
+                value={formData.address}
+                onChange={changeHandler}
+              />
+            </div>
+
+            <div className="mb-3">
+              <label>Qualification</label>
+
+              <input
+                type="text"
+                className="form-control"
+                name="qualification"
+                value={formData.qualification}
+                onChange={changeHandler}
+              />
+            </div>
+
+            <div className="mb-3">
+              <label>Birth Date</label>
+
+              <input
+                type="date"
+                className="form-control"
+                name="birthDate"
+                value={formData.birthDate}
+                onChange={changeHandler}
+              />
+            </div>
+
+            <div className="mb-3">
+              <label>Date Of Joining</label>
+
+              <input
+                type="date"
+                className="form-control"
+                name="dateOfJoining"
+                value={formData.dateOfJoining}
+                onChange={changeHandler}
+              />
+            </div>
+
             <div className="mb-4">
-              <label className="form-label">
-                Status
-              </label>
+              <label>Status</label>
 
               <select
                 name="isActive"
@@ -185,7 +373,6 @@ const EditUser = () => {
 
         </div>
       </div>
-
     </div>
   );
 };
