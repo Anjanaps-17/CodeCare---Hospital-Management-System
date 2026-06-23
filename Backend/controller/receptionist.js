@@ -302,7 +302,7 @@ if (existingAppointment) {
     const appointment = new Appointment({
   patientId: patient._id,
   doctorId: req.body.doctorId,
-  department: req.body.department,
+  department: doctor.department,
   date: req.body.date,
   time: req.body.time,
   token: `APT-${uniqueId}`,
