@@ -283,6 +283,20 @@ if (mongoose.Types.ObjectId.isValid(req.body.patientId)) {
       });
     }
 
+    // Check whether doctor already has an appointment
+const existingAppointment = await Appointment.findOne({
+  doctorId: req.body.doctorId,
+  date: req.body.date,
+  time: req.body.time,
+  status: { $ne: "Cancelled" }
+});
+
+if (existingAppointment) {
+  return res.status(400).json({
+    message: "Doctor already has an appointment at this time"
+  });
+}
+
     const uniqueId = Date.now();
 
     const appointment = new Appointment({
@@ -302,6 +316,24 @@ if (mongoose.Types.ObjectId.isValid(req.body.patientId)) {
     });
   } catch (error) {
     res.status(500).json({ error: error.message });
+  }
+};
+
+// ======================
+// Get All Doctors
+// ======================
+const getDoctors = async (req, res) => {
+  try {
+    const doctors = await Doctor.find()
+      .populate("department", "name")
+      .select("name schedule department");
+
+    res.status(200).json(doctors);
+
+  } catch (error) {
+    res.status(500).json({
+      error: error.message
+    });
   }
 };
 
@@ -410,6 +442,36 @@ const getAppointmentsByDoctor = async (req, res) => {
 };
 
 // ======================
+// Get Today's Appointments
+// ======================
+const getTodayAppointments = async (req, res) => {
+  try {
+
+    const start = new Date();
+    start.setHours(0,0,0,0);
+
+    const end = new Date();
+    end.setHours(23,59,59,999);
+
+    const appointments = await Appointment.find({
+      date: {
+        $gte: start,
+        $lte: end
+      }
+    })
+    .populate("patientId")
+    .populate("doctorId");
+
+    res.status(200).json(appointments);
+
+  } catch (error) {
+    res.status(500).json({
+      error: error.message
+    });
+  }
+};
+
+// ======================
 // Update Appointment
 // ======================
 const updateAppointment = async (req, res) => {
@@ -476,9 +538,11 @@ module.exports = {
   deletePatient,
   bookAppointment,
   verifyQR,
+  getDoctors,
   getAppointmentById,
   getAppointmentsByPatient,
   getAppointmentsByDoctor,
+  getTodayAppointments,
   updateAppointment,
   cancelAppointment,
 };
