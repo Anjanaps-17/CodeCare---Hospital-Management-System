@@ -25,9 +25,6 @@ const AdminDashboard = () => {
         return res.json();
       })
       .then((data) => {
-        console.log("Dashboard Data:", data);
-
-        // FIXED
         setDashboardData(data.data);
       })
       .catch((err) => {
@@ -36,13 +33,14 @@ const AdminDashboard = () => {
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
+    localStorage.clear();
     navigate("/login");
   };
 
   return (
     <div className="container-fluid p-0">
       <div className="row g-0">
+
         {/* Sidebar */}
         <div className="col-md-2 sidebar vh-100">
           <h4 className="text-center text-white mt-4 mb-4">
@@ -50,7 +48,12 @@ const AdminDashboard = () => {
           </h4>
 
           <ul className="list-group list-group-flush">
-            <li className="list-group-item fw-bold">
+
+            <li
+              className="list-group-item fw-bold"
+              style={{ cursor: "pointer" }}
+              onClick={() => navigate("/admin/dashboard")}
+            >
               Dashboard
             </li>
 
@@ -59,7 +62,7 @@ const AdminDashboard = () => {
               style={{ cursor: "pointer" }}
               onClick={() => navigate("/admin/users")}
             >
-              Users
+               Users
             </li>
 
             <li
@@ -67,7 +70,15 @@ const AdminDashboard = () => {
               style={{ cursor: "pointer" }}
               onClick={() => navigate("/admin/doctors")}
             >
-              Doctors
+              🩺 Doctors
+            </li>
+
+            <li
+              className="list-group-item"
+              style={{ cursor: "pointer" }}
+              onClick={() => navigate("/admin/departments")}
+            >
+               Departments
             </li>
 
             <li
@@ -75,7 +86,7 @@ const AdminDashboard = () => {
               style={{ cursor: "pointer" }}
               onClick={() => navigate("/admin/reports")}
             >
-              🧾Reports
+              🧾 Reports
             </li>
 
             <li
@@ -85,11 +96,13 @@ const AdminDashboard = () => {
             >
               Logout
             </li>
+
           </ul>
         </div>
 
         {/* Main Content */}
         <div className="col-md-10 p-4">
+
           <h1 className="text-center mb-4">
             ADMIN DASHBOARD
           </h1>
@@ -99,13 +112,14 @@ const AdminDashboard = () => {
             <div className="card-body text-center">
               <h3>Welcome Admin!!!</h3>
               <p className="mb-0">
-                Manage doctors, users and system reports from one place.
+                Manage doctors, users, departments and reports from one place.
               </p>
             </div>
           </div>
 
           {/* Statistics Cards */}
           <div className="row g-4 mb-5">
+
             <div className="col-md-4">
               <div className="card bg-primary text-white shadow h-100">
                 <div className="card-body text-center">
@@ -132,16 +146,19 @@ const AdminDashboard = () => {
                 </div>
               </div>
             </div>
+
           </div>
 
           {/* Quick Access */}
           <div className="card shadow mb-4">
             <div className="card-body text-center">
+
               <h4 className="mb-4">
                 Quick Access
               </h4>
 
               <div className="d-flex flex-wrap justify-content-center gap-3">
+
                 <button
                   className="btn btn-primary"
                   onClick={() => navigate("/admin/users")}
@@ -157,12 +174,21 @@ const AdminDashboard = () => {
                 </button>
 
                 <button
+                  className="btn btn-warning"
+                  onClick={() => navigate("/admin/departments")}
+                >
+                  Department Management
+                </button>
+
+                <button
                   className="btn btn-dark"
                   onClick={() => navigate("/admin/reports")}
                 >
-                 🧾 Reports
+                  Reports
                 </button>
+
               </div>
+
             </div>
           </div>
 
@@ -175,7 +201,9 @@ const AdminDashboard = () => {
               </p>
             </div>
           </div>
+
         </div>
+
       </div>
     </div>
   );

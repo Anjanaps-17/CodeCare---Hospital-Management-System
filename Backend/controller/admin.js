@@ -327,14 +327,51 @@ const getDoctorById = async (req, res, next) => {
 // CREATE DOCTOR
 const createDoctor = async (req, res, next) => {
     try {
-        const doctor = await Doctor.create(req.body);
+
+        const user = await User.findById(req.body.userId);
+
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found"
+            });
+        }
+
+        if (user.role !== "Doctor") {
+            return res.status(400).json({
+                success: false,
+                message: "Selected user is not a Doctor"
+            });
+        }
+
+        const existingDoctor = await Doctor.findOne({
+            userId: req.body.userId
+        });
+
+        if (existingDoctor) {
+            return res.status(400).json({
+                success: false,
+                message: "Doctor profile already exists for this user"
+            });
+        }
+
+        const doctor = await Doctor.create({
+            userId: req.body.userId,
+            name: req.body.name,
+            department: req.body.department,
+            schedule: req.body.schedule
+        });
 
         res.status(201).json({
             success: true,
             data: doctor
         });
+
     } catch (err) {
-        next({ code: 500, message: err.message });
+        next({
+            code: 500,
+            message: err.message
+        });
     }
 };
 

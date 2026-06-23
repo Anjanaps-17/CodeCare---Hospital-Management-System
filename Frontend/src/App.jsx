@@ -9,6 +9,18 @@ import DoctorDashboard from "./Pages/Dashboard/DoctorDashboard";
 import ReceptionistDashboard from "./Pages/Dashboard/ReceptionistDashboard";
 import LabDashboard from "./Pages/Dashboard/LabtechDashboard";
 
+import Users from "./Pages/Admin/Users";
+import AddUser from "./Pages/Admin/AddUser";
+import EditUser from "./Pages/Admin/EditUser";
+
+import Doctors from "./Pages/Admin/Doctor";
+import AddDoctor from "./Pages/Admin/AddDoctor";
+import EditDoctor from "./Pages/Admin/EditDoctor";
+
+import Departments from "./Pages/Admin/Departments";
+import AddDepartment from "./Pages/Admin/AddDepartment";
+import EditDepartment from "./Pages/Admin/EditDepartment";
+
 function App() {
   return (
     <BrowserRouter>
@@ -21,6 +33,21 @@ function App() {
         <Route path="/doctor/dashboard" element={<DoctorDashboard />} />
         <Route path="/receptionist/dashboard" element={<ReceptionistDashboard />} />
         <Route path="/lab/dashboard" element={<LabDashboard />} />
+
+        {/* User Management */}
+         <Route path="/admin/users" element={<Users />} />
+         <Route path="/admin/users/add" element={<AddUser />} />
+         <Route path="/admin/users/edit/:id" element={<EditUser />} />
+
+         <Route path="/admin/doctors" element={<Doctors />} />
+         <Route path="/admin/doctors/add" element={<AddDoctor />} />
+         <Route path="/admin/doctors/edit/:id" element={<EditDoctor />} />
+
+         <Route path="/admin/departments"element={<Departments />}/>
+         <Route path="/admin/departments/add"element={<AddDepartment />}/>
+
+         <Route path="/admin/departments/edit/:id"element={<EditDepartment />}/>
+
       </Routes>
     </BrowserRouter>
   );
