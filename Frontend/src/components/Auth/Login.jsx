@@ -32,9 +32,23 @@ const Login = () => {
       localStorage.setItem("username", response.username);
 
       alert("Login successful!");
+      console.log("Role:", response.role);
 
-      // ✅ FIXED NAVIGATION
-      navigate("/dashboard");
+     if (response.role === "Admin") {
+  navigate("/admin/dashboard");
+} 
+else if (response.role === "Doctor") {
+  navigate("/doctor/dashboard");
+} 
+else if (response.role === "Receptionist") {
+  navigate("/receptionist/dashboard");
+} 
+else if (response.role === "Lab Technician") {
+  navigate("/lab/dashboard");
+} 
+else {
+  navigate("/");
+}
 
     } catch (error) {
       console.log(error);
