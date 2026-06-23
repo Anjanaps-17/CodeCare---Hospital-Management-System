@@ -5,6 +5,7 @@ import Login from "../src/components/Auth/login";
 import Signup from "../src/components/Auth/Signup";
 
 import AddPatient from "./Pages/Receptionist/AddPatient";
+import BookAppointment from "./Pages/Receptionist/BookAppointment";
 
 import AdminDashboard from "./Pages/Dashboard/AdminDashboard";
 import DoctorDashboard from "./Pages/Dashboard/DoctorDashboard";
@@ -41,11 +42,8 @@ function App() {
         <Route path="/lab/dashboard" element={<LabDashboard />} />
 
         {/* Receptionist */}
-        <Route
-          path="/receptionist/add-patient"
-          element={<AddPatient />}
-        />
-
+        <Route path="/receptionist/add-patient" element={<AddPatient />} />
+        <Route path="/receptionist/book-appointment" element={<BookAppointment />} />
         {/* User Management */}
         <Route path="/admin/users" element={<Users />} />
         <Route path="/admin/users/add" element={<AddUser />} />
