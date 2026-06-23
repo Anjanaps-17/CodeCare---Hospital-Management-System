@@ -2,9 +2,9 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./App.css";
 
 import Login from "../src/components/Auth/login";
-import Dashboard from "./pages/Dashboard";
+import Dashboard from "./Pages/Dashboard";
 import Signup from "../src/components/Auth/Signup";
-import AddPatient from "./pages/receptionist/AddPatient";
+import AddPatient from "./Pages/receptionist/AddPatient";
 
 function App() {
   return (
