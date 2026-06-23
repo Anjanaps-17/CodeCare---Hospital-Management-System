@@ -71,7 +71,7 @@ router.post(
   "/departments",
   checkRole(["Admin"]),
   [
-    check("DepartmentName")
+    check("name")
       .notEmpty()
       .withMessage("Department name is required")
   ],
@@ -94,7 +94,7 @@ router.put(
   "/departments/:id",
   checkRole(["Admin"]),
   [
-    check("DepartmentName")
+    check("name")
       .notEmpty()
       .withMessage("Department name is required")
   ],
@@ -113,11 +113,11 @@ router.post(
   "/doctors",
   checkRole(["Admin"]),
   [
-    check("DoctorName")
+    check("name")
       .notEmpty()
       .withMessage("Doctor name is required"),
 
-    check("DepartmentId")
+    check("department")
       .notEmpty()
       .withMessage("Department is required")
   ],
@@ -128,12 +128,12 @@ router.put(
   "/doctors/:id",
   checkRole(["Admin"]),
   [
-    check("DoctorName")
+    check("name")
       .optional()
       .notEmpty()
       .withMessage("Doctor name cannot be empty"),
 
-    check("DepartmentId")
+    check("department")
       .optional()
       .notEmpty()
       .withMessage("Department is required")
