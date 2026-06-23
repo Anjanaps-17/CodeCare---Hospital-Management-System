@@ -66,7 +66,7 @@ const ReceptionistDashboard = () => {
               style={{ cursor: "pointer" }}
               onClick={() => navigate("/receptionist/patients/add")}
             >
-              ➕ Add Patient
+               Add Patient
             </li>
 
             <li
@@ -82,7 +82,7 @@ const ReceptionistDashboard = () => {
               style={{ cursor: "pointer" }}
               onClick={() => navigate("/receptionist/doctors")}
             >
-              👨‍⚕️ Doctor Availability
+               Doctor Availability
             </li>
 
             <li
@@ -128,7 +128,7 @@ const ReceptionistDashboard = () => {
                 style={{ width: "auto", marginRight: "10px" }}
                 onClick={() => navigate("/receptionist/patients/add")}
               >
-                ➕ Add New Patient
+                 Add New Patient
               </button>
 
               <button

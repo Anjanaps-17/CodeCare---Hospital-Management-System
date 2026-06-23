@@ -75,7 +75,7 @@ const AdminDashboard = () => {
               style={{ cursor: "pointer" }}
               onClick={() => navigate("/admin/reports")}
             >
-              Reports
+              🧾Reports
             </li>
 
             <li
@@ -160,7 +160,7 @@ const AdminDashboard = () => {
                   className="btn btn-dark"
                   onClick={() => navigate("/admin/reports")}
                 >
-                  Reports
+                 🧾 Reports
                 </button>
               </div>
             </div>
