@@ -42,14 +42,15 @@ const registerPatient = async (req, res) => {
 // ======================
 const searchPatient = async (req, res) => {
   try {
-    const { patientId, name, phone, qrCode } = req.query;
+    const { patientId, name, phone, qr } = req.query;
+
 
     const conditions = [];
 
 if (patientId) conditions.push({ patientId });
 if (name) conditions.push({ name });
 if (phone) conditions.push({ phone });
-if (qrCode) conditions.push({ qrCode });
+if (qr) conditions.push({ qrCode: qr });
 
 if (conditions.length === 0) {
   return res.status(400).json({
@@ -203,8 +204,31 @@ const updatePatientStatus = async (req, res) => {
 // ======================
 const deletePatient = async (req, res) => {
   try {
+    let patient;
+
+    // Find patient using ObjectId or PAT-xxxx
+    if (mongoose.Types.ObjectId.isValid(req.params.id)) {
+      patient = await Patient.findOne({
+        $or: [
+          { _id: req.params.id },
+          { patientId: req.params.id }
+        ]
+      });
+    } else {
+      patient = await Patient.findOne({
+        patientId: req.params.id
+      });
+    }
+
+    if (!patient) {
+      return res.status(404).json({
+        message: "Patient not found",
+      });
+    }
+
+    // Check whether patient has appointments
     const existingAppointment = await Appointment.findOne({
-      patientId: req.params.id,
+      patientId: patient._id,
     });
 
     if (existingAppointment) {
@@ -213,30 +237,13 @@ const deletePatient = async (req, res) => {
       });
     }
 
-    let patient;
-
-if (mongoose.Types.ObjectId.isValid(req.params.id)) {
-  patient = await Patient.findOneAndDelete({
-    $or: [
-      { _id: req.params.id },
-      { patientId: req.params.id }
-    ]
-  });
-} else {
-  patient = await Patient.findOneAndDelete({
-    patientId: req.params.id
-  });
-}
-
-    if (!patient) {
-      return res.status(404).json({
-        message: "Patient not found",
-      });
-    }
+    // Delete patient
+    await Patient.findByIdAndDelete(patient._id);
 
     res.status(200).json({
       message: "Patient deleted successfully",
     });
+
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -279,9 +286,13 @@ if (mongoose.Types.ObjectId.isValid(req.body.patientId)) {
     const uniqueId = Date.now();
 
     const appointment = new Appointment({
-      ...req.body,
-      token: `APT-${uniqueId}`,
-    });
+  patientId: patient._id,
+  doctorId: req.body.doctorId,
+  department: req.body.department,
+  date: req.body.date,
+  time: req.body.time,
+  token: `APT-${uniqueId}`,
+});
 
     await appointment.save();
 
@@ -347,13 +358,35 @@ const getAppointmentById = async (req, res) => {
 // ======================
 const getAppointmentsByPatient = async (req, res) => {
   try {
+    let patient;
+
+    if (mongoose.Types.ObjectId.isValid(req.params.patientId)) {
+      patient = await Patient.findOne({
+        $or: [
+          { _id: req.params.patientId },
+          { patientId: req.params.patientId }
+        ]
+      });
+    } else {
+      patient = await Patient.findOne({
+        patientId: req.params.patientId
+      });
+    }
+
+    if (!patient) {
+      return res.status(404).json({
+        message: "Patient not found",
+      });
+    }
+
     const appointments = await Appointment.find({
-      patientId: req.params.patientId,
+      patientId: patient._id,
     })
       .populate("patientId")
       .populate("doctorId");
 
     res.status(200).json(appointments);
+
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
