@@ -310,17 +310,20 @@ if (existingAppointment) {
   });
 }
 
-    const uniqueId = Date.now();
+    const count = await Appointment.countDocuments({
+  doctorId: req.body.doctorId,
+  date: req.body.date,
+  status: { $ne: "Cancelled" }
+});
 
-    const appointment = new Appointment({
+const appointment = new Appointment({
   patientId: patient._id,
   doctorId: req.body.doctorId,
   department: doctor.department,
   date: req.body.date,
   time: req.body.time,
-  token: `APT-${uniqueId}`,
+  token: count + 1,
 });
-
     await appointment.save();
 
     res.status(201).json({

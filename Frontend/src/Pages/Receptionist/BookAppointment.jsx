@@ -95,6 +95,7 @@ const BookAppointment = () => {
         department: selectedDoctor?.department?.name || "",
         date,
         time,
+        token: data.appointment.token,
       });
 
       alert("Appointment booked successfully!");
@@ -265,13 +266,24 @@ const BookAppointment = () => {
                   <tbody>
 
                     {[
-                      ["Patient", appointmentDetails.patient],
-                      ["Doctor", appointmentDetails.doctor],
-                      ["Department", appointmentDetails.department],
-                      ["Date", appointmentDetails.date],
-                      ["Time", appointmentDetails.time],
-                      ["Status", "Scheduled"],
-                    ].map(([k, v]) => (
+  ["Patient", appointmentDetails.patient],
+  ["Doctor", appointmentDetails.doctor],
+  ["Department", appointmentDetails.department],
+  [
+    "Date",
+    new Date(appointmentDetails.date).toLocaleDateString(
+      "en-IN",
+      {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+      }
+    ),
+  ],
+  ["Time", appointmentDetails.time],
+  ["Status", "Scheduled"],
+  ["Token Number", appointmentDetails.token],
+].map(([k, v]) => (
                       <tr key={k}>
                         <td className="ap-info-key">{k}</td>
                         <td className="ap-info-val">{v}</td>
