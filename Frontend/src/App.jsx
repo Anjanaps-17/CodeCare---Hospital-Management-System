@@ -7,7 +7,7 @@ import Signup from "../src/components/Auth/Signup";
 import AddPatient from "./Pages/Receptionist/AddPatient";
 import BookAppointment from "./Pages/Receptionist/BookAppointment";
 import UpdatePatient from "./Pages/Receptionist/UpdatePatient";
-import DoctorAvailability from "./Pages/Receptionist/DoctorAvailability";
+import VerifyQR from "./Pages/Receptionist/VerifyQR";
 
 import AdminDashboard from "./Pages/Dashboard/AdminDashboard";
 import DoctorDashboard from "./Pages/Dashboard/DoctorDashboard";
@@ -47,7 +47,6 @@ function App() {
         <Route path="/receptionist/add-patient" element={<AddPatient />} />
         <Route path="/receptionist/book-appointment" element={<BookAppointment />} />
         <Route path="/receptionist/update-patient" element={<UpdatePatient />} />
-        <Route path="/receptionist/doctors" element={<DoctorAvailability />} />
         
         {/* User Management */}
         <Route path="/admin/users" element={<Users />} />
@@ -58,6 +57,7 @@ function App() {
         <Route path="/admin/doctors" element={<Doctors />} />
         <Route path="/admin/doctors/add" element={<AddDoctor />} />
         <Route path="/admin/doctors/edit/:id" element={<EditDoctor />} />
+        <Route path="/receptionist/scan-qr" element={<VerifyQR />} />
 
         {/* Department Management */}
         <Route path="/admin/departments" element={<Departments />} />

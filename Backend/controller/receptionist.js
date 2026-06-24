@@ -359,7 +359,7 @@ const getDoctors = async (req, res) => {
 const verifyQR = async (req, res) => {
   try {
     const patient = await Patient.findOne({
-      qrCode: req.query.qr,
+      patientId: req.query.qr,
     });
 
     if (!patient) {
@@ -372,12 +372,15 @@ const verifyQR = async (req, res) => {
       patientId: patient._id,
     }).sort({ createdAt: -1 });
 
-    res.status(200).json({
+    return res.status(200).json({
       patient,
       appointment,
     });
+
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    return res.status(500).json({
+      error: error.message,
+    });
   }
 };
 // ======================

@@ -86,6 +86,14 @@ const ReceptionistDashboard = () => {
             </li>
 
             <li
+              className="list-group-item"
+              style={{ cursor: "pointer" }}
+              onClick={() => navigate("/receptionist/scan-qr")}
+            >
+              📷 Verify QR
+            </li>
+
+            <li
               className="list-group-item text-danger fw-bold"
               style={{ cursor: "pointer" }}
               onClick={handleLogout}
@@ -145,6 +153,14 @@ const ReceptionistDashboard = () => {
                 onClick={() => navigate("/receptionist/update-patient")}
               >
                 📝 Update Patient
+              </button>
+
+              <button
+                className="btn-theme mb-2"
+                style={{ width: "auto" }}
+                onClick={() => navigate("/receptionist/scan-qr")}
+              >
+              📷 Verify QR
               </button>
 
             </div>

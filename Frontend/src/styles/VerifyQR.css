@@ -1,0 +1,37 @@
+.verify-info-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: auto;
+}
+
+.verify-info-table td {
+    padding: 12px 8px;
+    vertical-align: middle;
+}
+
+.verify-info-table td:first-child {
+    font-weight: 600;
+    width: 45%;
+}
+
+.verify-info-table td:last-child {
+    text-align: right;
+    width: 55%;
+}
+.verify-info-table strong {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.verify-info-table div {
+  word-break: break-all;
+}
+
+.verify-info-table td[colspan="2"] {
+    text-align: center;
+}
+
+.verify-info-table td[colspan="2"] div {
+    text-align: center;
+    margin-top: 8px;
+}
