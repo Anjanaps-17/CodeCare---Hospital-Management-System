@@ -7,7 +7,7 @@ const app = express();
 
 const authRoutes = require("./routes/auth");
 const adminRoutes = require("./routes/admin");
-// const doctorRoutes = require("./routes/doctor");
+const doctorRoutes = require("./routes/doctor");
 const receptionistRoutes = require("./routes/receptionist");
 const labtechRoutes = require("./routes/labtech");
 
@@ -16,7 +16,7 @@ app.use(express.json());
 
 app.use(cors());
 app.use("/api/admin", adminRoutes);
-// app.use("/api/doctor", doctorRoutes);
+app.use("/api/doctor", doctorRoutes);
 app.use("/api/receptionist", receptionistRoutes);
 app.use("/api/labtech", labtechRoutes);
 

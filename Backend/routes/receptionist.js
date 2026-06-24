@@ -10,6 +10,7 @@ const {
   updatePatient,
   updatePatientStatus,
   deletePatient,
+  getPatients,
   bookAppointment,
   verifyQR,
   getDoctors,
@@ -33,6 +34,9 @@ router.post("/patients", registerPatient);
 
 // Search Patient
 router.get("/patients/search", searchPatient);
+
+// Get All Patients
+router.get("/patients", getPatients);
 
 // Get Patient by ID
 router.get("/patients/:id", getPatientById);

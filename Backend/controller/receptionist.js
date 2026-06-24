@@ -248,6 +248,19 @@ const deletePatient = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+const getPatients = async (req, res) => {
+  try {
+    const patients = await Patient.find()
+      .select("name patientId");
+
+    res.status(200).json(patients);
+
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
 
 // ======================
 // Book Appointment
@@ -297,17 +310,20 @@ if (existingAppointment) {
   });
 }
 
-    const uniqueId = Date.now();
-
-    const appointment = new Appointment({
-  patientId: patient._id,
+    const count = await Appointment.countDocuments({
   doctorId: req.body.doctorId,
-  department: req.body.department,
   date: req.body.date,
-  time: req.body.time,
-  token: `APT-${uniqueId}`,
+  status: { $ne: "Cancelled" }
 });
 
+const appointment = new Appointment({
+  patientId: patient._id,
+  doctorId: req.body.doctorId,
+  department: doctor.department,
+  date: req.body.date,
+  time: req.body.time,
+  token: count + 1,
+});
     await appointment.save();
 
     res.status(201).json({
@@ -343,7 +359,7 @@ const getDoctors = async (req, res) => {
 const verifyQR = async (req, res) => {
   try {
     const patient = await Patient.findOne({
-      qrCode: req.query.qr,
+      patientId: req.query.qr,
     });
 
     if (!patient) {
@@ -356,12 +372,15 @@ const verifyQR = async (req, res) => {
       patientId: patient._id,
     }).sort({ createdAt: -1 });
 
-    res.status(200).json({
+    return res.status(200).json({
       patient,
       appointment,
     });
+
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    return res.status(500).json({
+      error: error.message,
+    });
   }
 };
 // ======================
@@ -536,6 +555,7 @@ module.exports = {
   updatePatient,
   updatePatientStatus,
   deletePatient,
+  getPatients,
   bookAppointment,
   verifyQR,
   getDoctors,

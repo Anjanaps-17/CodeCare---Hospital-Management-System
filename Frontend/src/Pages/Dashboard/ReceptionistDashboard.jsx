@@ -64,7 +64,7 @@ const ReceptionistDashboard = () => {
             <li
               className="list-group-item"
               style={{ cursor: "pointer" }}
-              onClick={() => navigate("/receptionist/patients/add")}
+              onClick={() => navigate("/receptionist/add-patient")}
             >
                Add Patient
             </li>
@@ -72,7 +72,7 @@ const ReceptionistDashboard = () => {
             <li
               className="list-group-item"
               style={{ cursor: "pointer" }}
-              onClick={() => navigate("/receptionist/appointments")}
+              onClick={() => navigate("/receptionist/book-appointment")}
             >
               📅 Book Appointment
             </li>
@@ -83,6 +83,14 @@ const ReceptionistDashboard = () => {
               onClick={() => navigate("/receptionist/doctors")}
             >
                Doctor Availability
+            </li>
+
+            <li
+              className="list-group-item"
+              style={{ cursor: "pointer" }}
+              onClick={() => navigate("/receptionist/scan-qr")}
+            >
+              📷 Verify QR
             </li>
 
             <li
@@ -126,7 +134,7 @@ const ReceptionistDashboard = () => {
               <button
                 className="btn-theme mb-2"
                 style={{ width: "auto", marginRight: "10px" }}
-                onClick={() => navigate("/receptionist/patients/add")}
+                onClick={() => navigate("/receptionist/add-patient")}
               >
                  Add New Patient
               </button>
@@ -134,7 +142,7 @@ const ReceptionistDashboard = () => {
               <button
                 className="btn-theme mb-2"
                 style={{ width: "auto", marginRight: "10px" }}
-                onClick={() => navigate("/receptionist/appointments")}
+                onClick={() => navigate("/receptionist/book-appointment")}
               >
                 📅 Book Appointment
               </button>
@@ -142,9 +150,17 @@ const ReceptionistDashboard = () => {
               <button
                 className="btn-theme mb-2"
                 style={{ width: "auto", backgroundColor: "#f59e0b" }}
-                onClick={() => navigate("/receptionist/patients")}
+                onClick={() => navigate("/receptionist/update-patient")}
               >
                 📝 Update Patient
+              </button>
+
+              <button
+                className="btn-theme mb-2"
+                style={{ width: "auto" }}
+                onClick={() => navigate("/receptionist/scan-qr")}
+              >
+              📷 Verify QR
               </button>
 
             </div>
