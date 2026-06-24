@@ -6,26 +6,44 @@ const doctorSchema = new mongoose.Schema(
       type: String,
       required: true,
       unique: true,
+      trim: true,
     },
 
     DoctorName: {
       type: String,
       required: true,
+      trim: true,
     },
 
     Specialization: {
       type: String,
       required: true,
+      trim: true,
     },
 
     Department: {
       type: String,
       default: "",
+      trim: true,
     },
 
     Schedule: {
       type: String,
       default: "",
+      trim: true,
+    },
+
+    PhoneNumber: {
+      type: String,
+      default: "",
+      trim: true,
+    },
+
+    Email: {
+      type: String,
+      default: "",
+      trim: true,
+      lowercase: true,
     },
   },
   {

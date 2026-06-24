@@ -11,7 +11,7 @@ const app = express();
 // Import Routes
 const authRoutes = require("./routes/auth");
 const adminRoutes = require("./routes/admin");
-const doctorRoutes = require("./routes/doctor");
+// const doctorRoutes = require("./routes/doctor");
 const receptionistRoutes = require("./routes/receptionist");
 const labtechRoutes = require("./routes/labtech");
 
@@ -29,7 +29,7 @@ app.get("/", (req, res) => {
 // Route Middleware
 app.use("/api/auth", authRoutes);
 app.use("/api/admin", adminRoutes);
-app.use("/api/doctor", doctorRoutes);
+// app.use("/api/doctor", doctorRoutes);
 app.use("/api/receptionist", receptionistRoutes);
 app.use("/api/labtech", labtechRoutes);
 
