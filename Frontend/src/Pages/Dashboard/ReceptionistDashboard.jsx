@@ -142,7 +142,7 @@ const ReceptionistDashboard = () => {
               <button
                 className="btn-theme mb-2"
                 style={{ width: "auto", backgroundColor: "#f59e0b" }}
-                onClick={() => navigate("/receptionist/patients")}
+                onClick={() => navigate("/receptionist/update-patient")}
               >
                 📝 Update Patient
               </button>
