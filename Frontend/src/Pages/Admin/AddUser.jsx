@@ -122,7 +122,7 @@ const changeHandler = (e) => {
   
 return (
 
-  <div className="container mt-4">
+  <div className="page-wrapper">
     <div className="card shadow border-0">
       <div
         className="card-header text-white"

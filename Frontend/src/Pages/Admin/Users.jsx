@@ -36,7 +36,7 @@ const Users = () => {
   };
 
   return (
-    <div className="container mt-4">
+    <div className="page-wrapper">
       {/* Header */}
       <div className="d-flex justify-content-between align-items-center mb-4">
         <h2

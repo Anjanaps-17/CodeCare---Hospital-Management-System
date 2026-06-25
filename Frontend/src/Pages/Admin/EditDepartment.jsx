@@ -56,7 +56,7 @@ const EditDepartment = () => {
   };
 
   return (
-    <div className="container mt-4">
+    <div className="page-wrapper">
       <div className="card shadow">
         <div className="card-header">
           <h3>Edit Department</h3>

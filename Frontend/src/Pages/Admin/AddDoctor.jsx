@@ -12,6 +12,7 @@ const AddDoctor = () => {
 
   const [users, setUsers] = useState([]);
   const [departments, setDepartments] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const [formData, setFormData] = useState({
     userId: "",
@@ -29,152 +30,212 @@ const AddDoctor = () => {
       const usersResponse = await getUsers();
       const departmentsResponse = await getDepartments();
 
-      const doctorUsers = usersResponse.data.filter(
-        (user) => user.role === "Doctor"
-      );
+      const doctorUsers =
+        usersResponse?.data?.filter(
+          (user) => user.role === "Doctor"
+        ) || [];
 
       setUsers(doctorUsers);
-      setDepartments(departmentsResponse.data);
+      setDepartments(departmentsResponse?.data || []);
     } catch (err) {
       console.log(err);
     }
   };
 
   const changeHandler = (e) => {
+    const { name, value } = e.target;
+
+    if (name === "userId") {
+      const selectedUser = users.find(
+        (user) => user._id === value
+      );
+
+      setFormData({
+        ...formData,
+        userId: value,
+        name: selectedUser?.fullName || ""
+      });
+
+      return;
+    }
+
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [name]: value
     });
   };
 
   const submitHandler = async (e) => {
     e.preventDefault();
 
+    setLoading(true);
+
     try {
       await createDoctor(formData);
 
-      toast.success("Doctor added successfully");
+      toast.success("Doctor registered successfully");
 
-      navigate("/admin/doctors");
+      setTimeout(() => {
+        navigate("/admin/doctors");
+      }, 1000);
     } catch (err) {
       console.log(err);
 
       toast.error(
-        err.response?.data?.message ||
-        "Failed to create doctor"
+        err?.response?.data?.message ||
+          "Failed to create doctor"
       );
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="container mt-4">
-      <div className="card shadow">
-        <div className="card-header">
-          <h3>Add Doctor</h3>
-        </div>
+    <div className="page-wrapper">
+      <div className="container py-4">
+        <div
+          className="mx-auto bg-white shadow rounded-4 p-4"
+          style={{ maxWidth: "900px" }}
+        >
+          {/* Header */}
+          <div className="d-flex align-items-center mb-4">
+            <div
+              className="d-flex justify-content-center align-items-center rounded-circle bg-success text-white me-3"
+              style={{
+                width: "60px",
+                height: "60px",
+                fontSize: "24px",
+              }}
+            >
+              <i className="bi bi-person-vcard-fill"></i>
+            </div>
 
-        <div className="card-body">
+            <div>
+              <h2 className="fw-bold mb-1">
+                Register Doctor
+              </h2>
+              <p className="text-muted mb-0">
+                CodeCare Hospital Management System
+              </p>
+            </div>
+          </div>
+
           <form onSubmit={submitHandler}>
-
             <div className="mb-3">
-              <label className="form-label">
-                Doctor User
-              </label>
+              <h5 className="border-bottom pb-2 text-success">
+                Doctor Information
+              </h5>
+            </div>
 
-              <select
-                className="form-select"
-                name="userId"
-                value={formData.userId}
-                onChange={changeHandler}
-                required
-              >
-                <option value="">
-                  Select Doctor User
-                </option>
+            <div className="row">
+              {/* Doctor User */}
+              <div className="col-md-6 mb-3">
+                <label className="form-label fw-semibold">
+                  Doctor User *
+                </label>
 
-                {users.map((user) => (
-                  <option
-                    key={user._id}
-                    value={user._id}
-                  >
-                    {user.username}
+                <select
+                  className="form-select"
+                  name="userId"
+                  value={formData.userId}
+                  onChange={changeHandler}
+                  required
+                >
+                  <option value="">
+                    Select Doctor User
                   </option>
-                ))}
-              </select>
-            </div>
 
-            <div className="mb-3">
-              <label className="form-label">
-                Doctor Name
-              </label>
+                  {(users || []).map((user) => (
+                    <option
+                      key={user._id}
+                      value={user._id}
+                    >
+                      {user.username} - {user.fullName}
+                    </option>
+                  ))}
+                </select>
+              </div>
 
-              <input
-                type="text"
-                className="form-control"
-                name="name"
-                value={formData.name}
-                onChange={changeHandler}
-                required
-              />
-            </div>
+              {/* Doctor Name */}
+              <div className="col-md-6 mb-3">
+                <label className="form-label fw-semibold">
+                  Doctor Name *
+                </label>
 
-            <div className="mb-3">
-              <label className="form-label">
-                Department
-              </label>
+                <input
+                  type="text"
+                  className="form-control"
+                  name="name"
+                  value={formData.name}
+                  readOnly
+                />
+              </div>
 
-              <select
-                className="form-select"
-                name="department"
-                value={formData.department}
-                onChange={changeHandler}
-                required
-              >
-                <option value="">
-                  Select Department
-                </option>
+              {/* Department */}
+              <div className="col-md-6 mb-3">
+                <label className="form-label fw-semibold">
+                  Department *
+                </label>
 
-                {departments.map((dept) => (
-                  <option
-                    key={dept._id}
-                    value={dept._id}
-                  >
-                    {dept.name}
+                <select
+                  className="form-select"
+                  name="department"
+                  value={formData.department}
+                  onChange={changeHandler}
+                  required
+                >
+                  <option value="">
+                    Select Department
                   </option>
-                ))}
-              </select>
+
+                  {(departments || []).map((dept) => (
+                    <option
+                      key={dept._id}
+                      value={dept._id}
+                    >
+                      {dept.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Schedule */}
+              <div className="col-md-6 mb-3">
+                <label className="form-label fw-semibold">
+                  Schedule
+                </label>
+
+                <input
+                  type="text"
+                  className="form-control"
+                  name="schedule"
+                  value={formData.schedule}
+                  onChange={changeHandler}
+                  placeholder="Mon-Fri 9AM - 5PM"
+                />
+              </div>
             </div>
 
-            <div className="mb-3">
-              <label className="form-label">
-                Schedule
-              </label>
+            {/* Actions */}
+            <div className="d-flex justify-content-between mt-4">
+              <button
+                type="button"
+                className="btn btn-outline-secondary"
+                onClick={() =>
+                  navigate("/admin/doctors")
+                }
+              >
+                Back
+              </button>
 
-              <input
-                type="text"
-                className="form-control"
-                name="schedule"
-                value={formData.schedule}
-                onChange={changeHandler}
-                placeholder="Mon-Fri 9AM - 5PM"
-              />
+              <button
+                type="submit"
+                className="btn btn-success px-4"
+                disabled={loading}
+              >
+                {loading ? "Registering..." : "Register Doctor"}
+              </button>
             </div>
-
-            <button
-              type="submit"
-              className="btn btn-success me-2"
-            >
-              Save Doctor
-            </button>
-
-            <button
-              type="button"
-              className="btn btn-secondary"
-              onClick={() => navigate("/admin/doctors")}
-            >
-              Cancel
-            </button>
-
           </form>
         </div>
       </div>

@@ -4,9 +4,10 @@ import "./App.css";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+import ProtectedRoute from "./ProtectedRoute";
+
 // Auth
 import Login from "./components/Auth/login";
-// import Signup from "./components/Auth/Signup";
 
 // Dashboards
 import AdminDashboard from "./Pages/Dashboard/AdminDashboard";
@@ -28,6 +29,7 @@ import EditDoctor from "./Pages/Admin/EditDoctor";
 import Departments from "./Pages/Admin/Departments";
 import AddDepartment from "./Pages/Admin/AddDepartment";
 import EditDepartment from "./Pages/Admin/EditDepartment";
+import AdminReports from "./Pages/Admin/Reports";
 
 // Receptionist
 import AddPatient from "./Pages/Receptionist/AddPatient";
@@ -35,42 +37,179 @@ import BookAppointment from "./Pages/Receptionist/BookAppointment";
 import UpdatePatient from "./Pages/Receptionist/UpdatePatient";
 import VerifyQR from "./Pages/Receptionist/VerifyQR";
 
+import Home from "./Pages/Home";
+
 function App() {
   return (
     <>
       <BrowserRouter>
         <Routes>
-          {/* Auth */}
-          <Route path="/" element={<Login />} />
+          {/* Public Routes */}
+          <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
-          {/* <Route path="/signup" element={<Signup />} /> */}
 
-          {/* Dashboards */}
-          <Route path="/admin/dashboard" element={<AdminDashboard />} />
-          <Route path="/doctor/dashboard" element={<DoctorDashboard />} />
-          <Route path="/receptionist/dashboard" element={<ReceptionistDashboard />} />
-          <Route path="/lab/dashboard" element={<LabDashboard />} />
+          {/* Admin Dashboard */}
+          <Route
+            path="/admin/dashboard"
+            element={
+              <ProtectedRoute allowedRoles={["Admin"]}>
+                <AdminDashboard />
+              </ProtectedRoute>
+            }
+          />
 
-          {/* Receptionist */}
-          <Route path="/receptionist/add-patient" element={<AddPatient />} />
-          <Route path="/receptionist/book-appointment" element={<BookAppointment />} />
-          <Route path="/receptionist/update-patient" element={<UpdatePatient />} />
-          <Route path="/receptionist/scan-qr" element={<VerifyQR />} />
+          {/* Doctor Dashboard */}
+          <Route
+            path="/doctor/dashboard"
+            element={<DoctorDashboard />}
+          />
 
-          {/* Users */}
-          <Route path="/admin/users" element={<Users />} />
-          <Route path="/admin/users/add" element={<AddUser />} />
-          <Route path="/admin/users/edit/:id" element={<EditUser />} />
+          {/* Lab Dashboard */}
+          <Route
+            path="/lab/dashboard"
+            element={<LabDashboard />}
+          />
 
-          {/* Doctors */}
-          <Route path="/admin/doctors" element={<Doctors />} />
-          <Route path="/admin/doctors/add" element={<AddDoctor />} />
-          <Route path="/admin/doctors/edit/:id" element={<EditDoctor />} />
+          {/* Receptionist Dashboard */}
+          <Route
+            path="/receptionist/dashboard"
+            element={
+              <ProtectedRoute allowedRoles={["Receptionist"]}>
+                <ReceptionistDashboard />
+              </ProtectedRoute>
+            }
+          />
 
-          {/* Departments */}
-          <Route path="/admin/departments" element={<Departments />} />
-          <Route path="/admin/departments/add" element={<AddDepartment />} />
-          <Route path="/admin/departments/edit/:id" element={<EditDepartment />} />
+          {/* Receptionist Pages */}
+          <Route
+            path="/receptionist/add-patient"
+            element={
+              <ProtectedRoute allowedRoles={["Receptionist"]}>
+                <AddPatient />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/receptionist/book-appointment"
+            element={
+              <ProtectedRoute allowedRoles={["Receptionist"]}>
+                <BookAppointment />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/receptionist/update-patient"
+            element={
+              <ProtectedRoute allowedRoles={["Receptionist"]}>
+                <UpdatePatient />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/receptionist/scan-qr"
+            element={
+              <ProtectedRoute allowedRoles={["Receptionist"]}>
+                <VerifyQR />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Admin Users */}
+          <Route
+            path="/admin/users"
+            element={
+              <ProtectedRoute allowedRoles={["Admin"]}>
+                <Users />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/admin/users/add"
+            element={
+              <ProtectedRoute allowedRoles={["Admin"]}>
+                <AddUser />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/admin/users/edit/:id"
+            element={
+              <ProtectedRoute allowedRoles={["Admin"]}>
+                <EditUser />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Admin Doctors */}
+          <Route
+            path="/admin/doctors"
+            element={
+              <ProtectedRoute allowedRoles={["Admin"]}>
+                <Doctors />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/admin/doctors/add"
+            element={
+              <ProtectedRoute allowedRoles={["Admin"]}>
+                <AddDoctor />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/admin/doctors/edit/:id"
+            element={
+              <ProtectedRoute allowedRoles={["Admin"]}>
+                <EditDoctor />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Admin Departments */}
+          <Route
+            path="/admin/departments"
+            element={
+              <ProtectedRoute allowedRoles={["Admin"]}>
+                <Departments />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/admin/departments/add"
+            element={
+              <ProtectedRoute allowedRoles={["Admin"]}>
+                <AddDepartment />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/admin/departments/edit/:id"
+            element={
+              <ProtectedRoute allowedRoles={["Admin"]}>
+                <EditDepartment />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Admin Reports */}
+          <Route
+            path="/admin/reports"
+            element={
+              <ProtectedRoute allowedRoles={["Admin"]}>
+                <AdminReports />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
       </BrowserRouter>
 

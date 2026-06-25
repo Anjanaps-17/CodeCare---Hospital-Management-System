@@ -18,15 +18,15 @@ function Navbar() {
           type="button"
           data-bs-toggle="collapse"
           data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
         >
           <span className="navbar-toggler-icon"></span>
         </button>
 
         {/* Menu */}
-        <div
-          className="collapse navbar-collapse"
-          id="navbarNav"
-        >
+        <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav mx-auto">
 
             <li className="nav-item">
@@ -63,22 +63,11 @@ function Navbar() {
 
           {/* Buttons */}
           <div className="d-flex gap-2">
-
-            <Link
-              to="/login"
-              className="btn btn-light fw-semibold"
-            >
+            <Link to="/login" className="btn btn-light fw-semibold">
               Login
             </Link>
-{/* 
-            <Link
-              to="/signup"
-              className="btn btn-outline-light fw-semibold"
-            >
-              Signup
-            </Link> */}
-
           </div>
+
         </div>
       </div>
     </nav>

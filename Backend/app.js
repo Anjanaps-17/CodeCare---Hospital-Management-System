@@ -14,6 +14,7 @@ const adminRoutes = require("./routes/admin");
 const doctorRoutes = require("./routes/doctor");
 const receptionistRoutes = require("./routes/receptionist");
 const labtechRoutes = require("./routes/labtech");
+const reportRoutes = require("./routes/reports");
 
 // Middleware
 app.use(express.json());
@@ -32,6 +33,7 @@ app.use("/api/admin", adminRoutes);
 app.use("/api/doctor", doctorRoutes);
 app.use("/api/receptionist", receptionistRoutes);
 app.use("/api/labtech", labtechRoutes);
+app.use("/api/admin/reports", reportRoutes);
 
 // Error Handling Middleware
 app.use((error, req, res, next) => {
@@ -54,9 +56,9 @@ mongoose
     console.log("✅ Connected to MongoDB");
 
     app.listen(5000, () => {
-      console.log("🚀 Server running on http://localhost:5000");
+      console.log(" Server running on http://localhost:5000");
     });
   })
   .catch((err) => {
-    console.error("❌ MongoDB Connection Error:", err);
+    console.error(" MongoDB Connection Error:", err);
   });

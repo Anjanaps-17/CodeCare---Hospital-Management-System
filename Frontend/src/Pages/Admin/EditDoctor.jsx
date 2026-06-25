@@ -74,7 +74,7 @@ const EditDoctor = () => {
   };
 
   return (
-    <div className="container mt-4">
+    <div className="page-wrapper">
       <div className="card shadow">
         <div className="card-header">
           <h3>Edit Doctor</h3>

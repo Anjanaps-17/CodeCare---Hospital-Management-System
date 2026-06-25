@@ -30,15 +30,15 @@ const AddDepartment = () => {
       console.log(err);
       toast.error(
         err.response?.data?.message ||
-        "Failed to add department"
+          "Failed to add department"
       );
     }
   };
 
   return (
-    <div className="container mt-4">
-      <div className="card shadow">
-        <div className="card-header">
+    <div className="page-wrapper">
+      <div className="container">
+        <div className="page-card p-4">
           <h3>Add Department</h3>
         </div>
 

@@ -34,7 +34,7 @@ const Departments = () => {
   };
 
   return (
-    <div className="container mt-4">
+    <div className="page-wrapper">
       <div className="d-flex justify-content-between mb-3">
         <h2>Department Management</h2>
 

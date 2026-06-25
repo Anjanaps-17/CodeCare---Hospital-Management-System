@@ -6,7 +6,15 @@ import Clinic3 from "../../assets/Clinic3.png";
 import Clinic_code from "../../assets/Clinic_code.jpeg";
 
 function HeroCarousel() {
+     console.log("HeroCarousel rendered");
+
+  console.log(Clinic1);
+  console.log(Clinic2);
+  console.log(Clinic3);
+  console.log(Clinic_code);
+     
   return (
+    
     <Carousel
   fade
   interval={2500}

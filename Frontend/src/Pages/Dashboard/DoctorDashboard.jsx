@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
+import DashboardFooter from "../Dashboard/DashboardFooter";
 const DoctorDashboard = () => {
   const navigate = useNavigate();
 
@@ -45,7 +45,8 @@ const DoctorDashboard = () => {
   };
 
   return (
-    <div className="container-fluid p-0">
+    <div className="page-wrapper">
+  <div className="container-fluid p-0">
       <div className="row g-0">
 
         {/* SIDEBAR */}
@@ -200,20 +201,17 @@ const DoctorDashboard = () => {
 
             </div>
           </div>
+<div className="col-md-10 p-4">
+  {/* Dashboard Content */}
 
-          {/* FOOTER (ADDED SAME STYLE AS ADMIN & RECEPTIONIST) */}
-          <div className="card shadow mt-4">
-            <div className="card-body text-center">
-              <h5>CodeCare Hospital Management System</h5>
-              <p className="mb-0">
-                Doctor Control Panel
-              </p>
-            </div>
-          </div>
+  <DashboardFooter />
+</div>
+          
 
-        </div>
+               </div>
       </div>
     </div>
+  </div>
   );
 };
 

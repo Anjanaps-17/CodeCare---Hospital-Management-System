@@ -6,7 +6,7 @@
   --white: #ffffff;
 }
 
-/* Global */
+
 html,
 body,
 #root {
@@ -17,59 +17,221 @@ body,
 }
 
 body {
-  background: var(--light);
   font-family: Arial, Helvetica, sans-serif;
-}
-
-/* Dashboard Sidebar */
-.sidebar {
-  background: linear-gradient(
-    180deg,
-    var(--primary),
-    var(--secondary)
-  );
-  color: white;
-}
-
-/* Dashboard Cards */
-.dashboard-card {
-  border: none;
-  border-radius: 15px;
-  transition: 0.3s;
-}
-
-.dashboard-card:hover {
-  transform: translateY(-5px);
-}
-
-/* Login & Signup Pages */
-.login-container,
-.signup-container {
-  min-height: 100vh;
-  width: 100%;
+  color: #333;
   background: linear-gradient(
     135deg,
     #e0f7f7,
     #b2f0ef
   );
+  background-attachment: fixed;
+}
+
+/* Common page wrapper */
+.page-wrapper {
+  min-height: 100vh;
+  padding: 25px;
+}
+
+/* Common HMS card style */
+.page-card,
+.card {
+  border: none !important;
+  border-radius: 20px !important;
+  background: #ffffff;
+  box-shadow: 0 10px 30px rgba(0, 139, 139, 0.12);
+}
+
+/* Page header */
+.page-header {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.page-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 24px;
+}
+
+.page-title {
+  color: var(--dark);
+  font-weight: 700;
+  margin-bottom: 0;
+}
+
+.page-subtitle {
+  color: #64748b;
+  margin-bottom: 0;
+}
+
+/* Bootstrap form consistency */
+.form-control,
+.form-select {
+  border-radius: 10px;
+  border: 1px solid #dbe4e6;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 0.2rem rgba(0, 139, 139, 0.15);
+}
+
+
+.btn-theme {
+  background: var(--primary) !important;
+  color: white !important;
+  border: none !important;
+  border-radius: 10px !important;
+}
+
+.btn-theme:hover {
+  background: var(--dark) !important;
+}
+
+.btn-theme-outline {
+  background: white;
+  border: 1px solid var(--primary);
+  color: var(--primary);
+  border-radius: 10px;
+}
+
+.btn-theme-outline:hover {
+  background: var(--primary);
+  color: white;
+}
+
+/* =========================
+   LOGIN PAGE
+========================= */
+
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  overflow: hidden;
+}
+
+.login-left {
+  flex: 1;
+  min-height: 100vh;
+
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-/* Login / Signup Card */
+.overlay {
+  color: white;
+  text-align: center;
+  padding: 40px;
+  max-width: 600px;
+}
+
+.overlay h1 {
+  font-size: 3rem;
+  font-weight: 700;
+}
+
+.overlay p {
+  font-size: 1.2rem;
+}
+
+.login-right {
+  flex: 1;
+  min-height: 100vh;
+
+  background: linear-gradient(
+    135deg,
+    #e0f7f7,
+    #b2f0ef
+  );
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 30px;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 480px;
+
+  border: none !important;
+  border-radius: 25px !important;
+
+  overflow: hidden;
+  background: white;
+
+  box-shadow: 0 15px 40px rgba(0, 139, 139, 0.15);
+}
+
+.auth-header {
+  background: linear-gradient(
+    90deg,
+    #115e59,
+    #008b8b
+  );
+
+  color: white;
+  text-align: center;
+  padding: 20px;
+}
+
+.auth-header h3 {
+  margin: 0;
+  font-weight: 700;
+}
+
+.input-group-text {
+  background: #f8fafc;
+}
+
+@media (max-width: 768px) {
+  .login-page {
+    flex-direction: column;
+  }
+
+  .login-left {
+    min-height: 35vh;
+  }
+
+  .login-right {
+    min-height: 65vh;
+  }
+
+  .auth-card {
+    width: 95%;
+  }
+
+  .overlay h1 {
+    font-size: 2rem;
+  }
+}
+
 .auth-card {
   width: 450px;
   border: none;
-  border-radius: 15px;
+  border-radius: 20px;
   overflow: hidden;
   background: white;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 10px 30px rgba(0, 139, 139, 0.15);
 }
 
-/* Card Header */
 .auth-header {
-  background: #008b8b;
+  background: var(--primary);
   color: white;
   text-align: center;
   padding: 20px;
@@ -80,67 +242,12 @@ body {
   font-weight: bold;
 }
 
-.btn-theme {
-  background-color: #008b8b !important;
-  color: #ffffff !important;
-  border: none !important;
-  width: 100%;
-  padding: 10px;
-  border-radius: 6px;
-  font-weight: 600;
-  display: block;
-}
-
-.btn-theme:hover {
-  background-color: #115e59 !important;
-  color: #ffffff !important;
-}
-
-/* Form Controls */
-.form-control,
-.form-select {
-  border-radius: 8px;
-}
-
-/* Dashboard Statistics Cards */
-.stats-card {
-  border: none;
-  border-radius: 15px;
-  color: white;
-  text-align: center;
-  padding: 20px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-
-.stats-card h1 {
-  margin-top: 10px;
-  font-size: 2.5rem;
-}
-
-/* Dashboard Footer */
-.footer-card {
-  border-radius: 15px;
-}
-
-:root {
-  --primary: #008b8b;
-  --secondary: #0ea5a4;
-  --dark: #115e59;
-  --light: #f8fafc;
-  --white: #ffffff;
-}
-
-/* Navbar */
 .navbar-theme {
   background: linear-gradient(
     90deg,
     var(--dark),
     var(--primary)
   );
-}
-
-.navbar-brand {
-  letter-spacing: 0.5px;
 }
 
 .nav-link {
@@ -158,7 +265,6 @@ body {
   color: var(--primary) !important;
 }
 
-/* Footer */
 .footer-theme {
   background: linear-gradient(
     90deg,
@@ -166,29 +272,111 @@ body {
     var(--primary)
   );
 }
-
-.carousel-img {
-  height: 85vh;
-  width: 100%;
- object-fit: contain;
-background: #f8fafc;
+.dashboard-footer .card {
+  border-radius: 20px;
 }
 
-.carousel-caption {
-  bottom: 20%;
-  background: rgba(0, 0, 0, 0.45);
-  border-radius: 15px;
+.dashboard-footer {
+  margin-top: 30px;
+}
+.sidebar {
+  background: linear-gradient(
+    180deg,
+    var(--primary),
+    var(--secondary)
+  );
+  color: white;
+} 
+
+.users-card {
+  background: linear-gradient(
+    135deg,
+    #008b8b,
+    #0ea5a4
+  );
+}
+
+.doctors-card {
+  background: linear-gradient(
+    135deg,
+    #115e59,
+    #008b8b
+  );
+}
+
+.departments-card {
+  background: linear-gradient(
+    135deg,
+    #0ea5a4,
+    #36cfc9
+  );
+}
+
+.users-card,
+.doctors-card,
+.departments-card {
+  color: white;
+  text-align: center;
+  padding: 25px;
+  border-radius: 20px;
+  box-shadow: 0 8px 25px rgba(0, 139, 139, 0.25);
+  transition: all 0.3s ease;
+}
+
+.users-card:hover,
+.doctors-card:hover,
+.departments-card:hover {
+  transform: translateY(-8px);
+}
+
+.dashboard-card,
+.stats-card {
+  border: none;
+  border-radius: 20px;
+  transition: 0.3s;
+}
+
+.dashboard-card:hover {
+  transform: translateY(-5px);
+}
+
+.stats-card {
+  color: white;
+  text-align: center;
   padding: 20px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
-.hero-section {
-  margin-top: 70px;
+.stats-card h1 {
+  margin-top: 10px;
+  font-size: 2.5rem;
+}
+
+.footer-card {
+  border-radius: 20px;
+}
+
+.card-header-theme {
+  background: var(--primary);
+  color: white;
+  border-radius: 20px 20px 0 0;
 }
 
 .table {
   background: white;
-  border-radius: 12px;
+  border-radius: 15px;
   overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+}
+
+.table thead {
+  background: var(--primary);
+  color: white;
+}
+
+.table td,
+.table th {
+  vertical-align: middle;
 }
 
 .table tbody tr:hover {
@@ -196,7 +384,82 @@ background: #f8fafc;
   transition: 0.2s;
 }
 
-.table td,
-.table th {
-  vertical-align: middle;
+.hero-section {
+  margin-top: 70px;
+}
+
+.carousel-img {
+  width: 100%;
+  max-height: 80vh;
+  object-fit: contain;
+  background: #f8fafc;
+}
+
+.carousel-caption {
+  bottom: 20%;
+  background: rgba(0,0,0,0.45);
+  border-radius: 15px;
+  padding: 20px;
+}
+
+.carousel-item {
+  min-height: 80vh;
+}
+
+.carousel-item {
+  background: #f8fafc;
+}
+
+.report-page .cardContainer {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.report-page .card {
+  flex: 1;
+  text-align: center;
+}
+
+.report-page .filterBox {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.report-page input {
+  padding: 10px;
+}
+
+.report-page table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.report-page th {
+  background: #f1f1f1;
+  padding: 12px;
+}
+
+.report-page td {
+  padding: 12px;
+  border-top: 1px solid #eee;
+}
+
+.footer-card {
+  border-radius: 20px;
+  border: none;
+  background: white;
+  box-shadow: 0 8px 25px rgba(0, 139, 139, 0.12);
+  transition: 0.3s ease;
+}
+
+.footer-card:hover {
+  transform: translateY(-3px);
+}
+
+.footer-card span {
+  color: #115e59;
+  font-weight: 500;
 }

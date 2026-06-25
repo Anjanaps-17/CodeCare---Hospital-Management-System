@@ -158,3 +158,23 @@ export const deleteDepartment = async (id) => {
   return response.data;
 };
 
+export const getAdminReports = async () => {
+  const response = await axios.get(
+    `${API_URL}/reports/users`,
+    getAuthHeader()
+  );
+
+  return response.data;
+};
+
+export const exportAdminReportsCSV = async () => {
+  const response = await axios.get(
+    `${API_URL}/reports/export`,
+    {
+      ...getAuthHeader(),
+      responseType: "blob",
+    }
+  );
+
+  return response.data;
+};

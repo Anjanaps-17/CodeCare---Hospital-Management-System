@@ -1,6 +1,10 @@
 const bcrypt = require("bcryptjs");
 const { User, Department, Doctor } = require("../models/admin");
 
+const {
+  sendUserCredentials,
+} = require("../services/emailService");
+
 // =======================
 // DASHBOARD
 // =======================
@@ -124,11 +128,27 @@ const createUser = async (req, res, next) => {
           : true
     });
     console.log("SAVED USER:");
-    console.log(user);
-    res.status(201).json({
-      success: true,
-      data: user
-    });
+console.log(user);
+
+try {
+  console.log("Sending email to:", user.email);
+
+  const info = await sendUserCredentials(
+    user.email,
+    user.username,
+    req.body.password,
+    user.role
+  );
+
+  console.log("EMAIL SENT:", info.response);
+} catch (emailError) {
+  console.error("EMAIL ERROR:", emailError);
+}
+
+res.status(201).json({
+  success: true,
+  data: user
+});
 
   } catch (err) {
     next({
@@ -136,7 +156,11 @@ const createUser = async (req, res, next) => {
       message: err.message
     });
   }
+
+  
 };
+
+
 
 // UPDATE USER
 const updateUser = async (req, res, next) => {
@@ -452,7 +476,16 @@ const createDoctor = async (req, res, next) => {
             success: true,
             data: doctor
         });
+      
+existingDoctor = await Doctor.findOne({
+  userId: req.body.userId
+});
 
+if (existingDoctor) {
+  return res.status(400).json({
+    message: "Doctor already registered"
+  });
+}
     } catch (err) {
         next({
             code: 500,
@@ -541,6 +574,7 @@ const deleteDoctor = async (req, res, next) => {
         next({ code: 500, message: "Unable to delete doctor" });
     }
 };
+
 
 
 // EXPORTS
