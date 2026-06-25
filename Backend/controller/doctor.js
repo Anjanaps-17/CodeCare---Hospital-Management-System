@@ -1,6 +1,12 @@
 const { Patient, Appointment } = require("../models/receptionist");
-const { Consultation, Prescription, LabTest } = require("../models/doctor");
-const Doctor = require("../models/Doctor");
+
+const {
+  Doctor,
+  Consultation,
+  Prescription,
+  LabTest,
+} = require("../models/doctor");
+
 const mongoose = require("mongoose");
 
 

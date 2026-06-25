@@ -1,6 +1,15 @@
 const express = require("express");
 const router = express.Router();
-const doctorController = require("../controller/doctor");    // =======================
+
+const {
+  checkAuth,
+  checkRole,
+} = require("../middleware/admin-middleware");
+
+const doctorController = require("../controller/doctor");
+
+router.use(checkAuth);
+router.use(checkRole(["Doctor"]));
 // Today's Appointments
 // GET /api/doctor/appointments/today/:doctorId
 // =======================
