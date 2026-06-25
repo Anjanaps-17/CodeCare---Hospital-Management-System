@@ -188,7 +188,7 @@ const [updateSuccess, setUpdateSuccess] = useState(false);
 };
   return (
   <div className="ap-wrapper">
-    <div className="ap-container">
+    <div className="ap-container up-container">
 
       {/* Header */}
       <div className="ap-header">
@@ -223,7 +223,7 @@ const [updateSuccess, setUpdateSuccess] = useState(false);
 
         <>
           {/* Search Section */}
-          <div className="ap-form">
+          <div className="ap-form up-form">
 
             <div className="ap-section-label">
               Search Patient
@@ -259,9 +259,9 @@ const [updateSuccess, setUpdateSuccess] = useState(false);
                 Personal Information
               </div>
 
-              <div className="ap-grid-2">
+              <div className="ap-grid-2 up-grid">
 
-                <div className="ap-field">
+                <div className="ap-field up-field">
                   <label>Full Name *</label>
                   <input
                     name="name"
@@ -271,7 +271,7 @@ const [updateSuccess, setUpdateSuccess] = useState(false);
                   />
                 </div>
 
-                <div className="ap-field">
+                <div className="ap-field up-field">
                   <label>Date of Birth *</label>
                   <input
                     type="date"
@@ -282,7 +282,7 @@ const [updateSuccess, setUpdateSuccess] = useState(false);
                   />
                 </div>
 
-                <div className="ap-field">
+                <div className="ap-field up-field">
                   <label>Gender *</label>
 
                   <select
@@ -296,7 +296,7 @@ const [updateSuccess, setUpdateSuccess] = useState(false);
                   </select>
                 </div>
 
-                <div className="ap-field">
+                <div className="ap-field up-field">
                   <label>Blood Group *</label>
 
                   <select
@@ -310,7 +310,7 @@ const [updateSuccess, setUpdateSuccess] = useState(false);
                   </select>
                 </div>
 
-                <div className="ap-field">
+                <div className="ap-field up-field">
                   <label>Phone Number *</label>
 
                   <input
@@ -322,7 +322,7 @@ const [updateSuccess, setUpdateSuccess] = useState(false);
                   />
                 </div>
 
-                <div className="ap-field">
+                <div className="ap-field up-field">
                   <label>Address</label>
 
                   <input
@@ -365,7 +365,7 @@ const [updateSuccess, setUpdateSuccess] = useState(false);
 
               </div>
 
-              <div className="ap-actions">
+              <div className="ap-actions up-actions">
 
                 <button
                   type="button"
