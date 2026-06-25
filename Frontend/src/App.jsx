@@ -6,7 +6,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 // Auth
 import Login from "./components/Auth/login";
-import Signup from "./components/Auth/Signup";
+// import Signup from "./components/Auth/Signup";
 
 // Dashboards
 import AdminDashboard from "./Pages/Dashboard/AdminDashboard";
@@ -43,7 +43,7 @@ function App() {
           {/* Auth */}
           <Route path="/" element={<Login />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
+          {/* <Route path="/signup" element={<Signup />} /> */}
 
           {/* Dashboards */}
           <Route path="/admin/dashboard" element={<AdminDashboard />} />

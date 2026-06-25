@@ -70,13 +70,13 @@ function Navbar() {
             >
               Login
             </Link>
-
+{/* 
             <Link
               to="/signup"
               className="btn btn-outline-light fw-semibold"
             >
               Signup
-            </Link>
+            </Link> */}
 
           </div>
         </div>
