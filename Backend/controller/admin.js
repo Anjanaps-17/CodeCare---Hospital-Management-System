@@ -75,6 +75,8 @@ const getUserById = async (req, res, next) => {
 
 // CREATE USER
 const createUser = async (req, res, next) => {
+  console.log("BODY RECEIVED:");
+  console.log(req.body);
   try {
     const existingUsername = await User.findOne({
       username: req.body.username
@@ -105,6 +107,7 @@ const createUser = async (req, res, next) => {
 
     const user = await User.create({
       username: req.body.username,
+      fullName: req.body.fullName,
       email: req.body.email,
       phoneNumber: req.body.phoneNumber,
       password: hashedPassword,
@@ -120,7 +123,8 @@ const createUser = async (req, res, next) => {
           ? req.body.isActive
           : true
     });
-
+    console.log("SAVED USER:");
+    console.log(user);
     res.status(201).json({
       success: true,
       data: user

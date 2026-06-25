@@ -32,6 +32,9 @@ router.post(
     check("username")
       .notEmpty()
       .withMessage("Username is required"),
+    check("fullName")
+  .notEmpty()
+  .withMessage("Full Name is required"),  
 
     check("email")
       .isEmail()
@@ -72,6 +75,10 @@ router.put(
       .optional()
       .notEmpty()
       .withMessage("Username cannot be empty"),
+    check("fullName")
+  .optional()
+  .notEmpty()
+  .withMessage("Full Name is required"),
 
     check("email")
       .optional()

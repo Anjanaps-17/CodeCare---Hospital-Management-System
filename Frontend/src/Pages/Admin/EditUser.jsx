@@ -39,27 +39,24 @@ const EditUser = () => {
       const user = response.data;
 
       setFormData({
-        username: user.username || "",
-        email: user.email || "",
-        phoneNumber: user.phoneNumber || "",
-        password: "",
-        role: user.role || "",
-
-        gender: user.gender || "",
-        bloodGroup: user.bloodGroup || "",
-        address: user.address || "",
-        qualification: user.qualification || "",
-
-        birthDate: user.birthDate
-          ? user.birthDate.split("T")[0]
-          : "",
-
-        dateOfJoining: user.dateOfJoining
-          ? user.dateOfJoining.split("T")[0]
-          : "",
-
-        isActive: user.isActive
-      });
+  username: user.username,
+  fullName: user.fullName || "",
+  email: user.email || "",
+  phoneNumber: user.phoneNumber || "",
+  password: "",
+  role: user.role,
+  gender: user.gender || "",
+  bloodGroup: user.bloodGroup || "",
+  address: user.address || "",
+  qualification: user.qualification || "",
+  birthDate: user.birthDate
+    ? user.birthDate.substring(0, 10)
+    : "",
+  dateOfJoining: user.dateOfJoining
+    ? user.dateOfJoining.substring(0, 10)
+    : "",
+  isActive: user.isActive
+});
 
     } catch (error) {
       console.log(error);
@@ -105,22 +102,19 @@ const EditUser = () => {
 
     try {
       const updateData = {
-        username: formData.username,
-        email: formData.email,
-        phoneNumber: formData.phoneNumber,
-        role: formData.role,
-
-        gender: formData.gender,
-        bloodGroup: formData.bloodGroup,
-        address: formData.address,
-        qualification: formData.qualification,
-
-        birthDate: formData.birthDate,
-        dateOfJoining: formData.dateOfJoining,
-
-        isActive: formData.isActive
-      };
-
+  fullName: formData.fullName,
+  username: formData.username,
+  email: formData.email,
+  phoneNumber: formData.phoneNumber,
+  role: formData.role,
+  gender: formData.gender,
+  bloodGroup: formData.bloodGroup,
+  address: formData.address,
+  qualification: formData.qualification,
+  birthDate: formData.birthDate,
+  dateOfJoining: formData.dateOfJoining,
+  isActive: formData.isActive
+};
       if (formData.password.trim() !== "") {
         updateData.password =
           formData.password;
@@ -142,19 +136,28 @@ const EditUser = () => {
   };
 
   return (
-    <div className="container mt-4">
-      <div className="card shadow">
-        <div className="card-body">
+  <div className="container mt-4">
+    <div className="card shadow border-0">
+      <div
+        className="card-header text-white"
+        style={{
+          background: "linear-gradient(90deg,#008b8b,#0ea5a4)",
+        }}
+      >
+        <h3 className="mb-0"> Edit User</h3>
+      </div>
 
-          <h3 className="mb-4">
-            Edit User
-          </h3>
+      <div className="card-body p-4">
+        <form onSubmit={submitHandler}>
 
-          <form onSubmit={submitHandler}>
+          {/* Account Information */}
+          <h5 className="mb-3" style={{ color: "#008b8b" }}>
+             Account Information
+          </h5>
 
-            <div className="mb-3">
-              <label>Username</label>
-
+          <div className="row">
+            <div className="col-md-6 mb-3">
+              <label className="form-label">Username</label>
               <input
                 type="text"
                 name="username"
@@ -165,9 +168,22 @@ const EditUser = () => {
               />
             </div>
 
-            <div className="mb-3">
-              <label>Email</label>
+            <div className="col-md-6 mb-3">
+              <label className="form-label">Full Name</label>
+              <input
+                type="text"
+                name="fullName"
+                className="form-control"
+                value={formData.fullName}
+                onChange={changeHandler}
+                required
+              />
+            </div>
+          </div>
 
+          <div className="row">
+            <div className="col-md-6 mb-3">
+              <label className="form-label">Email</label>
               <input
                 type="email"
                 name="email"
@@ -178,9 +194,8 @@ const EditUser = () => {
               />
             </div>
 
-            <div className="mb-3">
-              <label>Phone Number</label>
-
+            <div className="col-md-6 mb-3">
+              <label className="form-label">Phone Number</label>
               <input
                 type="text"
                 name="phoneNumber"
@@ -190,10 +205,11 @@ const EditUser = () => {
                 required
               />
             </div>
+          </div>
 
-            <div className="mb-3">
-              <label>New Password (Optional)</label>
-
+          <div className="row">
+            <div className="col-md-6 mb-3">
+              <label className="form-label">Password (Optional)</label>
               <input
                 type="password"
                 name="password"
@@ -203,178 +219,169 @@ const EditUser = () => {
               />
             </div>
 
-            <div className="mb-3">
-              <label>Role</label>
-
+            <div className="col-md-6 mb-3">
+              <label className="form-label">Role</label>
               <select
                 name="role"
                 className="form-select"
                 value={formData.role}
                 onChange={changeHandler}
               >
-                <option value="Admin">
-                  Admin
-                </option>
-
-                <option value="Doctor">
-                  Doctor
-                </option>
-
-                <option value="Receptionist">
-                  Receptionist
-                </option>
-
+                <option value="Admin">Admin</option>
+                <option value="Doctor">Doctor</option>
+                <option value="Receptionist">Receptionist</option>
                 <option value="Lab Technician">
                   Lab Technician
                 </option>
               </select>
             </div>
+          </div>
 
-            <div className="mb-3">
-              <label>Gender</label>
+          <hr />
 
+          {/* Personal Information */}
+          <h5 className="mb-3" style={{ color: "#008b8b" }}>
+            Personal Information
+          </h5>
+
+          <div className="row">
+            <div className="col-md-6 mb-3">
+              <label className="form-label">Gender</label>
               <select
-                className="form-select"
                 name="gender"
+                className="form-select"
                 value={formData.gender}
                 onChange={changeHandler}
               >
-                <option value="">
-                  Select Gender
-                </option>
-
-                <option value="Male">
-                  Male
-                </option>
-
-                <option value="Female">
-                  Female
-                </option>
-
-                <option value="Other">
-                  Other
-                </option>
+                <option value="">Select Gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
               </select>
             </div>
 
-            <div className="mb-3">
-              <label>Blood Group</label>
-
+            <div className="col-md-6 mb-3">
+              <label className="form-label">Blood Group</label>
               <select
-                className="form-select"
                 name="bloodGroup"
+                className="form-select"
                 value={formData.bloodGroup}
                 onChange={changeHandler}
               >
-                <option value="">
-                  Select Blood Group
-                </option>
-
-                <option>A+</option>
-                <option>A-</option>
-                <option>B+</option>
-                <option>B-</option>
-                <option>AB+</option>
-                <option>AB-</option>
-                <option>O+</option>
-                <option>O-</option>
+                <option value="">Select Blood Group</option>
+                <option value="A+">A+</option>
+                <option value="A-">A-</option>
+                <option value="B+">B+</option>
+                <option value="B-">B-</option>
+                <option value="AB+">AB+</option>
+                <option value="AB-">AB-</option>
+                <option value="O+">O+</option>
+                <option value="O-">O-</option>
               </select>
             </div>
+          </div>
 
-            <div className="mb-3">
-              <label>Address</label>
-
-              <textarea
-                className="form-control"
-                rows="3"
-                name="address"
-                value={formData.address}
-                onChange={changeHandler}
-              />
-            </div>
-
-            <div className="mb-3">
-              <label>Qualification</label>
-
-              <input
-                type="text"
-                className="form-control"
-                name="qualification"
-                value={formData.qualification}
-                onChange={changeHandler}
-              />
-            </div>
-
-            <div className="mb-3">
-              <label>Birth Date</label>
-
+          <div className="row">
+            <div className="col-md-6 mb-3">
+              <label className="form-label">Birth Date</label>
               <input
                 type="date"
-                className="form-control"
                 name="birthDate"
+                className="form-control"
                 value={formData.birthDate}
                 onChange={changeHandler}
               />
             </div>
 
-            <div className="mb-3">
-              <label>Date Of Joining</label>
+            <div className="col-md-6 mb-3">
+              <label className="form-label">
+                Qualification
+              </label>
+              <input
+                type="text"
+                name="qualification"
+                className="form-control"
+                value={formData.qualification}
+                onChange={changeHandler}
+              />
+            </div>
+          </div>
 
+          <div className="mb-3">
+            <label className="form-label">Address</label>
+            <textarea
+              name="address"
+              rows="3"
+              className="form-control"
+              value={formData.address}
+              onChange={changeHandler}
+            />
+          </div>
+
+          <hr />
+
+          {/* Employment Information */}
+          <h5 className="mb-3" style={{ color: "#008b8b" }}>
+            Employment Information
+          </h5>
+
+          <div className="row">
+            <div className="col-md-6 mb-3">
+              <label className="form-label">
+                Date Of Joining
+              </label>
               <input
                 type="date"
-                className="form-control"
                 name="dateOfJoining"
+                className="form-control"
                 value={formData.dateOfJoining}
                 onChange={changeHandler}
               />
             </div>
 
-            <div className="mb-4">
-              <label>Status</label>
-
+            <div className="col-md-6 mb-3">
+              <label className="form-label">Status</label>
               <select
                 name="isActive"
                 className="form-select"
                 value={formData.isActive.toString()}
                 onChange={changeHandler}
               >
-                <option value="true">
-                  Active
-                </option>
-
-                <option value="false">
-                  Inactive
-                </option>
+                <option value="true">Active</option>
+                <option value="false">Inactive</option>
               </select>
             </div>
+          </div>
 
-            <div className="d-flex gap-2">
+          <div className="d-flex justify-content-end gap-2 mt-4">
+            <button
+              type="submit"
+              className="btn"
+              style={{
+                backgroundColor: "#008b8b",
+                color: "white",
+                padding: "10px 25px",
+                borderRadius: "8px",
+                fontWeight: "600",
+              }}
+            >
+               Update User
+            </button>
 
-              <button
-                type="submit"
-                className="btn-theme"
-              >
-                Update User
-              </button>
+            <button
+              type="button"
+              className="btn btn-secondary"
+              onClick={() => navigate("/admin/users")}
+            >
+              Cancel
+            </button>
+          </div>
 
-              <button
-                type="button"
-                className="btn btn-secondary"
-                onClick={() =>
-                  navigate("/admin/users")
-                }
-              >
-                Cancel
-              </button>
-
-            </div>
-
-          </form>
-
-        </div>
+        </form>
       </div>
     </div>
-  );
+  </div>
+);
 };
 
 export default EditUser;

@@ -4,6 +4,7 @@ import "./App.css";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+// Auth
 import Login from "./components/Auth/login";
 import Signup from "./components/Auth/Signup";
 
@@ -12,12 +13,6 @@ import AdminDashboard from "./Pages/Dashboard/AdminDashboard";
 import DoctorDashboard from "./Pages/Dashboard/DoctorDashboard";
 import ReceptionistDashboard from "./Pages/Dashboard/ReceptionistDashboard";
 import LabDashboard from "./Pages/Dashboard/LabtechDashboard";
-
-// Receptionist
-import AddPatient from "./Pages/Receptionist/AddPatient";
-import BookAppointment from "./Pages/Receptionist/BookAppointment";
-import UpdatePatient from "./Pages/Receptionist/UpdatePatient";
-import VerifyQR from "./Pages/Receptionist/VerifyQR";
 
 // Admin - Users
 import Users from "./Pages/Admin/Users";
@@ -33,6 +28,12 @@ import EditDoctor from "./Pages/Admin/EditDoctor";
 import Departments from "./Pages/Admin/Departments";
 import AddDepartment from "./Pages/Admin/AddDepartment";
 import EditDepartment from "./Pages/Admin/EditDepartment";
+
+// Receptionist
+import AddPatient from "./Pages/Receptionist/AddPatient";
+import BookAppointment from "./Pages/Receptionist/BookAppointment";
+import UpdatePatient from "./Pages/Receptionist/UpdatePatient";
+import VerifyQR from "./Pages/Receptionist/VerifyQR";
 
 function App() {
   return (
