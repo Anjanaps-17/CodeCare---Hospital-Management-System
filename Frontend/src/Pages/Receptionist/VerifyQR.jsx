@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Html5QrcodeScanner } from "html5-qrcode";
+import { toast } from "react-toastify";
 import "../../styles/VerifyQR.css";
  
 const VerifyQR = () => {
@@ -9,6 +10,7 @@ const VerifyQR = () => {
   const [qrCode, setQrCode] = useState("");
   const [patient, setPatient] = useState(null);
   const [appointment, setAppointment] = useState(null);
+  const [error, setError] = useState("");
  
   useEffect(() => {
     const scanner = new Html5QrcodeScanner(
@@ -38,6 +40,11 @@ const VerifyQR = () => {
   }, []);
  
   const handleVerify = async () => {
+    setError("");
+    if (!qrCode.trim()) {
+  setError("Please scan or enter a QR code.");
+  return;
+}
     try {
       const token = localStorage.getItem("token");
  
@@ -53,23 +60,32 @@ const VerifyQR = () => {
       const data = await response.json();
  
       if (!response.ok) {
-        alert(data.message);
+        setError(data.message);
         return;
       }
  
-      setPatient(data.patient);
-      setAppointment(data.appointment);
+      setError("");
+
+setPatient(data.patient);
+
+setAppointment(data.appointment);
+
+toast.success("QR verified successfully!");
+
     } catch (error) {
-      console.error("Verify QR Error:", error);
-      alert(error.message);
-    }
+  console.error("Verify QR Error:", error);
+
+  setError("");
+  toast.error("Unable to verify QR code.");
+}
   };
  
   const resetPage = () => {
-    setQrCode("");
-    setPatient(null);
-    setAppointment(null);
-  };
+  setQrCode("");
+  setPatient(null);
+  setAppointment(null);
+  setError("");
+};
  
   const getPatientStatusBadge = (status) => {
     if (!status) return <span className="vq-badge vq-badge--default">--</span>;
@@ -136,6 +152,13 @@ const VerifyQR = () => {
             Receptionist Portal
           </div>
         </header>
+
+        {error && (
+  <div className="ap-alert ap-alert-err">
+    <i className="bi bi-x-circle me-2" />
+    {error}
+  </div>
+)}
  
         {/* Three-column grid */}
         <div className="vq-grid">

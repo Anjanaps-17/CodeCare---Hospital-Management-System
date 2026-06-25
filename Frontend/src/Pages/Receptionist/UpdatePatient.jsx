@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import "../../styles/UpdatePatient.css";
 
 const UpdatePatient = () => {
@@ -22,7 +23,7 @@ const UpdatePatient = () => {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [message, setMessage] = useState("");
+
 
   const bloodGroups = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
 
@@ -32,6 +33,7 @@ const UpdatePatient = () => {
   };
 
   const handleSearch = async () => {
+    setError("");
     try {
       const token = localStorage.getItem("token");
 
@@ -50,7 +52,8 @@ const UpdatePatient = () => {
         setError(data.message);
         return;
       }
-
+      
+      setError("");
       setPatient(data);
 
       setFormData({
@@ -64,8 +67,10 @@ const UpdatePatient = () => {
         emergencyPhone: data.emergencyContact?.phone || "",
       });
     } catch (error) {
-      console.log(error);
-    }
+  console.log(error);
+   setError("");
+  toast.error("Unable to search patient.");
+}
   };
 
   const handleSubmit = async (e) => {
@@ -124,16 +129,22 @@ const UpdatePatient = () => {
 
       const data = await response.json();
 
-      if (!response.ok) {
-        setError(data.message);
-        return;
-      }
+     if (!response.ok) {
+    toast.error(data.message);
+    return;
+}
+       
+      setError("");
 
-      setPatient(data.updatedPatient);
-      setUpdateSuccess(true);
+setPatient(data.updatedPatient);
+
+setUpdateSuccess(true);
+
+toast.success("Patient updated successfully!");
+
     } catch (error) {
-      setError(error.message);
-    } finally {
+    toast.error(error.message);
+} finally {
       setLoading(false);
     }
   };
@@ -160,7 +171,6 @@ const UpdatePatient = () => {
     });
 
     setPatient(null);
-    setMessage("");
     setError("");
     setUpdateSuccess(false);
     setSearchId("");
@@ -188,12 +198,7 @@ const UpdatePatient = () => {
         </div>
 
         {/* ── Alerts ── */}
-        {message && (
-          <div className="up-alert up-alert-ok">
-            <i className="bi bi-check-circle-fill" />
-            <span>{message}</span>
-          </div>
-        )}
+        
         {error && (
           <div className="up-alert up-alert-err">
             <i className="bi bi-exclamation-triangle-fill" />
