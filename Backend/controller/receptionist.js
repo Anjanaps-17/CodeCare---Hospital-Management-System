@@ -266,6 +266,8 @@ const getPatients = async (req, res) => {
 // Book Appointment
 // ======================
 const bookAppointment = async (req, res) => {
+  console.log("bookAppointment called");
+  console.log(req.body);
   try {
    let patient;
 
@@ -288,7 +290,11 @@ if (mongoose.Types.ObjectId.isValid(req.body.patientId)) {
       });
     }
 
-    const doctor = await Doctor.findById(req.body.doctorId);
+  const doctor = await Doctor.findById(req.body.doctorId)
+  .populate("department", "name");
+
+  console.log("Doctor:", doctor);
+console.log("Department:", doctor?.department);
 
     if (!doctor) {
       return res.status(404).json({
@@ -316,10 +322,13 @@ if (existingAppointment) {
   status: { $ne: "Cancelled" }
 });
 
+const appointmentId = `APT-${Date.now()}`;
+
 const appointment = new Appointment({
+  appointmentId,
   patientId: patient._id,
   doctorId: req.body.doctorId,
-  department: doctor.department,
+  department: doctor.department.name,
   date: req.body.date,
   time: req.body.time,
   token: count + 1,
@@ -331,24 +340,78 @@ const appointment = new Appointment({
       appointment,
     });
   } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
+  console.error("BOOK APPOINTMENT ERROR");
+  console.error(error);
 
+  res.status(500).json({
+    message: error.message,
+  });
+}
+};
 // ======================
 // Get All Doctors
 // ======================
 const getDoctors = async (req, res) => {
   try {
-    const doctors = await Doctor.find().select(
-      "DoctorName Department Schedule"
-    );
+    const doctors = await Doctor.find()
+      .populate("department", "name")
+      .select("name schedule department");
 
     res.status(200).json(doctors);
 
   } catch (error) {
     res.status(500).json({
       error: error.message,
+    });
+  }
+};
+
+// ======================
+// Doctor Availability
+// ======================
+const getDoctorAvailability = async (req, res) => {
+  try {
+    const doctors = await Doctor.find()
+      .populate("department", "name");
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const tomorrow = new Date(today);
+    tomorrow.setDate(today.getDate() + 1);
+
+    const availability = await Promise.all(
+      doctors.map(async (doctor) => {
+        const booked = await Appointment.countDocuments({
+          doctorId: doctor._id,
+          date: {
+            $gte: today,
+            $lt: tomorrow,
+          },
+          status: {
+            $ne: "Cancelled",
+          },
+        });
+
+        const MAX_APPOINTMENTS = 20;
+
+        return {
+          _id: doctor._id,
+          name: doctor.name,
+          department: doctor.department.name,
+          schedule: doctor.schedule,
+          booked,
+          limit: MAX_APPOINTMENTS,
+          available: booked < MAX_APPOINTMENTS,
+        };
+      })
+    );
+
+    res.json(availability);
+
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
     });
   }
 };
@@ -370,6 +433,10 @@ const verifyQR = async (req, res) => {
 
     const appointment = await Appointment.findOne({
       patientId: patient._id,
+    })
+    .populate({
+    path: "doctorId",
+    select: "name",
     }).sort({ createdAt: -1 });
 
     return res.status(200).json({
@@ -461,35 +528,33 @@ const getAppointmentsByDoctor = async (req, res) => {
 };
 
 // ======================
-// Get Today's Appointments
-// ======================
 const getTodayAppointments = async (req, res) => {
   try {
-
     const start = new Date();
-    start.setHours(0,0,0,0);
+    start.setHours(0, 0, 0, 0);
 
     const end = new Date();
-    end.setHours(23,59,59,999);
+    end.setHours(23, 59, 59, 999);
 
     const appointments = await Appointment.find({
       date: {
         $gte: start,
-        $lte: end
-      }
+        $lte: end,
+      },
     })
-    .populate("patientId")
-    .populate("doctorId");
+      .populate("patientId")
+      .populate("doctorId");
 
-    res.status(200).json(appointments);
+    res.status(200).json({
+      data: appointments,
+    });
 
   } catch (error) {
-    res.status(500).json({
-      error: error.message
+    res.status(200).json({
+  data: appointments,
     });
   }
 };
-
 // ======================
 // Update Appointment
 // ======================
@@ -548,6 +613,44 @@ const cancelAppointment = async (req, res) => {
   }
 };
 
+const getDashboard = async (req, res) => {
+  try {
+    const start = new Date();
+    start.setHours(0, 0, 0, 0);
+
+    const end = new Date();
+    end.setHours(23, 59, 59, 999);
+
+    const totalPatientsToday = await Appointment.countDocuments({
+      date: {
+        $gte: start,
+        $lte: end,
+      },
+      status: { $ne: "Cancelled" },
+    });
+
+    const pendingAppointments = await Appointment.countDocuments({
+      date: {
+        $gte: start,
+        $lte: end,
+      },
+      status: "Scheduled",
+    });
+
+    res.status(200).json({
+      data: {
+        totalPatientsToday,
+        pendingAppointments,
+      },
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      error: error.message,
+    });
+  }
+};
+
 module.exports = {
   registerPatient,
   searchPatient,
@@ -559,10 +662,12 @@ module.exports = {
   bookAppointment,
   verifyQR,
   getDoctors,
+  getDoctorAvailability,
   getAppointmentById,
   getAppointmentsByPatient,
   getAppointmentsByDoctor,
   getTodayAppointments,
   updateAppointment,
   cancelAppointment,
+  getDashboard,
 };

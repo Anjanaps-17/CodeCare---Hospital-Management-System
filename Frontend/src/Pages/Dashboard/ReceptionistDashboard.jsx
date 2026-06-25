@@ -28,7 +28,7 @@ const ReceptionistDashboard = () => {
       .catch((err) => console.log(err));
 
     // Today appointments
-    fetch("http://localhost:5000/api/appointments/today", {
+    fetch("http://localhost:5000/api/receptionist/appointments/today", {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -78,12 +78,12 @@ const ReceptionistDashboard = () => {
             </li>
 
             <li
-              className="list-group-item"
-              style={{ cursor: "pointer" }}
-              onClick={() => navigate("/receptionist/doctors")}
+           className="list-group-item"
+           style={{ cursor: "pointer" }}
+           onClick={() => navigate("/receptionist/doctor-availability")}
             >
-               Doctor Availability
-            </li>
+           Doctor Availability
+           </li>
 
             <li
               className="list-group-item"
@@ -155,6 +155,15 @@ const ReceptionistDashboard = () => {
                 📝 Update Patient
               </button>
 
+
+              <button
+                  className="btn-theme mb-2"
+                   style={{ width: "auto", marginRight: "10px", backgroundColor: "#14b8a6", }}
+                  onClick={() => navigate("/receptionist/doctor-availability") }
+                 >
+              👨‍⚕️ Doctor Availability
+             </button>
+
               <button
                 className="btn-theme mb-2"
                 style={{ width: "auto" }}
@@ -215,15 +224,15 @@ const ReceptionistDashboard = () => {
                   </thead>
 
                   <tbody>
-                    {appointments.map((app, index) => (
-                      <tr key={index}>
-                        <td>{app.patientName}</td>
-                        <td>{app.doctorName}</td>
-                        <td>{app.time}</td>
-                        <td>{app.status}</td>
-                      </tr>
-                    ))}
-                  </tbody>
+  {appointments.map((app) => (
+    <tr key={app._id}>
+      <td>{app.patientId?.name}</td>
+      <td>{app.doctorId?.name}</td>
+      <td>{app.time}</td>
+      <td>{app.status}</td>
+    </tr>
+  ))}
+</tbody>
                 </table>
               )}
 

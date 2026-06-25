@@ -14,12 +14,14 @@ const {
   bookAppointment,
   verifyQR,
   getDoctors,
+  getDoctorAvailability,
   getTodayAppointments,
   getAppointmentById,
   getAppointmentsByDoctor,
   getAppointmentsByPatient,
   updateAppointment,
   cancelAppointment,
+  getDashboard,
 } = require("../controller/receptionist");
 
 
@@ -53,6 +55,9 @@ router.delete("/patients/:id", deletePatient);
 // View Doctors
 router.get("/doctors", getDoctors);
 
+// Doctor Availability
+router.get("/doctor-availability", getDoctorAvailability);
+
 
 // ======================
 // Appointment Routes
@@ -81,5 +86,7 @@ router.put("/appointments/:id", updateAppointment);
 
 // Cancel Appointment
 router.patch("/appointments/:id/cancel", cancelAppointment);
+
+router.get("/dashboard", getDashboard);
 
 module.exports = router;

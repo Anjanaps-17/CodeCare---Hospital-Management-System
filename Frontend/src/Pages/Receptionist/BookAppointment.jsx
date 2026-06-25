@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../../styles/BookAppointment.css";
+import { toast } from "react-toastify";
 
 const BookAppointment = () => {
   const navigate = useNavigate();
@@ -60,7 +61,30 @@ const BookAppointment = () => {
     }
   };
 
+  
+
   const handleSubmit = async () => {
+if (!patientId) {
+    toast.warning("Please select a patient.");
+    return;
+  }
+
+  if (!doctorId) {
+    toast.warning("Please select a doctor.");
+    return;
+  }
+
+  if (!date) {
+    toast.warning("Please select an appointment date.");
+    return;
+  }
+
+  if (!time) {
+    toast.warning("Please select an appointment time.");
+    return;
+  }
+
+
     try {
       const token = localStorage.getItem("token");
 
@@ -75,7 +99,7 @@ const BookAppointment = () => {
           body: JSON.stringify({
           patientId,
           doctorId,
-          department: selectedDoctor?.Department,
+          department: selectedDoctor?.department?.name,
           date,
           time,
           }),
@@ -85,25 +109,27 @@ const BookAppointment = () => {
       const data = await response.json();
 
       if (!response.ok) {
-        alert(data.message);
-        return;
-      }
+  toast.error(data.message);
+  return;
+}
 
       setAppointmentDetails({
+        appointmentId: data.appointment.appointmentId,
   patient:
     patients.find((p) => p.patientId === patientId)?.name || "",
-  doctor: selectedDoctor?.DoctorName || "",
-  department: selectedDoctor?.Department || "",
+  doctor: selectedDoctor?.name || "",
+department: selectedDoctor?.department?.name || "",
   date,
   time,
   token: data.appointment.token,
 });
 
-      alert("Appointment booked successfully!");
+      toast.success("Appointment booked successfully!");
     } catch (error) {
-      console.log(error);
-      alert("Failed to book appointment");
-    }
+  console.log(error);
+
+  toast.error("Failed to book appointment!");
+}
   };
 
   const resetForm = () => {
@@ -183,7 +209,7 @@ const BookAppointment = () => {
 
                   {doctors.map((doctor) => (
                     <option key={doctor._id} value={doctor._id}>
-                      {doctor.DoctorName}
+                      {doctor.name}
                     </option>
                   ))}
                 </select>
@@ -195,7 +221,7 @@ const BookAppointment = () => {
 
                 <input
                   type="text"
-                  value={selectedDoctor?.Department || ""}
+                  value={selectedDoctor?.department?.name || ""}
                   readOnly
                 />
               </div>
@@ -267,6 +293,7 @@ const BookAppointment = () => {
                   <tbody>
 
                     {[
+  ["Appointment ID", appointmentDetails.appointmentId],
   ["Patient", appointmentDetails.patient],
   ["Doctor", appointmentDetails.doctor],
   ["Department", appointmentDetails.department],

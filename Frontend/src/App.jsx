@@ -1,4 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
 
 import Login from "../src/components/Auth/login";
@@ -8,6 +10,7 @@ import AddPatient from "./Pages/Receptionist/AddPatient";
 import BookAppointment from "./Pages/Receptionist/BookAppointment";
 import UpdatePatient from "./Pages/Receptionist/UpdatePatient";
 import VerifyQR from "./Pages/Receptionist/VerifyQR";
+import DoctorAvailability from "./Pages/Receptionist/DoctorAvailability";
 
 import AdminDashboard from "./Pages/Dashboard/AdminDashboard";
 import DoctorDashboard from "./Pages/Dashboard/DoctorDashboard";
@@ -47,6 +50,7 @@ function App() {
         <Route path="/receptionist/add-patient" element={<AddPatient />} />
         <Route path="/receptionist/book-appointment" element={<BookAppointment />} />
         <Route path="/receptionist/update-patient" element={<UpdatePatient />} />
+        <Route path="/receptionist/doctor-availability" element={<DoctorAvailability />} />
         
         {/* User Management */}
         <Route path="/admin/users" element={<Users />} />
@@ -67,6 +71,17 @@ function App() {
           element={<EditDepartment />}
         />
       </Routes>
+       {/* Toast Notifications */}
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        pauseOnHover
+        draggable
+        theme="colored"
+      />
     </BrowserRouter>
   );
 }

@@ -2,16 +2,15 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Html5QrcodeScanner } from "html5-qrcode";
 import "../../styles/VerifyQR.css";
-
+ 
 const VerifyQR = () => {
   const navigate = useNavigate();
-
+ 
   const [qrCode, setQrCode] = useState("");
   const [patient, setPatient] = useState(null);
   const [appointment, setAppointment] = useState(null);
-
+ 
   useEffect(() => {
-
     const scanner = new Html5QrcodeScanner(
       "reader",
       {
@@ -23,7 +22,7 @@ const VerifyQR = () => {
       },
       false
     );
-
+ 
     scanner.render(
       (decodedText) => {
         setQrCode(decodedText);
@@ -32,244 +31,308 @@ const VerifyQR = () => {
         // ignore scan errors
       }
     );
-
+ 
     return () => {
       scanner.clear().catch(() => {});
     };
- }, []);
-
+  }, []);
+ 
   const handleVerify = async () => {
     try {
       const token = localStorage.getItem("token");
-
+ 
       const response = await fetch(
-  `http://localhost:5000/api/receptionist/appointments/verify-qr?qr=${qrCode}`,
+        `http://localhost:5000/api/receptionist/appointments/verify-qr?qr=${qrCode}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
       );
-
+ 
       const data = await response.json();
-
+ 
       if (!response.ok) {
         alert(data.message);
         return;
       }
-
+ 
       setPatient(data.patient);
       setAppointment(data.appointment);
-
     } catch (error) {
-  console.error("Verify QR Error:", error);
-  alert(error.message);
-}
+      console.error("Verify QR Error:", error);
+      alert(error.message);
+    }
   };
-
+ 
   const resetPage = () => {
     setQrCode("");
     setPatient(null);
     setAppointment(null);
-
   };
-
+ 
+  const getPatientStatusBadge = (status) => {
+    if (!status) return <span className="vq-badge vq-badge--default">--</span>;
+    const s = status.toLowerCase();
+    if (s === "active")
+      return (
+        <span className="vq-badge vq-badge--green">
+          <i className="bi bi-check-circle-fill"></i> {status}
+        </span>
+      );
+    if (s === "inactive")
+      return (
+        <span className="vq-badge vq-badge--red">
+          <i className="bi bi-x-circle-fill"></i> {status}
+        </span>
+      );
+    return <span className="vq-badge vq-badge--yellow">{status}</span>;
+  };
+ 
+  const getAppointmentStatusBadge = (status) => {
+    if (!status) return <span className="vq-badge vq-badge--default">--</span>;
+    const s = status.toLowerCase();
+    if (s === "verified" || s === "completed")
+      return (
+        <span className="vq-badge vq-badge--green">
+          <i className="bi bi-patch-check-fill"></i> {status}
+        </span>
+      );
+    if (s === "pending")
+      return (
+        <span className="vq-badge vq-badge--yellow">
+          <i className="bi bi-clock-fill"></i> {status}
+        </span>
+      );
+    if (s === "cancelled")
+      return (
+        <span className="vq-badge vq-badge--red">
+          <i className="bi bi-x-circle-fill"></i> {status}
+        </span>
+      );
+    return <span className="vq-badge vq-badge--default">{status}</span>;
+  };
+ 
   return (
-  <div className="ap-wrapper">
-    <div className="ap-container">
-
-      {/* Header */}
-      <div className="ap-header">
-        <div>
-          <h2 className="ap-title">Verify QR</h2>
-          <p className="ap-subtitle">
-            CodeCare Hospital Management System
-          </p>
-        </div>
-      </div>
-
-      <div className="row g-4">
-
-        {/* QR Scanner */}
-        <div className="col-md-4">
-
-          <div className="ap-card">
-
-            <div className="ap-card-header">
+    <div className="vq-wrapper">
+      <div className="vq-container">
+ 
+        {/* Header */}
+        <header className="vq-header">
+          <div className="vq-header__left">
+            <div className="vq-header__icon">
+              <i className="bi bi-qr-code-scan"></i>
+            </div>
+            <div className="vq-header__text">
+              <h2 className="vq-header__title">Verify QR</h2>
+              <p className="vq-header__subtitle">
+                <i className="bi bi-hospital"></i>
+                CodeCare Hospital Management System
+              </p>
+            </div>
+          </div>
+          <div className="vq-header__badge">
+            <i className="bi bi-person-badge"></i>
+            Receptionist Portal
+          </div>
+        </header>
+ 
+        {/* Three-column grid */}
+        <div className="vq-grid">
+ 
+          {/* LEFT — QR Scanner */}
+          <div className="vq-card">
+            <div className="vq-card__header">
+              <i className="bi bi-camera"></i>
               QR Scanner
             </div>
-
-            <div className="ap-card-body">
-
-              <div
-                id="reader"
-                style={{
-                  width: "100%",
-                  maxWidth: "450px",
-                  margin: "20px auto",
-                }}
-              ></div>
-
-              <div className="ap-field mt-3">
-                <label>QR Code</label>
-
-                <input
-                  type="text"
-                  placeholder="Scan or enter Patient ID"
-                  value={qrCode}
-                  onChange={(e) => setQrCode(e.target.value)}
-                />
+            <div className="vq-card__body">
+ 
+              <div className="vq-scanner-frame">
+                <div id="reader"></div>
               </div>
-
-              <div className="ap-actions mt-3">
-
+ 
+              <div className="vq-field">
+                <label className="vq-label">
+                  <i className="bi bi-upc-scan"></i>
+                  QR Code
+                </label>
+                <div className="vq-input-wrap">
+                  <i className="bi bi-qr-code vq-input-icon"></i>
+                  <input
+                    className="vq-input"
+                    type="text"
+                    placeholder="Scan or enter Patient ID"
+                    value={qrCode}
+                    onChange={(e) => setQrCode(e.target.value)}
+                  />
+                </div>
+              </div>
+ 
+              <div className="vq-actions">
                 <button
-                  className="ap-btn-ghost"
+                  className="vq-btn vq-btn--ghost"
                   onClick={() => navigate("/receptionist/dashboard")}
                 >
+                  <i className="bi bi-arrow-left"></i>
                   Back
                 </button>
-
                 <button
-                  className="ap-btn-primary"
+                  className="vq-btn vq-btn--primary"
                   onClick={handleVerify}
                 >
+                  <i className="bi bi-shield-check"></i>
                   Verify QR
                 </button>
-
               </div>
-
-              <div
-  className="mt-3"
-  style={{
-    display: "flex",
-    justifyContent: "center",
-  }}
->
-  <button
-    className="ap-btn-outline"
-    onClick={resetPage}
-  >
-    Verify Another QR
-  </button>
-</div>
-
+ 
+              <div className="vq-reset-row">
+                <button className="vq-btn vq-btn--outline" onClick={resetPage}>
+                  <i className="bi bi-arrow-repeat"></i>
+                  Verify Another QR
+                </button>
+              </div>
+ 
             </div>
-
           </div>
-
-        </div>
-
-        {/* Patient Details */}
-        <div className="col-md-4">
-
-          <div className="ap-card">
-
-            <div className="ap-card-header">
+ 
+          {/* CENTER — Patient Details */}
+          <div className="vq-card">
+            <div className="vq-card__header">
+              <i className="bi bi-person-circle"></i>
               Patient Details
             </div>
-
-            <div className="ap-card-body">
-
-              <table className="verify-info-table">
-                <tbody>
-<tr>
-  <td colSpan="2">
-    <strong>Patient ID</strong>
-    <div>{patient?.patientId || "--"}</div>
-  </td>
-</tr>
-
-                  <tr>
-                    <td>Name</td>
-                    <td>{patient?.name || "--"}</td>
-                  </tr>
-
-                  <tr>
-                    <td>Phone</td>
-                    <td>{patient?.phone || "--"}</td>
-                  </tr>
-
-                  <tr>
-                    <td>Blood Group</td>
-                    <td>{patient?.bloodGroup || "--"}</td>
-                  </tr>
-
-                  <tr>
-                    <td>Status</td>
-                    <td>{patient?.status || "--"}</td>
-                  </tr>
-
-                </tbody>
-              </table>
-
+            <div className="vq-card__body">
+ 
+              <div className="vq-id-box">
+                <p className="vq-id-box__label">
+                  <i className="bi bi-fingerprint"></i>
+                  Patient ID
+                </p>
+                <p className="vq-id-box__value">
+                  {patient?.patientId || "--"}
+                </p>
+              </div>
+ 
+              <ul className="vq-info-list">
+                <li className="vq-info-list__item">
+                  <span className="vq-info-list__key">
+                    <i className="bi bi-person"></i>
+                    Name
+                  </span>
+                  <span className="vq-info-list__val">
+                    {patient?.name || "--"}
+                  </span>
+                </li>
+                <li className="vq-info-list__item">
+                  <span className="vq-info-list__key">
+                    <i className="bi bi-telephone"></i>
+                    Phone
+                  </span>
+                  <span className="vq-info-list__val">
+                    {patient?.phone || "--"}
+                  </span>
+                </li>
+                <li className="vq-info-list__item">
+                  <span className="vq-info-list__key">
+                    <i className="bi bi-droplet-half"></i>
+                    Blood Group
+                  </span>
+                  <span className="vq-info-list__val">
+                    {patient?.bloodGroup || "--"}
+                  </span>
+                </li>
+                <li className="vq-info-list__item">
+                  <span className="vq-info-list__key">
+                    <i className="bi bi-toggle-on"></i>
+                    Status
+                  </span>
+                  <span className="vq-info-list__val">
+                    {getPatientStatusBadge(patient?.status)}
+                  </span>
+                </li>
+              </ul>
+ 
             </div>
-
           </div>
-
-        </div>
-
-        {/* Appointment Details */}
-        <div className="col-md-4">
-
-          <div className="ap-card">
-
-            <div className="ap-card-header">
+ 
+          {/* RIGHT — Appointment Verification */}
+          <div className="vq-card">
+            <div className="vq-card__header">
+              <i className="bi bi-calendar2-check"></i>
               Appointment Verification
             </div>
-
-            <div className="ap-card-body">
-
-              <table className="verify-info-table">
-                <tbody>
-
-                  <tr>
-  <td colSpan="2">
-    <strong>Appointment ID</strong>
-    <div>{appointment?.token || "--"}</div>
-  </td>
-</tr>
-
-                  <tr>
-                    <td>Date</td>
-                    <td>
-                      {appointment
-                        ? new Date(appointment.date).toLocaleDateString("en-GB")
-                        : "--"}
-                    </td>
-                  </tr>
-
-                  <tr>
-                    <td>Department</td>
-                    <td>
-  {appointment?.department &&
-  appointment.department.length > 20
-    ? "Department"
-    : appointment?.department || "--"}
-</td>
-                  </tr>
-
-                  <tr>
-                    <td>Status</td>
-                    <td>{appointment?.status || "--"}</td>
-                  </tr>
-
-                </tbody>
-              </table>
-
+            <div className="vq-card__body">
+ 
+              <div className="vq-id-box">
+                <p className="vq-id-box__label">
+                  <i className="bi bi-hash"></i>
+                  Appointment ID
+                </p>
+                <p className="vq-id-box__value">
+                  {appointment?.appointmentId || "--"}
+                </p>
+              </div>
+ 
+              <ul className="vq-info-list">
+                <li className="vq-info-list__item">
+                  <span className="vq-info-list__key">
+                    <i className="bi bi-ticket-perforated"></i>
+                    Token
+                  </span>
+                  <span className="vq-info-list__val">
+                    {appointment?.token || "--"}
+                  </span>
+                </li>
+                <li className="vq-info-list__item">
+                  <span className="vq-info-list__key">
+                    <i className="bi bi-calendar3"></i>
+                    Date
+                  </span>
+                  <span className="vq-info-list__val">
+                    {appointment
+                      ? new Date(appointment.date).toLocaleDateString("en-GB")
+                      : "--"}
+                  </span>
+                </li>
+                <li className="vq-info-list__item">
+                  <span className="vq-info-list__key">
+                    <i className="bi bi-person-badge"></i>
+                    Doctor
+                  </span>
+                  <span className="vq-info-list__val">
+                    {appointment?.doctorId?.name || "--"}
+                  </span>
+                </li>
+                <li className="vq-info-list__item">
+                  <span className="vq-info-list__key">
+                    <i className="bi bi-building-cross"></i>
+                    Department
+                  </span>
+                  <span className="vq-info-list__val">
+                    {appointment?.department || "--"}
+                  </span>
+                </li>
+                <li className="vq-info-list__item">
+                  <span className="vq-info-list__key">
+                    <i className="bi bi-circle-half"></i>
+                    Status
+                  </span>
+                  <span className="vq-info-list__val">
+                    {getAppointmentStatusBadge(appointment?.status)}
+                  </span>
+                </li>
+              </ul>
+ 
             </div>
-
           </div>
-
+ 
         </div>
-
+        {/* end .vq-grid */}
+ 
       </div>
-
-      
-
     </div>
-  </div>
-);
+  );
 };
-
+ 
 export default VerifyQR;
