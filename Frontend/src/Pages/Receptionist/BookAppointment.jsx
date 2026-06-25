@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import "../../styles/BookAppointment.css";
 
 const BookAppointment = () => {
   const navigate = useNavigate();
@@ -72,11 +73,11 @@ const BookAppointment = () => {
             Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({
-            patientId,
-            doctorId,
-            department: selectedDoctor?.department?.name,
-            date,
-            time,
+          patientId,
+          doctorId,
+          department: selectedDoctor?.Department,
+          date,
+          time,
           }),
         }
       );
@@ -89,14 +90,14 @@ const BookAppointment = () => {
       }
 
       setAppointmentDetails({
-        patient:
-          patients.find((p) => p.patientId === patientId)?.name || "",
-        doctor: selectedDoctor?.name || "",
-        department: selectedDoctor?.department?.name || "",
-        date,
-        time,
-        token: data.appointment.token,
-      });
+  patient:
+    patients.find((p) => p.patientId === patientId)?.name || "",
+  doctor: selectedDoctor?.DoctorName || "",
+  department: selectedDoctor?.Department || "",
+  date,
+  time,
+  token: data.appointment.token,
+});
 
       alert("Appointment booked successfully!");
     } catch (error) {
@@ -116,7 +117,7 @@ const BookAppointment = () => {
 
   return (
     <div className="ap-wrapper">
-      <div className="ap-container">
+      <div className="ap-container  ba-container">
 
         {/* Header */}
         <div className="ap-header">
@@ -139,10 +140,10 @@ const BookAppointment = () => {
               APPOINTMENT INFORMATION
             </div>
 
-            <div className="ap-grid-2">
+            <div className="ap-grid-2 ba-grid">
 
               {/* Patient */}
-              <div className="ap-field">
+              <div className="ap-field ba-field">
                 <label>Patient</label>
 
                 <select
@@ -163,7 +164,7 @@ const BookAppointment = () => {
               </div>
 
               {/* Doctor */}
-              <div className="ap-field">
+              <div className="ap-field ba-field">
                 <label>Doctor</label>
 
                 <select
@@ -182,25 +183,25 @@ const BookAppointment = () => {
 
                   {doctors.map((doctor) => (
                     <option key={doctor._id} value={doctor._id}>
-                      {doctor.name}
+                      {doctor.DoctorName}
                     </option>
                   ))}
                 </select>
               </div>
 
               {/* Department */}
-              <div className="ap-field">
+              <div className="ap-field ba-field">
                 <label>Department</label>
 
                 <input
                   type="text"
-                  value={selectedDoctor?.department?.name || ""}
+                  value={selectedDoctor?.Department || ""}
                   readOnly
                 />
               </div>
 
               {/* Date */}
-              <div className="ap-field">
+              <div className="ap-field ba-field">
                 <label>Appointment Date</label>
 
                 <input
@@ -211,7 +212,7 @@ const BookAppointment = () => {
               </div>
 
               {/* Time */}
-              <div className="ap-field">
+              <div className="ap-field ba-field">
                 <label>Appointment Time</label>
 
                 <input
@@ -223,7 +224,7 @@ const BookAppointment = () => {
 
             </div>
 
-            <div className="ap-actions">
+            <div className="ap-actions ba-actions">
 
               <button
                 type="button"

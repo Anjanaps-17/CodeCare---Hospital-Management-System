@@ -340,15 +340,15 @@ const appointment = new Appointment({
 // ======================
 const getDoctors = async (req, res) => {
   try {
-    const doctors = await Doctor.find()
-      .populate("department", "name")
-      .select("name schedule department");
+    const doctors = await Doctor.find().select(
+      "DoctorName Department Schedule"
+    );
 
     res.status(200).json(doctors);
 
   } catch (error) {
     res.status(500).json({
-      error: error.message
+      error: error.message,
     });
   }
 };

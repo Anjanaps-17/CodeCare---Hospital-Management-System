@@ -259,7 +259,7 @@ setQrDataUrl("");
                   name="name"
                   value={formData.name}
                   onChange={handleChange}
-                  placeholder="e.g. Anamika S"
+                  placeholder="Enter your full name"
                   required
                 />
               </div>
