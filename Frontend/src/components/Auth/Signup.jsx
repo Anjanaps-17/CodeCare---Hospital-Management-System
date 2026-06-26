@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { registerUser } from "../../api/AuthService";
 import SignupForm from "../../pages/AuthPages/SignupForm";
+import { toast } from "react-toastify";
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -22,7 +23,7 @@ const Signup = () => {
     event.preventDefault();
 
     if (!formData.role) {
-      alert("Please select a role");
+      toast.warning("Please select a role");
       return;
     }
 
@@ -30,7 +31,7 @@ const Signup = () => {
       const response = await registerUser(formData);
       console.log(response);
 
-      alert("User registered successfully!");
+      toast.success("User registered successfully!");
 
       // Clear form
       setFormData({
@@ -40,7 +41,7 @@ const Signup = () => {
       });
     } catch (error) {
       console.log(error);
-      alert("Registration failed!");
+      toast.error("Registration failed!");
     }
   };
 

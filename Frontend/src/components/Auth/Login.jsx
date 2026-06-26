@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "../../api/AuthService";
 import LoginForm from "../../pages/AuthPages/LoginForm";
+import { toast } from "react-toastify";
 
 const Login = () => {
 
@@ -31,7 +32,7 @@ const Login = () => {
       localStorage.setItem("role", response.role);
       localStorage.setItem("username", response.username);
 
-      alert("Login successful!");
+      toast.success("Login successful!");
       console.log("Role:", response.role);
 
      if (response.role === "Admin") {
@@ -52,7 +53,7 @@ else {
 
     } catch (error) {
       console.log(error);
-      alert("Login failed!");
+      toast.error("Login failed!");
     }
   };
 

@@ -2,22 +2,28 @@ const express = require("express");
 const { check } = require("express-validator");
 
 const router = express.Router();
+
 const admin = require("../controller/admin");
-const { checkAuth, checkRole } = require("../middleware/admin-middleware");
+
+const {
+  checkAuth,
+  checkRole
+} = require("../middleware/admin-middleware");
 
 router.use(checkAuth);
 
-
-const {
-  getDashboardData,
-} = require("../controller/admin");
+// ======================
+// DASHBOARD
+// ======================
 
 router.get(
   "/dashboard",
-  getDashboardData
+  admin.getDashboardData
 );
 
-// USERS - Admin Only
+// ======================
+// USERS - ADMIN ONLY
+// ======================
 
 router.post(
   "/users",
@@ -25,16 +31,35 @@ router.post(
   [
     check("username")
       .notEmpty()
-      .withMessage("username is required"),
+      .withMessage("Username is required"),
+    check("fullName")
+  .notEmpty()
+  .withMessage("Full Name is required"),  
+
+    check("email")
+      .isEmail()
+      .withMessage("Valid email is required"),
+
+    check("phoneNumber")
+      .matches(/^[6-9]\d{9}$/)
+      .withMessage("Invalid phone number"),
 
     check("password")
-      .isLength({ min: 5 })
-      .withMessage("Password must be at least 6 characters")
+      .isLength({ min: 6 })
+      .withMessage("Password must be at least 6 characters"),
+
+    check("role")
+      .notEmpty()
+      .withMessage("Role is required")
   ],
   admin.createUser
 );
 
-router.get("/users", checkRole(["Admin"]), admin.getUsers);
+router.get(
+  "/users",
+  checkRole(["Admin"]),
+  admin.getUsers
+);
 
 router.get(
   "/users/:id",
@@ -49,7 +74,21 @@ router.put(
     check("username")
       .optional()
       .notEmpty()
-      .withMessage("username cannot be empty"),
+      .withMessage("Username cannot be empty"),
+    check("fullName")
+  .optional()
+  .notEmpty()
+  .withMessage("Full Name is required"),
+
+    check("email")
+      .optional()
+      .isEmail()
+      .withMessage("Valid email is required"),
+
+    check("phoneNumber")
+      .optional()
+      .matches(/^[6-9]\d{9}$/)
+      .withMessage("Invalid phone number"),
 
     check("password")
       .optional()
@@ -65,7 +104,9 @@ router.delete(
   admin.deleteUser
 );
 
-// DEPARTMENTS - Admin Only
+// ======================
+// DEPARTMENTS - ADMIN ONLY
+// ======================
 
 router.post(
   "/departments",
@@ -107,12 +148,18 @@ router.delete(
   admin.deleteDepartment
 );
 
-// DOCTORS - Admin Only
+// ======================
+// DOCTORS - ADMIN ONLY
+// ======================
 
 router.post(
   "/doctors",
   checkRole(["Admin"]),
   [
+    check("userId")
+      .notEmpty()
+      .withMessage("User is required"),
+
     check("name")
       .notEmpty()
       .withMessage("Doctor name is required"),
@@ -147,17 +194,27 @@ router.delete(
   admin.deleteDoctor
 );
 
-// DOCTORS - View
+// ======================
+// DOCTORS - VIEW ACCESS
+// ======================
 
 router.get(
   "/doctors",
-  checkRole(["Admin", "Receptionist", "Doctor"]),
+  checkRole([
+    "Admin",
+    "Receptionist",
+    "Doctor"
+  ]),
   admin.getDoctors
 );
 
 router.get(
   "/doctors/:id",
-  checkRole(["Admin", "Receptionist", "Doctor"]),
+  checkRole([
+    "Admin",
+    "Receptionist",
+    "Doctor"
+  ]),
   admin.getDoctorById
 );
 

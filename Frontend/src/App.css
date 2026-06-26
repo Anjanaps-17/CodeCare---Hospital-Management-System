@@ -121,3 +121,82 @@ body {
 .footer-card {
   border-radius: 15px;
 }
+
+:root {
+  --primary: #008b8b;
+  --secondary: #0ea5a4;
+  --dark: #115e59;
+  --light: #f8fafc;
+  --white: #ffffff;
+}
+
+/* Navbar */
+.navbar-theme {
+  background: linear-gradient(
+    90deg,
+    var(--dark),
+    var(--primary)
+  );
+}
+
+.navbar-brand {
+  letter-spacing: 0.5px;
+}
+
+.nav-link {
+  color: white !important;
+  margin: 0 8px;
+  transition: 0.3s;
+}
+
+.nav-link:hover {
+  color: #d1ffff !important;
+}
+
+.btn-outline-light:hover {
+  background-color: white;
+  color: var(--primary) !important;
+}
+
+/* Footer */
+.footer-theme {
+  background: linear-gradient(
+    90deg,
+    var(--dark),
+    var(--primary)
+  );
+}
+
+.carousel-img {
+  height: 85vh;
+  width: 100%;
+ object-fit: contain;
+background: #f8fafc;
+}
+
+.carousel-caption {
+  bottom: 20%;
+  background: rgba(0, 0, 0, 0.45);
+  border-radius: 15px;
+  padding: 20px;
+}
+
+.hero-section {
+  margin-top: 70px;
+}
+
+.table {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.table tbody tr:hover {
+  background-color: #f0fdfd;
+  transition: 0.2s;
+}
+
+.table td,
+.table th {
+  vertical-align: middle;
+}

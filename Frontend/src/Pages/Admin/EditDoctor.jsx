@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 import {
   getDoctorById,
   updateDoctor,
@@ -59,13 +60,13 @@ const EditDoctor = () => {
     try {
       await updateDoctor(id, formData);
 
-      alert("Doctor updated successfully");
+      toast.success("Doctor updated successfully");
 
       navigate("/admin/doctors");
     } catch (err) {
       console.log(err);
 
-      alert(
+      toast.error(
         err.response?.data?.message ||
         "Failed to update doctor"
       );

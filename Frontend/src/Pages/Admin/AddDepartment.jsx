@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { createDepartment } from "../../api/AdminService";
+import { toast } from "react-toastify";
 
 const AddDepartment = () => {
   const navigate = useNavigate();
@@ -22,12 +23,12 @@ const AddDepartment = () => {
     try {
       await createDepartment(formData);
 
-      alert("Department Added Successfully");
+      toast.success("Department Added Successfully");
 
       navigate("/admin/departments");
     } catch (err) {
       console.log(err);
-      alert(
+      toast.error(
         err.response?.data?.message ||
         "Failed to add department"
       );
