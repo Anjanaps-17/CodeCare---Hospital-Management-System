@@ -16,6 +16,8 @@ const BookAppointment = () => {
   const [selectedDoctor, setSelectedDoctor] = useState(null);
   const [department, setDepartment] = useState("");
   const [appointmentDetails, setAppointmentDetails] = useState(null);
+  const [patientSearch, setPatientSearch] = useState("");
+const [patientSuggestions, setPatientSuggestions] = useState([]);
 
   useEffect(() => {
     fetchDoctors();
@@ -62,6 +64,23 @@ const BookAppointment = () => {
     }
   };
 
+
+  const searchPatients = (value) => {
+  setPatientSearch(value);
+
+  if (!value.trim()) {
+    setPatientSuggestions([]);
+    return;
+  }
+
+  const filtered = patients.filter(
+    (patient) =>
+      patient.name.toLowerCase().includes(value.toLowerCase()) ||
+      patient.patientId.toLowerCase().includes(value.toLowerCase())
+  );
+
+  setPatientSuggestions(filtered);
+};
   
 
   const handleSubmit = async () => {
@@ -136,6 +155,8 @@ department: selectedDoctor?.department?.name || "",
   const resetForm = () => {
     setAppointmentDetails(null);
     setPatientId("");
+    setPatientSearch("");
+setPatientSuggestions([]);
     setDoctorId("");
     setDepartment("");
     setDate("");
@@ -178,25 +199,51 @@ department: selectedDoctor?.department?.name || "",
             <div className="ap-grid-2 ba-grid">
 
               {/* Patient */}
-              <div className="ap-field ba-field">
-                <label>Patient</label>
+<div className="ap-field ba-field">
+  <label>Patient</label>
 
-                <select
-                  value={patientId}
-                  onChange={(e) => setPatientId(e.target.value)}
-                >
-                  <option value="">Select Patient</option>
+  <div style={{ position: "relative" }}>
+    <input
+      type="text"
+      className="form-control"
+      placeholder="Search patient..."
+      value={patientSearch}
+      onChange={(e) => searchPatients(e.target.value)}
+    />
 
-                  {patients.map((patient) => (
-                    <option
-                      key={patient._id}
-                      value={patient.patientId}
-                    >
-                      {patient.name} ({patient.patientId})
-                    </option>
-                  ))}
-                </select>
-              </div>
+    {patientSuggestions.length > 0 && (
+      <div
+        className="list-group"
+        style={{
+          position: "absolute",
+          width: "100%",
+          zIndex: 1000,
+          maxHeight: "200px",
+          overflowY: "auto",
+          background: "#fff",
+          border: "1px solid #ddd",
+        }}
+      >
+        {patientSuggestions.map((patient) => (
+          <button
+            key={patient._id}
+            type="button"
+            className="list-group-item list-group-item-action"
+            onClick={() => {
+              setPatientSearch(patient.name);
+              setPatientId(patient.patientId);
+              setPatientSuggestions([]);
+            }}
+          >
+            <strong>{patient.name}</strong>
+            <br />
+            <small>{patient.patientId}</small>
+          </button>
+        ))}
+      </div>
+    )}
+  </div>
+</div>
 
               {/* Doctor */}
               <div className="ap-field ba-field">
