@@ -67,7 +67,7 @@ if (conditions.length === 0) {
 
 const patients = await Patient.find({
   $or: conditions,
-});
+}).limit(5);
 
 if (patients.length === 0) {
   return res.status(404).json({

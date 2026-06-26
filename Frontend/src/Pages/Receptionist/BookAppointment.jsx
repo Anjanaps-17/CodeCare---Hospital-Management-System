@@ -14,6 +14,7 @@ const BookAppointment = () => {
   const [doctors, setDoctors] = useState([]);
   const [patients, setPatients] = useState([]);
   const [selectedDoctor, setSelectedDoctor] = useState(null);
+  const [department, setDepartment] = useState("");
   const [appointmentDetails, setAppointmentDetails] = useState(null);
 
   useEffect(() => {
@@ -99,7 +100,7 @@ if (!patientId) {
           body: JSON.stringify({
           patientId,
           doctorId,
-          department: selectedDoctor?.department?.name,
+          department,
           date,
           time,
           }),
@@ -136,10 +137,18 @@ department: selectedDoctor?.department?.name || "",
     setAppointmentDetails(null);
     setPatientId("");
     setDoctorId("");
+    setDepartment("");
     setDate("");
     setTime("");
     setSelectedDoctor(null);
   };
+
+  const filteredDoctors =
+  department === ""
+    ? doctors
+    : doctors.filter(
+        (doctor) => doctor.department?.name === department
+      );
 
   return (
     <div className="ap-wrapper">
@@ -207,24 +216,35 @@ department: selectedDoctor?.department?.name || "",
                 >
                   <option value="">Select Doctor</option>
 
-                  {doctors.map((doctor) => (
+                  {filteredDoctors.map((doctor) => (
                     <option key={doctor._id} value={doctor._id}>
-                      {doctor.name}
-                    </option>
-                  ))}
+                     {doctor.name}
+                   </option>
+                   ))}
                 </select>
               </div>
 
-              {/* Department */}
-              <div className="ap-field ba-field">
-                <label>Department</label>
+             {/* Department */}
+<div className="ap-field ba-field">
+  <label>Department</label>
 
-                <input
-                  type="text"
-                  value={selectedDoctor?.department?.name || ""}
-                  readOnly
-                />
-              </div>
+  <select
+    value={department}
+    onChange={(e) => {
+      setDepartment(e.target.value);
+      setDoctorId("");
+      setSelectedDoctor(null);
+    }}
+  >
+    <option value="">Select Department</option>
+
+    {[...new Set(doctors.map(doc => doc.department?.name))].map(dep => (
+      <option key={dep} value={dep}>
+        {dep}
+      </option>
+    ))}
+  </select>
+</div>
 
               {/* Date */}
               <div className="ap-field ba-field">
