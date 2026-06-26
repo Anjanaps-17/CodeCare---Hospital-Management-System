@@ -48,7 +48,14 @@ const searchPatient = async (req, res) => {
     const conditions = [];
 
 if (patientId) conditions.push({ patientId });
-if (name) conditions.push({ name });
+if (name) {
+  conditions.push({
+    name: {
+      $regex: name,
+      $options: "i",
+    },
+  });
+}
 if (phone) conditions.push({ phone });
 if (qr) conditions.push({ qrCode: qr });
 

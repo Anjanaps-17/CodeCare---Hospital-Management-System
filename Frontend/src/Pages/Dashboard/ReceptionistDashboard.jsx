@@ -46,12 +46,73 @@ const ReceptionistDashboard = () => {
     navigate("/login");
   };
 
-  const handleCancelAppointment = async (appointmentId) => {
-  const confirmCancel = window.confirm(
-    "Are you sure you want to cancel this appointment?"
-  );
 
-  if (!confirmCancel) return;
+const showCancelConfirmation = (appointmentId) => {
+    toast.dismiss();
+ toast.info(
+  ({ closeToast }) => (
+    <div
+  style={{
+    minWidth: "420px",
+    padding: "15px",
+  }}
+>
+       <p
+  className="mb-3 fw-bold"
+  style={{
+    fontSize: "20px",
+    fontWeight: "700",
+    textAlign: "center",
+    lineHeight: "1.5",
+    marginLeft: "-50px",
+  }}
+>
+          Are you sure you want to cancel this appointment?
+        </p>
+
+        <div className="d-flex justify-content-end gap-2">
+          <button
+className="btn btn-secondary"
+style={{
+  minWidth: "85px",
+  height: "40px",
+  fontWeight: "600",
+}}           onClick={closeToast}
+          >
+            No
+          </button>
+
+          <button
+className="btn btn-danger"
+style={{
+  minWidth: "85px",
+  height: "40px",
+  fontWeight: "600",
+}}            onClick={() => {
+              closeToast();
+              handleCancelAppointment(appointmentId);
+            }}
+          >
+            Yes
+          </button>
+        </div>
+      </div>
+    ),
+    {
+  autoClose: false,
+  closeOnClick: false,
+  draggable: false,
+  position: "top-center",
+  style: {
+    width: "460px",
+    padding: "15px",
+  },
+}
+  );
+};
+
+
+  const handleCancelAppointment = async (appointmentId) => {
 
   try {
     const token = localStorage.getItem("token");
@@ -326,9 +387,8 @@ const ReceptionistDashboard = () => {
         ) : (
           <button
             className="btn btn-sm btn-danger"
-            onClick={() =>
-              handleCancelAppointment(app._id)
-            }
+            onClick={() => showCancelConfirmation(app._id)
+             }
           >
             Cancel
           </button>
