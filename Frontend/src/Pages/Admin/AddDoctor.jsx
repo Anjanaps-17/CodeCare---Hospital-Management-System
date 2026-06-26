@@ -103,7 +103,7 @@ const AddDoctor = () => {
         <PageHeader
     title="Add Doctor"
     icon="bi bi-person-plus-fill"
-    backPath="/admin/doctor"
+    // backPath="/admin/doctor"
 />
           {/* Header */}
           <div className="d-flex align-items-center mb-4">

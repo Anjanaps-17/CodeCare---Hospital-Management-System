@@ -83,7 +83,11 @@ const EditDoctor = () => {
 
         <div className="card-body">
           <form onSubmit={submitHandler}>
-
+ <PageHeader
+    title="Doctor"
+    icon="bi bi-person-plus-fill"
+    backPath="/admin/doctor"
+/>
             <div className="mb-3">
               <label className="form-label">
                 Doctor Name
@@ -98,12 +102,6 @@ const EditDoctor = () => {
                 required
               />
             </div>
-
-            <PageHeader
-    title="Add New User"
-    icon="bi bi-person-plus-fill"
-    backPath="/admin/doctor"
-/>
 
             <div className="mb-3">
               <label className="form-label">

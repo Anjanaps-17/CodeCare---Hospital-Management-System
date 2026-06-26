@@ -42,7 +42,84 @@ const changeHandler = (e) => {
   }));
 };
 
- const validateForm = () => {
+//  const validateForm = () => {
+//   let newErrors = {};
+
+//   const usernameRegex = /^[a-zA-Z0-9_]{3,20}$/;
+//   const fullNameRegex = /^[\p{L} .'-]{2,50}$/u;
+//   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+//   const phoneRegex = /^[6-9]\d{9}$/;
+
+//   if (!formData.username.trim()) {
+//     newErrors.username = "Username is required";
+//   } else if (!usernameRegex.test(formData.username)) {
+//     newErrors.username =
+//       "Only letters, numbers and underscore allowed";
+//   }
+
+//      if (!formData.fullName.trim()) {
+//       newErrors.fullName = "Full Name is required";
+//     } else if (!fullNameRegex.test(formData.fullName)) {
+//       newErrors.fullName = "Name contains invalid characters or is too short";
+//     }
+
+//   if (!formData.email.trim()) {
+//     newErrors.email = "Email is required";
+//   } else if (!emailRegex.test(formData.email)) {
+//     newErrors.email = "Invalid Email Address";
+//   }
+
+//   if (!formData.phoneNumber.trim()) {
+//     newErrors.phoneNumber = "Phone Number is required";
+//   } else if (!phoneRegex.test(formData.phoneNumber)) {
+//     newErrors.phoneNumber =
+//       "Must be a valid 10 digit Indian number";
+//   }
+
+//   if (!formData.password) {
+//     newErrors.password = "Password is required";
+//   } else if (formData.password.length < 6) {
+//     newErrors.password =
+//       "Password must be at least 6 characters";
+//   }
+
+//   if (!formData.gender) {
+//     newErrors.gender = "Please select Gender";
+//   }
+
+//   if (!formData.bloodGroup) {
+//     newErrors.bloodGroup =
+//       "Please select Blood Group";
+//   }
+
+//   setErrors(newErrors);
+
+//   return Object.keys(newErrors).length === 0;
+
+// if (formData.birthDate) {
+//   const dob = new Date(formData.birthDate);
+//   const today = new Date();
+
+//   today.setHours(0, 0, 0, 0);
+
+//   let age = today.getFullYear() - dob.getFullYear();
+
+//   const monthDiff = today.getMonth() - dob.getMonth();
+
+//   if (
+//     monthDiff < 0 ||
+//     (monthDiff === 0 && today.getDate() < dob.getDate())
+//   ) {
+//     age--;
+//   }
+
+//   if (age < 18) {
+//     newErrors.birthDate = "User must be at least 18 years old";
+//   }
+// }
+
+// };
+const validateForm = () => {
   let newErrors = {};
 
   const usernameRegex = /^[a-zA-Z0-9_]{3,20}$/;
@@ -53,15 +130,14 @@ const changeHandler = (e) => {
   if (!formData.username.trim()) {
     newErrors.username = "Username is required";
   } else if (!usernameRegex.test(formData.username)) {
-    newErrors.username =
-      "Only letters, numbers and underscore allowed";
+    newErrors.username = "Only letters, numbers and underscore allowed";
   }
 
-     if (!formData.fullName.trim()) {
-      newErrors.fullName = "Full Name is required";
-    } else if (!fullNameRegex.test(formData.fullName)) {
-      newErrors.fullName = "Name contains invalid characters or is too short";
-    }
+  if (!formData.fullName.trim()) {
+    newErrors.fullName = "Full Name is required";
+  } else if (!fullNameRegex.test(formData.fullName)) {
+    newErrors.fullName = "Name contains invalid characters or is too short";
+  }
 
   if (!formData.email.trim()) {
     newErrors.email = "Email is required";
@@ -72,15 +148,13 @@ const changeHandler = (e) => {
   if (!formData.phoneNumber.trim()) {
     newErrors.phoneNumber = "Phone Number is required";
   } else if (!phoneRegex.test(formData.phoneNumber)) {
-    newErrors.phoneNumber =
-      "Must be a valid 10 digit Indian number";
+    newErrors.phoneNumber = "Must be a valid 10 digit Indian number";
   }
 
   if (!formData.password) {
     newErrors.password = "Password is required";
   } else if (formData.password.length < 6) {
-    newErrors.password =
-      "Password must be at least 6 characters";
+    newErrors.password = "Password must be at least 6 characters";
   }
 
   if (!formData.gender) {
@@ -88,15 +162,34 @@ const changeHandler = (e) => {
   }
 
   if (!formData.bloodGroup) {
-    newErrors.bloodGroup =
-      "Please select Blood Group";
+    newErrors.bloodGroup = "Please select Blood Group";
+  }
+
+  // ✅ FIXED: AGE validation (THIS MUST BE BEFORE RETURN)
+  if (formData.birthDate) {
+    const dob = new Date(formData.birthDate);
+    const today = new Date();
+
+    let age = today.getFullYear() - dob.getFullYear();
+
+    const monthDiff = today.getMonth() - dob.getMonth();
+
+    if (
+      monthDiff < 0 ||
+      (monthDiff === 0 && today.getDate() < dob.getDate())
+    ) {
+      age--;
+    }
+
+    if (age < 18) {
+      newErrors.birthDate = "User must be at least 18 years old";
+    }
   }
 
   setErrors(newErrors);
 
   return Object.keys(newErrors).length === 0;
 };
-
   const submitHandler = async (e) => {
   e.preventDefault();
 
@@ -294,14 +387,22 @@ return (
           </div>
 
           <div className="ap-field">
-            <label>Birth Date</label>
-            <input
-              type="date"
-              name="birthDate"
-              value={formData.birthDate}
-              onChange={changeHandler}
-            />
-          </div>
+  <label>Birth Date</label>
+
+  <input
+    type="date"
+    name="birthDate"
+    value={formData.birthDate}
+    onChange={changeHandler}
+    max={new Date().toISOString().split("T")[0]}
+  />
+
+  {errors.birthDate && (
+    <small className="text-danger">
+      {errors.birthDate}
+    </small>
+  )}
+</div>
 
           <div className="ap-field">
             <label>Qualification</label>
