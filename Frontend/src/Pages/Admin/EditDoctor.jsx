@@ -6,6 +6,7 @@ import {
   updateDoctor,
   getDepartments
 } from "../../api/AdminService";
+import PageHeader from "../../components/common/PageHeader";
 
 const EditDoctor = () => {
   const { id } = useParams();
@@ -97,6 +98,12 @@ const EditDoctor = () => {
                 required
               />
             </div>
+
+            <PageHeader
+    title="Add New User"
+    icon="bi bi-person-plus-fill"
+    backPath="/admin/doctor"
+/>
 
             <div className="mb-3">
               <label className="form-label">

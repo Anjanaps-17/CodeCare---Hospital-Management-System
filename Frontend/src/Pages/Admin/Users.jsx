@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getUsers, deleteUser } from "../../api/AdminService";
 import { toast } from "react-toastify";
-
+import PageHeader from "../../components/common/PageHeader";
 const Users = () => {
   const navigate = useNavigate();
   const [users, setUsers] = useState([]);
@@ -62,6 +62,12 @@ const Users = () => {
           ➕ Add User
         </button>
       </div>
+
+      <PageHeader
+    title="Users"
+    icon="bi bi-people-fill"
+    backPath="/admin/dashboard"
+/>
 
       {/* Table Card */}
       <div

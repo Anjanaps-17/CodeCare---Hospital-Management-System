@@ -33,7 +33,8 @@ const handleSearch = async () => {
     const token = localStorage.getItem("token");
 
     // Dashboard stats
-    fetch("http://localhost:5000/api/receptionist/dashboard", {
+    // fetch("http://localhost:5000/api/receptionist/dashboard", {
+    fetch("http://localhost:5000/api/receptionist/appointments/today", {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -50,7 +51,8 @@ const handleSearch = async () => {
       .catch((err) => console.log(err));
 
     // Today appointments
-    fetch("http://localhost:5000/api/appointments/today", {
+    // fetch("http://localhost:5000/api/appointments/today", {
+    fetch("http://localhost:5000/api/receptionist/appointments/today", {
       headers: {
         Authorization: `Bearer ${token}`,
       },

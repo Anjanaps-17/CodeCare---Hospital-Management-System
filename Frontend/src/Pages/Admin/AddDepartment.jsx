@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { createDepartment } from "../../api/AdminService";
 import { toast } from "react-toastify";
 
+import PageHeader from "../../components/common/PageHeader";
+
 const AddDepartment = () => {
   const navigate = useNavigate();
 
@@ -41,7 +43,11 @@ const AddDepartment = () => {
         <div className="page-card p-4">
           <h3>Add Department</h3>
         </div>
-
+   <PageHeader
+    title="Add department"
+    icon="bi bi-person-plus-fill"
+    backPath="/admin/department"
+/>
         <div className="card-body">
           <form onSubmit={submitHandler}>
             <div className="mb-3">

@@ -548,6 +548,41 @@ const cancelAppointment = async (req, res) => {
   }
 };
 
+// ======================
+// Receptionist Dashboard
+// ======================
+const getDashboard = async (req, res) => {
+  try {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const tomorrow = new Date(today);
+    tomorrow.setDate(today.getDate() + 1);
+
+    const totalPatientsToday = await Patient.countDocuments({
+      createdAt: {
+        $gte: today,
+        $lt: tomorrow,
+      },
+    });
+
+    const pendingAppointments = await Appointment.countDocuments({
+      status: "Pending",
+    });
+
+    res.status(200).json({
+      data: {
+        totalPatientsToday,
+        pendingAppointments,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({
+      error: error.message,
+    });
+  }
+};
+
 module.exports = {
   registerPatient,
   searchPatient,
@@ -565,4 +600,5 @@ module.exports = {
   getTodayAppointments,
   updateAppointment,
   cancelAppointment,
+  getDashboard,
 };

@@ -4,7 +4,7 @@ import {
   getAdminReports,
   exportAdminReportsCSV,
 } from "../../api/AdminService";
-
+import PageHeader from "../../components/common/PageHeader";
 import {
   PieChart,
   Pie,
@@ -123,7 +123,12 @@ if (toDate) {
 
   return (
     <div style={{ padding: "20px" }}>
-      <h2> Admin Reports</h2>
+        <PageHeader
+    title="Reports"
+    icon="bi bi-bar-chart-line-fill"
+    backPath="/admin/dashboard"
+/>
+      
 
       {/* 📌 SUMMARY CARDS */}
       <div style={styles.cardContainer}>
@@ -131,6 +136,7 @@ if (toDate) {
         <div style={styles.card}>✅ Active<br /><b>{summary.active}</b></div>
         <div style={styles.card}>❌ Inactive<br /><b>{summary.inactive}</b></div>
       </div>
+
 
       {/* 🔍 FILTERS */}
       <div style={styles.filterBox}>

@@ -4,6 +4,7 @@ import {
   getDoctors,
   deleteDoctor
 } from "../../api/AdminService";
+import PageHeader from "../../components/common/PageHeader";
 
 const Doctors = () => {
   const navigate = useNavigate();
@@ -43,7 +44,11 @@ const Doctors = () => {
           Add Doctor
         </button>
       </div>
-
+<PageHeader
+    title="Doctors"
+    icon="bi bi-person-badge-fill"
+    backPath="/admin/dashboard"
+/>
       <table className="table table-bordered shadow">
         <thead>
           <tr>

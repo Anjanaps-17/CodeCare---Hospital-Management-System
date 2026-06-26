@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { createUser } from "../../api/AdminService";
 import { toast } from "react-toastify";
+import "../../styles/AddPatient.css";
 
 const AddUser = () => {
   const navigate = useNavigate();
@@ -120,256 +121,271 @@ const changeHandler = (e) => {
   }
 };
   
+const [loading, setLoading] = useState(false);
 return (
+  <div className="ap-wrapper">
+    <div className="ap-container">
 
-  <div className="page-wrapper">
-    <div className="card shadow border-0">
-      <div
-        className="card-header text-white"
-        style={{
-          background: "linear-gradient(90deg,#008b8b,#0ea5a4)",
-        }}
-      >
-        <h3 className="mb-0">👤 Add New User</h3>
-      </div>
+     {/* Header */}
+<div className="ap-header">
 
+  <button
+    type="button"
+    className="ap-back-btn"
+    onClick={() => navigate("/admin/users")}
+  >
+    <i className="bi bi-arrow-left"></i>
+  </button>
 
-  <div className="card-body p-4">
-    <form onSubmit={submitHandler}>
-
-      {/* Account Information */}
-      <h5 className="mb-3" style={{ color: "#008b8b" }}>
-         Account Information
-      </h5>
-
-      <div className="row">
-        <div className="col-md-6 mb-3">
-          <label className="form-label">Username</label>
-          <input
-            type="text"
-            name="username"
-            className={`form-control ${errors.username ? "is-invalid" : ""}`}
-            value={formData.username}
-            onChange={changeHandler}
-          />
-          {errors.username && (
-            <div className="invalid-feedback">{errors.username}</div>
-          )}
-        </div>
-
-        <div className="col-md-6 mb-3">
-          <label className="form-label">Full Name</label>
-          <input
-            type="text"
-            name="fullName"
-            className={`form-control ${errors.fullName ? "is-invalid" : ""}`}
-            value={formData.fullName}
-            onChange={changeHandler}
-          />
-          {errors.fullName && (
-            <div className="invalid-feedback">{errors.fullName}</div>
-          )}
-        </div>
-      </div>
-
-      <div className="row">
-        <div className="col-md-6 mb-3">
-          <label className="form-label">Email</label>
-          <input
-            type="email"
-            name="email"
-            className={`form-control ${errors.email ? "is-invalid" : ""}`}
-            value={formData.email}
-            onChange={changeHandler}
-          />
-          {errors.email && (
-            <div className="invalid-feedback">{errors.email}</div>
-          )}
-        </div>
-
-        <div className="col-md-6 mb-3">
-          <label className="form-label">Phone Number</label>
-          <input
-            type="text"
-            name="phoneNumber"
-            className={`form-control ${errors.phoneNumber ? "is-invalid" : ""}`}
-            value={formData.phoneNumber}
-            onChange={changeHandler}
-          />
-          {errors.phoneNumber && (
-            <div className="invalid-feedback">{errors.phoneNumber}</div>
-          )}
-        </div>
-      </div>
-
-      <div className="row">
-        <div className="col-md-6 mb-3">
-          <label className="form-label">Password</label>
-          <input
-            type="password"
-            name="password"
-            className={`form-control ${errors.password ? "is-invalid" : ""}`}
-            value={formData.password}
-            onChange={changeHandler}
-          />
-          {errors.password && (
-            <div className="invalid-feedback">{errors.password}</div>
-          )}
-        </div>
-
-        <div className="col-md-6 mb-3">
-          <label className="form-label">Role</label>
-          <select
-            name="role"
-            className="form-select"
-            value={formData.role}
-            onChange={changeHandler}
-          >
-            <option value="Admin">Admin</option>
-            <option value="Doctor">Doctor</option>
-            <option value="Receptionist">Receptionist</option>
-            <option value="Lab Technician">Lab Technician</option>
-          </select>
-        </div>
-      </div>
-
-      <hr />
-
-      {/* Personal Information */}
-      <h5 className="mb-3" style={{ color: "#008b8b" }}>
-         Personal Information
-      </h5>
-
-      <div className="row">
-        <div className="col-md-6 mb-3">
-          <label className="form-label">Gender</label>
-          <select
-            name="gender"
-            className={`form-select ${errors.gender ? "is-invalid" : ""}`}
-            value={formData.gender}
-            onChange={changeHandler}
-          >
-            <option value="">Select Gender</option>
-            <option value="Male">Male</option>
-            <option value="Female">Female</option>
-            <option value="Other">Other</option>
-          </select>
-          {errors.gender && (
-            <div className="invalid-feedback">{errors.gender}</div>
-          )}
-        </div>
-
-        <div className="col-md-6 mb-3">
-          <label className="form-label">Blood Group</label>
-          <select
-            name="bloodGroup"
-            className={`form-select ${errors.bloodGroup ? "is-invalid" : ""}`}
-            value={formData.bloodGroup}
-            onChange={changeHandler}
-          >
-            <option value="">Select Blood Group</option>
-            <option value="A+">A+</option>
-            <option value="A-">A-</option>
-            <option value="B+">B+</option>
-            <option value="B-">B-</option>
-            <option value="AB+">AB+</option>
-            <option value="AB-">AB-</option>
-            <option value="O+">O+</option>
-            <option value="O-">O-</option>
-          </select>
-          {errors.bloodGroup && (
-            <div className="invalid-feedback">{errors.bloodGroup}</div>
-          )}
-        </div>
-      </div>
-
-      <div className="row">
-        <div className="col-md-6 mb-3">
-          <label className="form-label">Birth Date</label>
-          <input
-            type="date"
-            name="birthDate"
-            className="form-control"
-            value={formData.birthDate}
-            onChange={changeHandler}
-          />
-        </div>
-
-        <div className="col-md-6 mb-3">
-          <label className="form-label">Qualification</label>
-          <input
-            type="text"
-            name="qualification"
-            className="form-control"
-            value={formData.qualification}
-            onChange={changeHandler}
-          />
-        </div>
-      </div>
-
-      <div className="mb-3">
-        <label className="form-label">Address</label>
-        <textarea
-          name="address"
-          rows="3"
-          className="form-control"
-          value={formData.address}
-          onChange={changeHandler}
-        />
-      </div>
-
-      <hr />
-
-      {/* Employment Information */}
-      <h5 className="mb-3" style={{ color: "#008b8b" }}>
-         Employment Information
-      </h5>
-
-      <div className="row">
-        <div className="col-md-6 mb-3">
-          <label className="form-label">Date Of Joining</label>
-          <input
-            type="date"
-            name="dateOfJoining"
-            className="form-control"
-            value={formData.dateOfJoining}
-            onChange={changeHandler}
-          />
-        </div>
-
-        <div className="col-md-6 mb-3">
-          <label className="form-label">Status</label>
-          <select
-            name="isActive"
-            className="form-select"
-            value={formData.isActive.toString()}
-            onChange={changeHandler}
-          >
-            <option value="true">Active</option>
-            <option value="false">Inactive</option>
-          </select>
-        </div>
-      </div>
-
-      <div className="text-end mt-4">
-        <button
-          type="submit"
-          className="btn"
-          style={{
-            backgroundColor: "#008b8b",
-            color: "white",
-            padding: "10px 25px",
-            borderRadius: "8px",
-            fontWeight: "600",
-          }}
-        >
-          ✅ Create User
-        </button>
-      </div>
-
-    </form>
+  <div className="ap-header-icon">
+    <i className="bi bi-person-plus-fill"></i>
   </div>
+
+  <div>
+    <h2 className="ap-title">Add New User</h2>
+    <p className="ap-subtitle">
+      CodeCare Hospital Management System
+    </p>
+  </div>
+
 </div>
+
+      <form onSubmit={submitHandler} className="ap-form">
+
+        {/* Account Information */}
+
+        <div className="ap-section-label">
+          Account Information
+        </div>
+
+        <div className="ap-grid-2">
+
+          <div className="ap-field">
+            <label>Username *</label>
+            <input
+              type="text"
+              name="username"
+              value={formData.username}
+              onChange={changeHandler}
+            />
+            {errors.username && (
+              <small className="text-danger">{errors.username}</small>
+            )}
+          </div>
+
+          <div className="ap-field">
+            <label>Full Name *</label>
+            <input
+              type="text"
+              name="fullName"
+              value={formData.fullName}
+              onChange={changeHandler}
+            />
+            {errors.fullName && (
+              <small className="text-danger">{errors.fullName}</small>
+            )}
+          </div>
+
+          <div className="ap-field">
+            <label>Email *</label>
+            <input
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={changeHandler}
+            />
+            {errors.email && (
+              <small className="text-danger">{errors.email}</small>
+            )}
+          </div>
+
+          <div className="ap-field">
+            <label>Phone Number *</label>
+            <input
+              type="text"
+              name="phoneNumber"
+              value={formData.phoneNumber}
+              onChange={changeHandler}
+              maxLength={10}
+            />
+            {errors.phoneNumber && (
+              <small className="text-danger">{errors.phoneNumber}</small>
+            )}
+          </div>
+
+          <div className="ap-field">
+            <label>Password *</label>
+            <input
+              type="password"
+              name="password"
+              value={formData.password}
+              onChange={changeHandler}
+            />
+            {errors.password && (
+              <small className="text-danger">{errors.password}</small>
+            )}
+          </div>
+
+          <div className="ap-field">
+            <label>Role *</label>
+            <select
+              name="role"
+              value={formData.role}
+              onChange={changeHandler}
+            >
+              <option value="Admin">Admin</option>
+              <option value="Doctor">Doctor</option>
+              <option value="Receptionist">Receptionist</option>
+              <option value="Lab Technician">Lab Technician</option>
+            </select>
+          </div>
+
+        </div>
+
+        {/* Personal Information */}
+
+        <div className="ap-section-label mt-3">
+          Personal Information
+        </div>
+
+        <div className="ap-grid-2">
+
+          <div className="ap-field">
+            <label>Gender *</label>
+
+            <select
+              name="gender"
+              value={formData.gender}
+              onChange={changeHandler}
+            >
+              <option value="">Select Gender</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Other">Other</option>
+            </select>
+
+            {errors.gender && (
+              <small className="text-danger">{errors.gender}</small>
+            )}
+          </div>
+
+          <div className="ap-field">
+            <label>Blood Group *</label>
+
+            <select
+              name="bloodGroup"
+              value={formData.bloodGroup}
+              onChange={changeHandler}
+            >
+              <option value="">Select Blood Group</option>
+              <option value="A+">A+</option>
+              <option value="A-">A-</option>
+              <option value="B+">B+</option>
+              <option value="B-">B-</option>
+              <option value="AB+">AB+</option>
+              <option value="AB-">AB-</option>
+              <option value="O+">O+</option>
+              <option value="O-">O-</option>
+            </select>
+
+            {errors.bloodGroup && (
+              <small className="text-danger">{errors.bloodGroup}</small>
+            )}
+          </div>
+
+          <div className="ap-field">
+            <label>Birth Date</label>
+            <input
+              type="date"
+              name="birthDate"
+              value={formData.birthDate}
+              onChange={changeHandler}
+            />
+          </div>
+
+          <div className="ap-field">
+            <label>Qualification</label>
+            <input
+              type="text"
+              name="qualification"
+              value={formData.qualification}
+              onChange={changeHandler}
+            />
+          </div>
+
+        </div>
+
+        <div className="ap-field mt-3">
+          <label>Address</label>
+
+          <textarea
+            rows="3"
+            name="address"
+            value={formData.address}
+            onChange={changeHandler}
+          />
+        </div>
+
+        {/* Employment */}
+
+        <div className="ap-section-label mt-3">
+          Employment Information
+        </div>
+
+        <div className="ap-grid-2">
+
+          <div className="ap-field">
+            <label>Date Of Joining</label>
+
+            <input
+              type="date"
+              name="dateOfJoining"
+              value={formData.dateOfJoining}
+              onChange={changeHandler}
+            />
+          </div>
+
+          <div className="ap-field">
+            <label>Status</label>
+
+            <select
+              name="isActive"
+              value={formData.isActive.toString()}
+              onChange={changeHandler}
+            >
+              <option value="true">Active</option>
+              <option value="false">Inactive</option>
+            </select>
+          </div>
+
+        </div>
+
+        <div className="ap-actions">
+
+          <button
+            type="button"
+            className="ap-btn-ghost"
+            onClick={() => navigate("/admin/users")}
+          >
+            <i className="bi bi-arrow-left me-1"></i>
+            Back
+          </button>
+
+          <button
+            type="submit"
+            className="ap-btn-primary"
+            disabled={loading}
+          >
+            <i className="bi bi-person-plus-fill me-1"></i>
+
+            {loading ? "Creating..." : "Create User"}
+          </button>
+
+        </div>
+
+      </form>
+
+    </div>
   </div>
 );
 

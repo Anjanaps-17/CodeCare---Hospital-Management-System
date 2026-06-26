@@ -463,3 +463,33 @@ body {
   color: #115e59;
   font-weight: 500;
 }
+
+.ap-header {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 30px;
+}
+
+.ap-back-btn {
+  width: 42px;
+  height: 42px;
+  border: none;
+  border-radius: 50%;
+  background: #f3f4f6;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.25s ease;
+}
+
+.ap-back-btn:hover {
+  background: #0ea5a4;
+  color: white;
+  transform: translateX(-2px);
+}
+
+.ap-back-btn i {
+  font-size: 20px;
+}

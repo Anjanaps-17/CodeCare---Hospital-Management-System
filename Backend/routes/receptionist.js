@@ -20,6 +20,7 @@ const {
   getAppointmentsByPatient,
   updateAppointment,
   cancelAppointment,
+  getDashboard,
 } = require("../controller/receptionist");
 
 
@@ -81,5 +82,7 @@ router.put("/appointments/:id", updateAppointment);
 
 // Cancel Appointment
 router.patch("/appointments/:id/cancel", cancelAppointment);
+
+router.get("/dashboard", getDashboard);
 
 module.exports = router;

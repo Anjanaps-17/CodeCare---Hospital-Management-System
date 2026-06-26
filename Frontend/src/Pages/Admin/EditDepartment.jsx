@@ -5,6 +5,7 @@ import {
   getDepartmentById,
   updateDepartment,
 } from "../../api/AdminService";
+import PageHeader from "../../components/common/PageHeader";
 
 const EditDepartment = () => {
   const navigate = useNavigate();
@@ -61,6 +62,12 @@ const EditDepartment = () => {
         <div className="card-header">
           <h3>Edit Department</h3>
         </div>
+ 
+<PageHeader
+    title="Edit Department"
+    icon="bi bi-person-plus-fill"
+    backPath="/admin/department"
+/>
 
         <div className="card-body">
           <form onSubmit={submitHandler}>

@@ -6,6 +6,7 @@ import {
   updateUser,
 } from "../../api/AdminService";
 
+import PageHeader from "../../components/common/PageHeader";
 const EditUser = () => {
   const navigate = useNavigate();
   const { id } = useParams();
@@ -150,6 +151,12 @@ const EditUser = () => {
       <div className="card-body p-4">
         <form onSubmit={submitHandler}>
 
+
+       <PageHeader
+    title="Add New User"
+    icon="bi bi-person-plus-fill"
+    backPath="/admin/users"
+/>
           {/* Account Information */}
           <h5 className="mb-3" style={{ color: "#008b8b" }}>
              Account Information
@@ -238,7 +245,7 @@ const EditUser = () => {
           </div>
 
           <hr />
-
+ 
           {/* Personal Information */}
           <h5 className="mb-3" style={{ color: "#008b8b" }}>
             Personal Information

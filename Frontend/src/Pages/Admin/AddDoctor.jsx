@@ -7,6 +7,8 @@ import {
   createDoctor
 } from "../../api/AdminService";
 
+import PageHeader from "../../components/common/PageHeader";
+
 const AddDoctor = () => {
   const navigate = useNavigate();
 
@@ -96,7 +98,13 @@ const AddDoctor = () => {
         <div
           className="mx-auto bg-white shadow rounded-4 p-4"
           style={{ maxWidth: "900px" }}
-        >
+        > 
+
+        <PageHeader
+    title="Add Doctor"
+    icon="bi bi-person-plus-fill"
+    backPath="/admin/doctor"
+/>
           {/* Header */}
           <div className="d-flex align-items-center mb-4">
             <div
