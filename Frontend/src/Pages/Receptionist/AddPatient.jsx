@@ -2,7 +2,9 @@ import React, { useState, useRef, } from "react";
 import { useNavigate } from "react-router-dom";
 import QRCode from "qrcode";
 import jsPDF from "jspdf";
+import { toast } from "react-toastify";
 import "../../styles/AddPatient.css";
+
 
 const AddPatient = () => {
   const navigate = useNavigate();
@@ -21,9 +23,9 @@ const AddPatient = () => {
 
   const [patient, setPatient] = useState(null);
   const [qrDataUrl, setQrDataUrl] = useState("");
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
+  
 
   const bloodGroups = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
 
@@ -46,7 +48,8 @@ const AddPatient = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-setError("");
+    setError("");
+
 
     // Full Name validation
 if (!/^[A-Za-z\s]+$/.test(formData.name.trim())) {
@@ -108,12 +111,14 @@ setQrDataUrl("");
 
       if (!res.ok) throw new Error(data.message || "Registration failed");
 
+
+      setError("");
       setPatient(data.patient);
-      setMessage(data.message);
       await generateQR(data.patient.patientId);
+      toast.success(data.message);
     } catch (err) {
-      setError(err.message);
-    } finally {
+    toast.error(err.message);
+} finally {
       setLoading(false);
     }
   };
@@ -216,8 +221,7 @@ setQrDataUrl("");
     });
     setPatient(null);
     setQrDataUrl("");
-    setMessage("");
-    setError("");
+      setError(""); 
   };
 
   return (
@@ -234,20 +238,14 @@ setQrDataUrl("");
           </div>
         </div>
 
-        {/* ── Alert banner ── */}
-        {message && (
-          <div className={`ap-alert ${message.includes("already") ? "ap-alert-warn" : "ap-alert-ok"}`}>
-            <i className={`bi ${message.includes("already") ? "bi-exclamation-circle" : "bi-check-circle"} me-2`} />
-            {message}
-          </div>
-        )}
-        {error && (
-          <div className="ap-alert ap-alert-err">
-            <i className="bi bi-x-circle me-2" />
-            {error}
-          </div>
-        )}
-
+{/* Error Alert */}
+{error && (
+  <div className="ap-alert ap-alert-err">
+    <i className="bi bi-x-circle me-2" />
+    {error}
+  </div>
+)}
+        
         {!patient ? (
           /* ── Registration form ── */
           <form onSubmit={handleSubmit} className="ap-form">
@@ -259,7 +257,7 @@ setQrDataUrl("");
                   name="name"
                   value={formData.name}
                   onChange={handleChange}
-                  placeholder="e.g. Anamika S"
+                  placeholder="Enter your full name"
                   required
                 />
               </div>

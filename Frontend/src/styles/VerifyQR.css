@@ -1,37 +1,586 @@
-.verify-info-table {
+/* ============================================================
+   VerifyQR.css  —  CodeCare Hospital Management System
+   Modern, professional teal theme. No logic changes.
+   ============================================================ */
+ 
+/* ── CSS Variables ─────────────────────────────────────────── */
+:root {
+  --vq-teal-50:    #f0fdfa;
+  --vq-teal-100:   #ccfbf1;
+  --vq-teal-200:   #99f6e4;
+  --vq-teal-400:   #2dd4bf;
+  --vq-teal-500:   #14b8a6;
+  --vq-teal-600:   #0d9488;
+  --vq-teal-700:   #0f766e;
+  --vq-teal-800:   #115e59;
+  --vq-teal-900:   #134e4a;
+ 
+  --vq-green-500:  #22c55e;
+  --vq-green-100:  #dcfce7;
+  --vq-green-700:  #15803d;
+ 
+  --vq-yellow-500: #eab308;
+  --vq-yellow-100: #fef9c3;
+  --vq-yellow-700: #a16207;
+ 
+  --vq-red-500:    #ef4444;
+  --vq-red-100:    #fee2e2;
+  --vq-red-700:    #b91c1c;
+ 
+  --vq-gray-50:    #f8fafc;
+  --vq-gray-100:   #f1f5f9;
+  --vq-gray-200:   #e2e8f0;
+  --vq-gray-300:   #cbd5e1;
+  --vq-gray-400:   #94a3b8;
+  --vq-gray-500:   #64748b;
+  --vq-gray-600:   #475569;
+  --vq-gray-700:   #334155;
+  --vq-gray-800:   #1e293b;
+  --vq-gray-900:   #0f172a;
+ 
+  --vq-white:      #ffffff;
+ 
+  --vq-card-radius:   16px;
+  --vq-btn-radius:    10px;
+  --vq-input-radius:  10px;
+ 
+  --vq-shadow-sm:  0 1px 3px rgba(15,118,110,.08), 0 1px 2px rgba(15,118,110,.06);
+  --vq-shadow-md:  0 4px 16px rgba(15,118,110,.10), 0 2px 6px rgba(15,118,110,.07);
+  --vq-shadow-lg:  0 8px 30px rgba(15,118,110,.12), 0 4px 10px rgba(15,118,110,.08);
+  --vq-shadow-hover: 0 12px 36px rgba(15,118,110,.16), 0 4px 12px rgba(15,118,110,.10);
+ 
+  --vq-transition: 0.22s ease;
+}
+ 
+/* ── Page wrapper ───────────────────────────────────────────── */
+.vq-wrapper {
+  min-height: 100vh;
+  background: linear-gradient(145deg, #f0fdfa 0%, #e6f9f7 40%, #f8fafc 100%);
+  padding: 32px 20px 48px;
+  font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+ 
+.vq-container {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+ 
+/* ── Header ─────────────────────────────────────────────────── */
+.vq-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:16px;
+
+    background:linear-gradient(120deg,var(--vq-teal-700) 0%,var(--vq-teal-500) 60%,var(--vq-teal-400) 100%);
+    border-radius:18px;
+
+    padding:28px 34px;
+
+    margin-bottom:34px;
+
+    box-shadow:0 6px 28px rgba(13,148,136,.28);
+
+    position:relative;
+    overflow:hidden;
+}
+ 
+/* subtle watermark ring */
+.vq-header::before {
+  content: '';
+  position: absolute;
+  right: -40px;
+  top: -40px;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.06);
+  pointer-events: none;
+}
+ 
+.vq-header::after {
+  content: '';
+  position: absolute;
+  right: 40px;
+  top: 30px;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.04);
+  pointer-events: none;
+}
+ 
+.vq-header__left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+ 
+.vq-header__icon {
+  width: 52px;
+  height: 52px;
+  background: rgba(255,255,255,.18);
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  color: var(--vq-white);
+  flex-shrink: 0;
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255,255,255,.22);
+}
+ 
+.vq-header__title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--vq-white);
+  margin: 0 0 3px;
+  letter-spacing: -0.3px;
+}
+ 
+.vq-header__subtitle {
+  font-size: 0.82rem;
+  color: rgba(255,255,255,.80);
+  margin: 0;
+  font-weight: 400;
+}
+ 
+.vq-header__badge {
+  background: rgba(255,255,255,.18);
+  color: var(--vq-white);
+  border: 1px solid rgba(255,255,255,.28);
+  border-radius: 999px;
+  padding: 7px 18px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+  backdrop-filter: blur(4px);
+  flex-shrink: 0;
+}
+ 
+/* ── Three-column grid ──────────────────────────────────────── */
+.vq-grid{
+    display:grid;
+
+    grid-template-columns:340px 1fr 1fr;
+
+    gap:28px;
+
+    align-items:stretch;
+}
+ 
+/* ── Cards ──────────────────────────────────────────────────── */
+.vq-card{
+    background:var(--vq-white);
+    border-radius:var(--vq-card-radius);
+    box-shadow:var(--vq-shadow-md);
+    border:1px solid var(--vq-gray-200);
+
+    display:flex;
+    flex-direction:column;
+
+    transition:box-shadow var(--vq-transition),transform var(--vq-transition);
+
+    overflow:hidden;
+
+    height:100%;
+}
+ 
+.vq-card:hover {
+  box-shadow: var(--vq-shadow-hover);
+  transform: translateY(-2px);
+}
+ 
+.vq-card__header {
+  background: linear-gradient(90deg, var(--vq-teal-700) 0%, var(--vq-teal-600) 100%);
+  color: var(--vq-white);
+  font-size: 0.88rem;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+}
+ 
+.vq-card__header i {
+  font-size: 1rem;
+}
+ 
+.vq-card__body{
+    padding:26px;
+
+    flex:1;
+
+    display:flex;
+    flex-direction:column;
+}
+ 
+/* ── QR Scanner frame ───────────────────────────────────────── */
+.vq-scanner-frame{
+
+    background:var(--vq-teal-50);
+
+    border:2px dashed var(--vq-teal-200);
+
+    border-radius:14px;
+
+    padding:8px;
+
+    min-height:320px;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    margin-bottom:25px;
+
+    overflow:hidden;
+}
+ 
+.vq-reader {
+  width: 100%;
+  max-width: 450px;
+  margin: 0 auto;
+}
+ 
+/* Override html5-qrcode default styles slightly */
+#reader {
+  border: none !important;
+  border-radius: 10px;
+  overflow: hidden;
+}
+ 
+#reader__scan_region {
+  border-radius: 10px;
+  overflow: hidden;
+}
+ 
+#reader__dashboard {
+  padding: 8px 4px 4px !important;
+}
+ 
+#reader__dashboard_section_swaplink {
+  color: var(--vq-teal-600) !important;
+  font-size: 0.8rem !important;
+}
+ 
+/* ── Field / Input ──────────────────────────────────────────── */
+.vq-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+ 
+.vq-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--vq-gray-600);
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+}
+ 
+.vq-input {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1.5px solid var(--vq-gray-200);
+  border-radius: var(--vq-input-radius);
+  font-size: 0.88rem;
+  color: var(--vq-gray-800);
+  background: var(--vq-gray-50);
+  outline: none;
+  transition: border-color var(--vq-transition), box-shadow var(--vq-transition), background var(--vq-transition);
+  font-family: inherit;
+}
+ 
+.vq-input::placeholder {
+  color: var(--vq-gray-400);
+}
+ 
+.vq-input:focus {
+  border-color: var(--vq-teal-500);
+  background: var(--vq-white);
+  box-shadow: 0 0 0 3px rgba(20,184,166,.15);
+}
+ 
+/* ── Buttons ────────────────────────────────────────────────── */
+.vq-actions{
+    display:flex;
+    gap:10px;
+    margin-top:16px;
+}
+
+.vq-actions button{
+    flex:1;
+
+    height:46px;
+}
+ 
+.vq-reset-row{
+
+    margin-top:18px;
+
+    display:flex;
+
+    justify-content:center;
+}
+ 
+.vq-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 9px 18px;
+  border-radius: var(--vq-btn-radius);
+  border: none;
+  cursor: pointer;
+  transition: all var(--vq-transition);
+  font-family: inherit;
+  letter-spacing: 0.1px;
+  white-space: nowrap;
+}
+ 
+/* Primary — teal gradient */
+.vq-btn--primary {
+  flex: 1;
+  background: linear-gradient(135deg, var(--vq-teal-600) 0%, var(--vq-teal-500) 100%);
+  color: var(--vq-white);
+  box-shadow: 0 2px 8px rgba(13,148,136,.30);
+}
+ 
+.vq-btn--primary:hover {
+  background: linear-gradient(135deg, var(--vq-teal-700) 0%, var(--vq-teal-600) 100%);
+  box-shadow: 0 4px 14px rgba(13,148,136,.38);
+  transform: translateY(-1px);
+}
+ 
+.vq-btn--primary:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(13,148,136,.25);
+}
+ 
+/* Ghost */
+.vq-btn--ghost {
+  background: var(--vq-gray-100);
+  color: var(--vq-gray-700);
+  border: 1.5px solid var(--vq-gray-200);
+}
+ 
+.vq-btn--ghost:hover {
+  background: var(--vq-gray-200);
+  color: var(--vq-gray-900);
+  transform: translateY(-1px);
+}
+ 
+.vq-btn--ghost:active {
+  transform: translateY(0);
+}
+ 
+/* Outline teal */
+.vq-btn--outline {
+  background: transparent;
+  color: var(--vq-teal-600);
+  border: 1.5px solid var(--vq-teal-400);
+}
+ 
+.vq-btn--outline:hover {
+  background: var(--vq-teal-50);
+  color: var(--vq-teal-700);
+  border-color: var(--vq-teal-500);
+  transform: translateY(-1px);
+}
+ 
+.vq-btn--outline:active {
+  transform: translateY(0);
+}
+ 
+/* ── Status Badges ──────────────────────────────────────────── */
+.vq-badge {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 999px;
+  letter-spacing: 0.2px;
+}
+ 
+.vq-badge--green {
+  background: var(--vq-green-100);
+  color: var(--vq-green-700);
+}
+ 
+.vq-badge--yellow {
+  background: var(--vq-yellow-100);
+  color: var(--vq-yellow-700);
+}
+ 
+.vq-badge--red {
+  background: var(--vq-red-100);
+  color: var(--vq-red-700);
+}
+ 
+.vq-badge--default {
+  background: var(--vq-gray-100);
+  color: var(--vq-gray-500);
+}
+ 
+/* ── ID Block (top of each info card) ──────────────────────── */
+.vq-id-box{
+    background:#f7fffe;
+
+    border:1px solid #bdebe5;
+
+    border-radius:14px;
+
+    padding:18px;
+
+    margin-bottom:24px;
+
+    text-align:center;
+}
+
+.vq-id-box__label{
+    color:#0f766e;
+
+    font-size:.8rem;
+
+    text-transform:uppercase;
+
+    font-weight:700;
+
+    margin-bottom:8px;
+}
+
+.vq-id-box__value{
+    font-size:1.05rem;
+
+    font-weight:700;
+
+    color:#0f172a;
+
+    font-family:monospace;
+
+    white-space:nowrap;
+}
+
+/* ── Info table ─────────────────────────────────────────────── */
+.vq-info-list{
+    list-style:none;
+    margin:0;
+    padding:0;
+}
+
+.vq-info-list__item{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:14px 0;
+    border-bottom:1px solid #edf2f7;
+}
+
+.vq-info-list__item:last-child{
+    border-bottom:none;
+}
+
+.vq-info-list__key{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    color:#64748b;
+    font-weight:600;
+}
+
+.vq-info-list__val{
+    font-weight:600;
+    color:#1e293b;
+    text-align:right;
+}
+ 
+/* row icon tint */
+.vq-row-icon {
+  color: var(--vq-teal-500);
+  font-size: 0.9rem;
+}
+ 
+/* ── Responsive ─────────────────────────────────────────────── */
+ 
+/* Tablet  — 2 columns */
+@media (max-width: 992px) {
+  .vq-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+ 
+  .vq-grid > .vq-card:last-child {
+    grid-column: 1 / -1;
+  }
+ 
+  .vq-header {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+}
+ 
+/* Mobile — 1 column */
+@media (max-width: 640px) {
+  .vq-wrapper {
+    padding: 16px 12px 36px;
+  }
+ 
+  .vq-grid {
+    grid-template-columns: 1fr;
+  }
+ 
+  .vq-grid > .vq-card:last-child {
+    grid-column: auto;
+  }
+ 
+  .vq-header {
+    border-radius: 14px;
+    padding: 16px 18px;
+  }
+ 
+  .vq-header__title {
+    font-size: 1.2rem;
+  }
+ 
+  .vq-header__badge {
     width: 100%;
-    border-collapse: collapse;
-    table-layout: auto;
-}
-
-.verify-info-table td {
-    padding: 12px 8px;
-    vertical-align: middle;
-}
-
-.verify-info-table td:first-child {
-    font-weight: 600;
-    width: 45%;
-}
-
-.verify-info-table td:last-child {
-    text-align: right;
-    width: 55%;
-}
-.verify-info-table strong {
-  display: block;
-  margin-bottom: 5px;
-}
-
-.verify-info-table div {
-  word-break: break-all;
-}
-
-.verify-info-table td[colspan="2"] {
     text-align: center;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+  }
+ 
+  .vq-actions {
+    flex-direction: column;
+  }
+ 
+  .vq-btn--ghost,
+  .vq-btn--primary {
+    flex: unset;
+    width: 100%;
+  }
 }
-
-.verify-info-table td[colspan="2"] div {
-    text-align: center;
-    margin-top: 8px;
+ 
+/* ── Reduced motion ─────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .vq-card,
+  .vq-btn,
+  .vq-input {
+    transition: none;
+  }
+ 
+  .vq-card:hover,
+  .vq-btn:hover {
+    transform: none;
+  }
 }

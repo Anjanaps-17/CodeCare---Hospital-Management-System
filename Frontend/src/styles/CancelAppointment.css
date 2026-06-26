@@ -1,0 +1,665 @@
+/* ============================================================
+   CancelAppointment.css — CodeCare Hospital Management System
+   Follows identical design language as VerifyQR.css /
+   BookAppointment.css. Prefix: ca-
+   ============================================================ */
+
+/* ── Design tokens (mirrors vq- / ap- tokens exactly) ─────── */
+:root {
+  --ca-teal-50:   #f0fdfa;
+  --ca-teal-100:  #ccfbf1;
+  --ca-teal-200:  #99f6e4;
+  --ca-teal-300:  #5eead4;
+  --ca-teal-400:  #2dd4bf;
+  --ca-teal-500:  #14b8a6;
+  --ca-teal-600:  #0d9488;
+  --ca-teal-700:  #0f766e;
+  --ca-teal-800:  #115e59;
+  --ca-teal-900:  #134e4a;
+
+  /* Status colours */
+  --ca-green-bg:   #dcfce7;
+  --ca-green-txt:  #15803d;
+  --ca-yellow-bg:  #fef9c3;
+  --ca-yellow-txt: #a16207;
+  --ca-red-50:     #fff1f2;
+  --ca-red-100:    #fee2e2;
+  --ca-red-200:    #fecaca;
+  --ca-red-500:    #ef4444;
+  --ca-red-600:    #dc2626;
+  --ca-red-700:    #b91c1c;
+  --ca-red-800:    #991b1b;
+
+  /* Neutral */
+  --ca-white:     #ffffff;
+  --ca-gray-50:   #f8fafc;
+  --ca-gray-100:  #f1f5f9;
+  --ca-gray-200:  #e2e8f0;
+  --ca-gray-300:  #cbd5e1;
+  --ca-gray-400:  #94a3b8;
+  --ca-gray-500:  #64748b;
+  --ca-gray-600:  #475569;
+  --ca-gray-700:  #334155;
+  --ca-gray-800:  #1e293b;
+
+  /* Shape — same as vq */
+  --ca-radius-sm: 8px;
+  --ca-radius-md: 12px;
+  --ca-radius-lg: 16px;
+  --ca-radius-xl: 20px;
+
+  /* Shadows — same as vq */
+  --ca-shadow-card:  0 2px 12px rgba(15,118,110,.08), 0 1px 4px rgba(15,118,110,.05);
+  --ca-shadow-hover: 0 8px 28px rgba(15,118,110,.14), 0 2px 8px rgba(15,118,110,.08);
+  --ca-shadow-btn:   0 2px 8px rgba(13,148,136,.32);
+  --ca-shadow-hdr:   0 6px 24px rgba(13,148,136,.28);
+  --ca-shadow-red:   0 2px 10px rgba(220,38,38,.28);
+  --ca-shadow-red-h: 0 4px 16px rgba(220,38,38,.38);
+
+  --ca-ease: 0.2s ease;
+}
+
+/* ── Page wrapper ───────────────────────────────────────────── */
+.ca-wrapper {
+  min-height: 100vh;
+  background: linear-gradient(140deg, #f0fdfa 0%, #e8faf6 45%, #f8fafc 100%);
+  padding: 28px 20px 48px;
+  font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.ca-container {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* ── Header — identical structure to vq-header ─────────────── */
+.ca-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 14px;
+  background: linear-gradient(118deg, var(--ca-teal-800) 0%, var(--ca-teal-600) 55%, var(--ca-teal-400) 100%);
+  border-radius: var(--ca-radius-xl);
+  padding: 20px 26px;
+  margin-bottom: 26px;
+  box-shadow: var(--ca-shadow-hdr);
+  position: relative;
+  overflow: hidden;
+}
+
+.ca-header::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 90% 50%, rgba(255,255,255,.10) 0%, transparent 65%);
+  pointer-events: none;
+}
+
+.ca-header__left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.ca-header__icon {
+  width: 50px;
+  height: 50px;
+  flex-shrink: 0;
+  background: rgba(255,255,255,.16);
+  border: 1px solid rgba(255,255,255,.24);
+  border-radius: var(--ca-radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  color: var(--ca-white);
+}
+
+.ca-header__title {
+  font-size: 1.45rem;
+  font-weight: 700;
+  color: var(--ca-white);
+  letter-spacing: -0.3px;
+  margin: 0 0 3px;
+  line-height: 1.2;
+}
+
+.ca-header__subtitle {
+  font-size: 0.8rem;
+  color: rgba(255,255,255,.78);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.ca-header__subtitle .bi {
+  font-size: 0.9rem;
+}
+
+.ca-header__badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255,255,255,.16);
+  border: 1px solid rgba(255,255,255,.26);
+  color: var(--ca-white);
+  border-radius: 999px;
+  padding: 7px 18px;
+  font-size: 0.77rem;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+  backdrop-filter: blur(6px);
+}
+
+/* ── Page body layout ───────────────────────────────────────── */
+/*
+  Initially: one centred narrow search card.
+  After search: two-column — search left, details right.
+*/
+.ca-body {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+  align-items: start;
+}
+
+/* When details card is visible, go 2-column */
+.ca-body:has(.ca-card--details) {
+  grid-template-columns: 420px 1fr;
+}
+
+/* ── Cards — identical to vq-card ──────────────────────────── */
+.ca-card {
+  background: var(--ca-white);
+  border-radius: var(--ca-radius-lg);
+  border: 1px solid var(--ca-gray-200);
+  box-shadow: var(--ca-shadow-card);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: box-shadow var(--ca-ease), transform var(--ca-ease);
+}
+
+.ca-card:hover {
+  box-shadow: var(--ca-shadow-hover);
+  transform: translateY(-2px);
+}
+
+/* Search card: constrain width when alone */
+.ca-card--search {
+  max-width: 520px;
+  width: 100%;
+  justify-self: center;
+}
+
+/* When two cards exist, search card fills its column */
+.ca-body:has(.ca-card--details) .ca-card--search {
+  max-width: none;
+  justify-self: auto;
+}
+
+.ca-card__header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(90deg, var(--ca-teal-800) 0%, var(--ca-teal-600) 100%);
+  color: var(--ca-white);
+  font-size: 0.86rem;
+  font-weight: 600;
+  letter-spacing: 0.15px;
+  padding: 13px 18px;
+}
+
+.ca-card__header .bi {
+  font-size: 1rem;
+  opacity: 0.9;
+}
+
+.ca-card__body {
+  padding: 20px 18px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* ── Field & Input — identical to vq ───────────────────────── */
+.ca-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.ca-label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--ca-gray-600);
+}
+
+.ca-label .bi {
+  font-size: 0.82rem;
+  color: var(--ca-teal-500);
+}
+
+.ca-input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.ca-input-icon {
+  position: absolute;
+  left: 12px;
+  font-size: 1rem;
+  color: var(--ca-teal-500);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.ca-input {
+  width: 100%;
+  padding: 10px 14px 10px 36px;
+  border: 1.5px solid var(--ca-gray-200);
+  border-radius: var(--ca-radius-md);
+  font-size: 0.87rem;
+  color: var(--ca-gray-800);
+  background: var(--ca-gray-50);
+  font-family: inherit;
+  outline: none;
+  transition: border-color var(--ca-ease), box-shadow var(--ca-ease), background var(--ca-ease);
+}
+
+.ca-input::placeholder {
+  color: var(--ca-gray-400);
+  font-size: 0.84rem;
+}
+
+.ca-input:focus {
+  border-color: var(--ca-teal-500);
+  background: var(--ca-white);
+  box-shadow: 0 0 0 3px rgba(20,184,166,.14);
+}
+
+/* ── Buttons — mirrors vq-btn exactly ──────────────────────── */
+.ca-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.ca-reset-row {
+  display: flex;
+  justify-content: center;
+}
+
+.ca-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 0.84rem;
+  font-weight: 600;
+  padding: 9px 18px;
+  border-radius: var(--ca-radius-md);
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  letter-spacing: 0.1px;
+  white-space: nowrap;
+  transition: background var(--ca-ease), box-shadow var(--ca-ease),
+              transform var(--ca-ease), border-color var(--ca-ease),
+              color var(--ca-ease), opacity var(--ca-ease);
+}
+
+.ca-btn .bi {
+  font-size: 0.95rem;
+  line-height: 1;
+}
+
+/* Full-width modifier */
+.ca-btn--full {
+  width: 100%;
+}
+
+/* Primary — teal gradient */
+.ca-btn--primary {
+  flex: 1;
+  background: linear-gradient(135deg, var(--ca-teal-700) 0%, var(--ca-teal-500) 100%);
+  color: var(--ca-white);
+  box-shadow: var(--ca-shadow-btn);
+}
+
+.ca-btn--primary:hover:not(:disabled) {
+  background: linear-gradient(135deg, var(--ca-teal-800) 0%, var(--ca-teal-600) 100%);
+  box-shadow: 0 4px 14px rgba(13,148,136,.40);
+  transform: translateY(-1px);
+}
+
+.ca-btn--primary:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: var(--ca-shadow-btn);
+}
+
+/* Ghost */
+.ca-btn--ghost {
+  background: var(--ca-gray-100);
+  color: var(--ca-gray-700);
+  border: 1.5px solid var(--ca-gray-200);
+}
+
+.ca-btn--ghost:hover {
+  background: var(--ca-gray-200);
+  color: var(--ca-gray-800);
+  transform: translateY(-1px);
+}
+
+.ca-btn--ghost:active {
+  transform: translateY(0);
+}
+
+/* Outline teal */
+.ca-btn--outline {
+  background: transparent;
+  color: var(--ca-teal-700);
+  border: 1.5px solid var(--ca-teal-400);
+}
+
+.ca-btn--outline:hover {
+  background: var(--ca-teal-50);
+  color: var(--ca-teal-800);
+  border-color: var(--ca-teal-500);
+  transform: translateY(-1px);
+}
+
+.ca-btn--outline:active {
+  transform: translateY(0);
+}
+
+/* Danger — red gradient for Cancel Appointment */
+.ca-btn--danger {
+  background: linear-gradient(135deg, var(--ca-red-700) 0%, var(--ca-red-500) 100%);
+  color: var(--ca-white);
+  box-shadow: var(--ca-shadow-red);
+  padding: 11px 20px;
+  font-size: 0.88rem;
+}
+
+.ca-btn--danger:hover:not(:disabled) {
+  background: linear-gradient(135deg, var(--ca-red-800) 0%, var(--ca-red-600) 100%);
+  box-shadow: var(--ca-shadow-red-h);
+  transform: translateY(-1px);
+}
+
+.ca-btn--danger:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: var(--ca-shadow-red);
+}
+
+/* Disabled state — covers both primary and danger */
+.ca-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* ── Appointment ID highlighted box ─────────────────────────── */
+.ca-id-box {
+  background: linear-gradient(115deg, var(--ca-teal-50) 0%, #f0f9ff 100%);
+  border: 1px solid var(--ca-teal-100);
+  border-radius: var(--ca-radius-md);
+  padding: 14px 16px;
+  text-align: center;
+}
+
+.ca-id-box__label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+  color: var(--ca-teal-600);
+  margin: 0 0 8px;
+}
+
+.ca-id-box__label .bi {
+  font-size: 0.8rem;
+}
+
+.ca-id-box__value {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--ca-teal-800);
+  font-family: "SF Mono", "Fira Code", "Fira Mono", "Courier New", monospace;
+  letter-spacing: 0.4px;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: normal;
+  overflow-wrap: normal;
+}
+
+/* ── Info list — same as vq-info-list ──────────────────────── */
+.ca-info-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.ca-info-list__item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 4px;
+  border-bottom: 1px solid var(--ca-gray-100);
+  transition: background var(--ca-ease), padding var(--ca-ease);
+  border-radius: var(--ca-radius-sm);
+}
+
+.ca-info-list__item:last-child {
+  border-bottom: none;
+}
+
+.ca-info-list__item:hover {
+  background: var(--ca-gray-50);
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+.ca-info-list__key {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.83rem;
+  font-weight: 600;
+  color: var(--ca-gray-500);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.ca-info-list__key .bi {
+  font-size: 0.95rem;
+  color: var(--ca-teal-500);
+  width: 16px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.ca-info-list__val {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--ca-gray-800);
+  text-align: right;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: normal;
+  overflow-wrap: normal;
+}
+
+/* ── Divider ────────────────────────────────────────────────── */
+.ca-divider {
+  height: 1px;
+  background: var(--ca-gray-200);
+  margin: 2px 0;
+}
+
+/* ── Status badges — same as vq-badge ──────────────────────── */
+.ca-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.73rem;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 999px;
+  white-space: nowrap;
+  letter-spacing: 0.2px;
+}
+
+.ca-badge .bi {
+  font-size: 0.72rem;
+  line-height: 1;
+}
+
+.ca-badge--green {
+  background: var(--ca-green-bg);
+  color: var(--ca-green-txt);
+}
+
+.ca-badge--yellow {
+  background: var(--ca-yellow-bg);
+  color: var(--ca-yellow-txt);
+}
+
+.ca-badge--red {
+  background: var(--ca-red-100);
+  color: var(--ca-red-700);
+}
+
+.ca-badge--default {
+  background: var(--ca-gray-100);
+  color: var(--ca-gray-500);
+}
+
+/* ── Post-cancel note ───────────────────────────────────────── */
+.ca-cancelled-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 0.78rem;
+  color: var(--ca-red-700);
+  background: var(--ca-red-50);
+  border: 1px solid var(--ca-red-200);
+  border-radius: var(--ca-radius-md);
+  padding: 10px 14px;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.ca-cancelled-note .bi {
+  font-size: 0.9rem;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+/* ── Spinner ────────────────────────────────────────────────── */
+.ca-spinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(13,148,136,.25);
+  border-top-color: var(--ca-teal-600);
+  border-radius: 50%;
+  display: inline-block;
+  animation: ca-spin 0.65s linear infinite;
+  flex-shrink: 0;
+}
+
+.ca-spinner--white {
+  border: 2px solid rgba(255,255,255,.30);
+  border-top-color: var(--ca-white);
+}
+
+@keyframes ca-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Responsive ─────────────────────────────────────────────── */
+
+/* Tablet */
+@media (max-width: 900px) {
+  .ca-body:has(.ca-card--details) {
+    grid-template-columns: 1fr;
+  }
+
+  .ca-card--search {
+    max-width: none;
+    justify-self: auto;
+  }
+}
+
+/* Mobile */
+@media (max-width: 640px) {
+  .ca-wrapper {
+    padding: 14px 12px 36px;
+  }
+
+  .ca-header {
+    padding: 16px 18px;
+    border-radius: var(--ca-radius-lg);
+  }
+
+  .ca-header__title {
+    font-size: 1.2rem;
+  }
+
+  .ca-header__badge {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .ca-actions {
+    flex-direction: column;
+  }
+
+  .ca-btn--ghost,
+  .ca-btn--primary {
+    flex: unset;
+    width: 100%;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .ca-card,
+  .ca-btn,
+  .ca-input,
+  .ca-info-list__item {
+    transition: none;
+  }
+
+  .ca-card:hover,
+  .ca-btn:hover {
+    transform: none;
+  }
+
+  .ca-spinner {
+    animation: none;
+    border-top-color: transparent;
+  }
+}

@@ -1,0 +1,29 @@
+/* Wider container */
+.ba-container {
+    width: 95%;
+    max-width: 1400px;
+    margin: 30px auto;
+}
+
+/* Wider form grid */
+.ba-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+}
+
+/* Larger input fields */
+.ba-field input,
+.ba-field select {
+    width: 100%;
+    height: 52px;
+    font-size: 16px;
+}
+
+/* Buttons */
+.ba-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: 35px;
+}

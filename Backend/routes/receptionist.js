@@ -14,6 +14,7 @@ const {
   bookAppointment,
   verifyQR,
   getDoctors,
+  getDoctorAvailability,
   getTodayAppointments,
   getAppointmentById,
   getAppointmentsByDoctor,
@@ -53,6 +54,9 @@ router.delete("/patients/:id", deletePatient);
 
 // View Doctors
 router.get("/doctors", getDoctors);
+
+// Doctor Availability
+router.get("/doctor-availability", getDoctorAvailability);
 
 
 // ======================

@@ -133,11 +133,16 @@ const appointmentSchema = new mongoose.Schema(
   ],
   default: "Scheduled"
 },
-    token: {
-      type: String,
-      required: true,
-      unique: true,
-    }
+
+appointmentId: {
+  type: String,
+  required: true,
+  unique: true,
+},
+   token: {
+  type: Number,
+  required: true,
+}
   },
   {
     timestamps: true,

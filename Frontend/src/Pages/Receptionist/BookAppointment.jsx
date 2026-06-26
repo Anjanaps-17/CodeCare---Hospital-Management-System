@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import "../../styles/BookAppointment.css";
+import { toast } from "react-toastify";
 
 const BookAppointment = () => {
   const navigate = useNavigate();
@@ -12,6 +14,7 @@ const BookAppointment = () => {
   const [doctors, setDoctors] = useState([]);
   const [patients, setPatients] = useState([]);
   const [selectedDoctor, setSelectedDoctor] = useState(null);
+  const [department, setDepartment] = useState("");
   const [appointmentDetails, setAppointmentDetails] = useState(null);
 
   useEffect(() => {
@@ -59,7 +62,30 @@ const BookAppointment = () => {
     }
   };
 
+  
+
   const handleSubmit = async () => {
+if (!patientId) {
+    toast.warning("Please select a patient.");
+    return;
+  }
+
+  if (!doctorId) {
+    toast.warning("Please select a doctor.");
+    return;
+  }
+
+  if (!date) {
+    toast.warning("Please select an appointment date.");
+    return;
+  }
+
+  if (!time) {
+    toast.warning("Please select an appointment time.");
+    return;
+  }
+
+
     try {
       const token = localStorage.getItem("token");
 
@@ -72,11 +98,11 @@ const BookAppointment = () => {
             Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({
-            patientId,
-            doctorId,
-            department: selectedDoctor?.department?.name,
-            date,
-            time,
+          patientId,
+          doctorId,
+          department,
+          date,
+          time,
           }),
         }
       );
@@ -84,39 +110,49 @@ const BookAppointment = () => {
       const data = await response.json();
 
       if (!response.ok) {
-        alert(data.message);
-        return;
-      }
+  toast.error(data.message);
+  return;
+}
 
       setAppointmentDetails({
-        patient:
-          patients.find((p) => p.patientId === patientId)?.name || "",
-        doctor: selectedDoctor?.name || "",
-        department: selectedDoctor?.department?.name || "",
-        date,
-        time,
-        token: data.appointment.token,
-      });
+        appointmentId: data.appointment.appointmentId,
+  patient:
+    patients.find((p) => p.patientId === patientId)?.name || "",
+  doctor: selectedDoctor?.name || "",
+department: selectedDoctor?.department?.name || "",
+  date,
+  time,
+  token: data.appointment.token,
+});
 
-      alert("Appointment booked successfully!");
+      toast.success("Appointment booked successfully!");
     } catch (error) {
-      console.log(error);
-      alert("Failed to book appointment");
-    }
+  console.log(error);
+
+  toast.error("Failed to book appointment!");
+}
   };
 
   const resetForm = () => {
     setAppointmentDetails(null);
     setPatientId("");
     setDoctorId("");
+    setDepartment("");
     setDate("");
     setTime("");
     setSelectedDoctor(null);
   };
 
+  const filteredDoctors =
+  department === ""
+    ? doctors
+    : doctors.filter(
+        (doctor) => doctor.department?.name === department
+      );
+
   return (
     <div className="ap-wrapper">
-      <div className="ap-container">
+      <div className="ap-container  ba-container">
 
         {/* Header */}
         <div className="ap-header">
@@ -139,10 +175,10 @@ const BookAppointment = () => {
               APPOINTMENT INFORMATION
             </div>
 
-            <div className="ap-grid-2">
+            <div className="ap-grid-2 ba-grid">
 
               {/* Patient */}
-              <div className="ap-field">
+              <div className="ap-field ba-field">
                 <label>Patient</label>
 
                 <select
@@ -163,7 +199,7 @@ const BookAppointment = () => {
               </div>
 
               {/* Doctor */}
-              <div className="ap-field">
+              <div className="ap-field ba-field">
                 <label>Doctor</label>
 
                 <select
@@ -180,27 +216,38 @@ const BookAppointment = () => {
                 >
                   <option value="">Select Doctor</option>
 
-                  {doctors.map((doctor) => (
+                  {filteredDoctors.map((doctor) => (
                     <option key={doctor._id} value={doctor._id}>
-                      {doctor.name}
-                    </option>
-                  ))}
+                     {doctor.name}
+                   </option>
+                   ))}
                 </select>
               </div>
 
-              {/* Department */}
-              <div className="ap-field">
-                <label>Department</label>
+             {/* Department */}
+<div className="ap-field ba-field">
+  <label>Department</label>
 
-                <input
-                  type="text"
-                  value={selectedDoctor?.department?.name || ""}
-                  readOnly
-                />
-              </div>
+  <select
+    value={department}
+    onChange={(e) => {
+      setDepartment(e.target.value);
+      setDoctorId("");
+      setSelectedDoctor(null);
+    }}
+  >
+    <option value="">Select Department</option>
+
+    {[...new Set(doctors.map(doc => doc.department?.name))].map(dep => (
+      <option key={dep} value={dep}>
+        {dep}
+      </option>
+    ))}
+  </select>
+</div>
 
               {/* Date */}
-              <div className="ap-field">
+              <div className="ap-field ba-field">
                 <label>Appointment Date</label>
 
                 <input
@@ -211,7 +258,7 @@ const BookAppointment = () => {
               </div>
 
               {/* Time */}
-              <div className="ap-field">
+              <div className="ap-field ba-field">
                 <label>Appointment Time</label>
 
                 <input
@@ -223,7 +270,7 @@ const BookAppointment = () => {
 
             </div>
 
-            <div className="ap-actions">
+            <div className="ap-actions ba-actions">
 
               <button
                 type="button"
@@ -266,6 +313,7 @@ const BookAppointment = () => {
                   <tbody>
 
                     {[
+  ["Appointment ID", appointmentDetails.appointmentId],
   ["Patient", appointmentDetails.patient],
   ["Doctor", appointmentDetails.doctor],
   ["Department", appointmentDetails.department],

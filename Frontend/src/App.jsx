@@ -1,8 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import "./App.css";
-
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import "./App.css";
 
 import ProtectedRoute from "./ProtectedRoute";
 
@@ -36,6 +35,8 @@ import AddPatient from "./Pages/Receptionist/AddPatient";
 import BookAppointment from "./Pages/Receptionist/BookAppointment";
 import UpdatePatient from "./Pages/Receptionist/UpdatePatient";
 import VerifyQR from "./Pages/Receptionist/VerifyQR";
+import DoctorAvailability from "./Pages/Receptionist/DoctorAvailability";
+import CancelAppointment from "./Pages/Receptionist/CancelAppointment";
 
 import Home from "./Pages/Home";
 
@@ -44,6 +45,7 @@ function App() {
     <>
       <BrowserRouter>
         <Routes>
+
           {/* Public Routes */}
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
@@ -109,10 +111,28 @@ function App() {
           />
 
           <Route
+            path="/receptionist/doctor-availability"
+            element={
+              <ProtectedRoute allowedRoles={["Receptionist"]}>
+                <DoctorAvailability />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
             path="/receptionist/scan-qr"
             element={
               <ProtectedRoute allowedRoles={["Receptionist"]}>
                 <VerifyQR />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/receptionist/cancel-appointment"
+            element={
+              <ProtectedRoute allowedRoles={["Receptionist"]}>
+                <CancelAppointment />
               </ProtectedRoute>
             }
           />
@@ -210,10 +230,20 @@ function App() {
               </ProtectedRoute>
             }
           />
+
         </Routes>
       </BrowserRouter>
 
-      <ToastContainer position="top-right" autoClose={3000} />
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        pauseOnHover
+        draggable
+        theme="colored"
+      />
     </>
   );
 }
