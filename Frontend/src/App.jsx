@@ -11,6 +11,7 @@ import BookAppointment from "./Pages/Receptionist/BookAppointment";
 import UpdatePatient from "./Pages/Receptionist/UpdatePatient";
 import VerifyQR from "./Pages/Receptionist/VerifyQR";
 import DoctorAvailability from "./Pages/Receptionist/DoctorAvailability";
+import CancelAppointment from "./Pages/Receptionist/CancelAppointment";
 
 import AdminDashboard from "./Pages/Dashboard/AdminDashboard";
 import DoctorDashboard from "./Pages/Dashboard/DoctorDashboard";
@@ -62,6 +63,7 @@ function App() {
         <Route path="/admin/doctors/add" element={<AddDoctor />} />
         <Route path="/admin/doctors/edit/:id" element={<EditDoctor />} />
         <Route path="/receptionist/scan-qr" element={<VerifyQR />} />
+        <Route path="/receptionist/cancel-appointment" element={<CancelAppointment />} />
 
         {/* Department Management */}
         <Route path="/admin/departments" element={<Departments />} />

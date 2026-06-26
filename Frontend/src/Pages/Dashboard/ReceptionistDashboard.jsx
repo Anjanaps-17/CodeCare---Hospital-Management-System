@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const ReceptionistDashboard = () => {
   const navigate = useNavigate();
@@ -44,6 +45,69 @@ const ReceptionistDashboard = () => {
     localStorage.clear();
     navigate("/login");
   };
+
+  const handleCancelAppointment = async (appointmentId) => {
+  const confirmCancel = window.confirm(
+    "Are you sure you want to cancel this appointment?"
+  );
+
+  if (!confirmCancel) return;
+
+  try {
+    const token = localStorage.getItem("token");
+
+    const response = await fetch(
+      `http://localhost:5000/api/receptionist/appointments/${appointmentId}/cancel`,
+      {
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      toast.error(data.message);
+      return;
+    }
+
+    toast.success("Appointment cancelled successfully!");
+
+    // Refresh today's appointments
+    const appointmentsResponse = await fetch(
+      "http://localhost:5000/api/receptionist/appointments/today",
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    const appointmentsData = await appointmentsResponse.json();
+
+    setAppointments(appointmentsData.data || []);
+
+    // Refresh dashboard statistics
+    const statsResponse = await fetch(
+      "http://localhost:5000/api/receptionist/dashboard",
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    const statsData = await statsResponse.json();
+
+    setStats(statsData.data);
+
+  } catch (error) {
+    console.log(error);
+    toast.error("Failed to cancel appointment.");
+  }
+};
 
   return (
     <div className="container-fluid p-0">
@@ -92,6 +156,15 @@ const ReceptionistDashboard = () => {
             >
               📷 Verify QR
             </li>
+
+
+            <li
+  className="list-group-item"
+  style={{ cursor: "pointer" }}
+  onClick={() => navigate("/receptionist/cancel-appointment")}
+>
+  ❌ Cancel Appointment
+</li>
 
             <li
               className="list-group-item text-danger fw-bold"
@@ -172,6 +245,16 @@ const ReceptionistDashboard = () => {
               📷 Verify QR
               </button>
 
+              <button
+  className="btn-theme mb-2"
+  style={{ width: "auto", marginRight: "10px",
+    backgroundColor: "#dc3545",
+  }}
+  onClick={() => navigate("/receptionist/cancel-appointment")}
+>
+  ❌ Cancel Appointment
+</button>
+
             </div>
           </div>
 
@@ -220,6 +303,7 @@ const ReceptionistDashboard = () => {
                       <th>Doctor</th>
                       <th>Time</th>
                       <th>Status</th>
+                      <th>Action</th>
                     </tr>
                   </thead>
 
@@ -227,9 +311,29 @@ const ReceptionistDashboard = () => {
   {appointments.map((app) => (
     <tr key={app._id}>
       <td>{app.patientId?.name}</td>
+
       <td>{app.doctorId?.name}</td>
+
       <td>{app.time}</td>
+
       <td>{app.status}</td>
+
+      <td>
+        {app.status === "Cancelled" ? (
+          <span className="text-danger fw-bold">
+            Cancelled
+          </span>
+        ) : (
+          <button
+            className="btn btn-sm btn-danger"
+            onClick={() =>
+              handleCancelAppointment(app._id)
+            }
+          >
+            Cancel
+          </button>
+        )}
+      </td>
     </tr>
   ))}
 </tbody>
