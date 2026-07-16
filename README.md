@@ -4,7 +4,7 @@ A MERN Stack-based Hospital Management System developed as a collaborative team 
 
 The project aims to simplify hospital operations through role-based access control and digital management of hospital activities.
 
-> **Note:** This repository contains the collaborative work of the project team. The Admin module is fully implemented, while some other modules are partially implemented or under development.
+> **Note:** This repository contains the collaborative work of the project team. The Admin module is fully implemented and recepionist module is completed, while some other modules are partially implemented or under development.
 
 ---
 
@@ -188,7 +188,7 @@ This project was developed as part of the **InternPro MERN Stack Development Int
 Current status:
 
 - ✅ Admin Module Completed
-- 🚧 Receptionist Module Partially Completed
+- ✅ Receptionist Module Completed
 - 🚧 Doctor Module Under Development
 - 🚧 Lab Technician Module Under Development
 
